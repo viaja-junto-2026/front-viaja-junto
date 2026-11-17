@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 
 describe('App', () => {
-  it('renderiza o título do projeto', () => {
+  it('renders the project title', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: /viaja junto/i })).toBeInTheDocument()
   })

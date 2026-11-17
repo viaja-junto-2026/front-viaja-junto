@@ -5,7 +5,7 @@
 function required(name: keyof ImportMetaEnv): string {
   const value = import.meta.env[name]
   if (!value) {
-    throw new Error(`Variável de ambiente ausente: ${name} (veja .env.example)`)
+    throw new Error(`Missing environment variable: ${name} (see .env.example)`)
   }
   return value
 }

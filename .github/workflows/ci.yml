@@ -53,6 +53,10 @@ jobs:
           cache: pnpm
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
+      - name: Check generated API types are up to date
+        run: |
+          pnpm api:generate
+          git diff --exit-code -- src/services/generated
       - name: Lint
         run: pnpm lint
       - name: Check formatting
@@ -77,19 +81,38 @@ jobs:
           path: dist
           retention-days: 7
 
+  # Validates that the front-end image builds and that the full compose file
+  # (front + back-end submodule) is valid. Starting the whole stack is too slow for CI.
+  docker:
+    name: CI docker
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: Validate docker compose file
+        run: docker compose config --quiet
+      - name: Build front-end image
+        run: docker build --build-arg VITE_API_URL=http://localhost:3000 -t front-viaja-junto:ci .
+
   # Preserve the existing required context until every protected branch uses the new checks.
   # A skipped dependent job counts as successful for branch protection, so run it after failures.
   legacy-required-check:
     name: Lint, type-check, test & build
     if: ${{ always() && github.event_name != 'schedule' }}
-    needs: [audit, quality]
+    needs: [audit, quality, docker]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Require audit and quality
+      - name: Require audit, quality and docker
         env:
           AUDIT_RESULT: ${{ needs.audit.result }}
           QUALITY_RESULT: ${{ needs.quality.result }}
+          DOCKER_RESULT: ${{ needs.docker.result }}
         run: |
           test "$AUDIT_RESULT" = success
           test "$QUALITY_RESULT" = success
+          test "$DOCKER_RESULT" = success
