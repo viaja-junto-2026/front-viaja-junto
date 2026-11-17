@@ -1,0 +1,30 @@
+# Starts the whole project (PostgreSQL, migrations, API and front-end) with one command:
+#
+#   docker compose up --build
+#
+# The back-end comes from the `backend/` git submodule. Its own compose files are
+# included here: the base file plus the demo override, which provides safe local
+# defaults (JWT secret, demo data, emulated S3), so no configuration is required.
+# To use real Google sign-in, copy .env.example to .env and fill in the credentials.
+name: viajajunto
+
+include:
+  - path:
+      - ./backend/docker-compose.yml
+      - ./backend/docker-compose.demo.yml
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        # Must be reachable from the browser, so it points to the published API port.
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+    container_name: viajajunto-web
+    restart: unless-stopped
+    ports:
+      # 5173 is the origin the back-end allows in CORS and redirects to after sign-in.
+      - '${WEB_PORT:-5173}:80'
+    depends_on:
+      api:
+        condition: service_healthy
