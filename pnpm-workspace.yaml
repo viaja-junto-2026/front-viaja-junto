@@ -1,0 +1,5 @@
+auditConfig:
+  ignoreGhsas:
+    # picomatch ReDoS (extglobs). Dependência transitiva apenas de desenvolvimento
+    # (vite/vitest/tinyglobby); ainda não existe versão corrigida. Remover quando houver patch.
+    - GHSA-fc5q-39xc-vjpf
