@@ -1,15 +1,8 @@
+@import 'tailwindcss';
 @import './styles/tokens.css';
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-family);
-  font-size: var(--font-size-md);
-  color: var(--color-text);
-  background: var(--color-bg);
+@layer base {
+  body {
+    @apply bg-bg font-sans text-text;
+  }
 }

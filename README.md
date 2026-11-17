@@ -7,7 +7,27 @@ Front-end do projeto Viaja Junto, feito com **React + Vite + TypeScript**.
 - Node.js 22+
 - [pnpm](https://pnpm.io) 11 (`corepack enable` já resolve a versão pelo `packageManager`)
 
-## Como rodar
+## Como rodar com Docker (front + back)
+
+O back-end vem do submodule `backend/` ([ViajaJunto/viaja-junto.server](https://github.com/ViajaJunto/viaja-junto.server)). Clone com os submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/viaja-junto-2026/front-viaja-junto.git
+# se já clonou sem eles: git submodule update --init
+docker compose up --build
+```
+
+Sobe PostgreSQL, migrations, API, dados de demonstração e o front. Não precisa configurar nada.
+
+| Serviço | URL                        |
+| ------- | -------------------------- |
+| Front   | http://localhost:5173      |
+| API     | http://localhost:3000/api  |
+| Swagger | http://localhost:3000/docs |
+
+Para usar o login real do Google, copie `.env.example` para `.env` e preencha `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`.
+
+## Como rodar localmente (sem Docker)
 
 ```bash
 pnpm install
