@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint'
 const ARBITRARY_TAILWIND_VALUE = '/(^|[\\s:])[a-z-]*\\[/'
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'backend'] },
+  { ignores: ['dist', 'coverage', 'backend', 'src/services/generated'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

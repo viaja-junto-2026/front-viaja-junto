@@ -13,8 +13,16 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
+      // The CI fails if coverage drops below 70%.
+      thresholds: { statements: 70, branches: 70, functions: 70, lines: 70 },
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/main.tsx', 'src/test/**', 'src/**/*.d.ts', 'src/**/*.test.{ts,tsx}'],
+      exclude: [
+        'src/main.tsx',
+        'src/services/generated/**',
+        'src/test/**',
+        'src/**/*.d.ts',
+        'src/**/*.test.{ts,tsx}',
+      ],
     },
   },
 })

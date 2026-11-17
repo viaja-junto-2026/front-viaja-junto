@@ -2,3 +2,5 @@ dist
 coverage
 backend
 pnpm-lock.yaml
+src/services/openapi.json
+src/services/generated
