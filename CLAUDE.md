@@ -1,1 +1,1 @@
-@RULES.md
+@docs/RULES.md
