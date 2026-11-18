@@ -9,6 +9,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Valor padrão nos testes: sem isso o app falha ao carregar quando não há arquivo .env (como no CI).
+    env: { VITE_API_URL: 'http://localhost:3000' },
     exclude: ['**/node_modules/**', 'dist/**', 'backend/**'],
     coverage: {
       provider: 'v8',

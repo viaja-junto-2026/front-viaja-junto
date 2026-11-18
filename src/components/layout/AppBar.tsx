@@ -1,13 +1,18 @@
-import { Bell, Compass, User } from 'lucide-react'
+import { Bell, Compass } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
+import { getInitials } from '../../auth/getInitials'
+import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
 import { topNavItems } from './navigation'
 
 /**
  * Barra superior. No desktop mostra marca, navegação, notificações e perfil;
  * no celular mostra só a marca e as notificações (a navegação fica na barra inferior).
+ * Quem não está logado vê o botão "Entrar" no lugar das notificações e do perfil.
  */
 export function AppBar() {
+  const { status, user } = useAuth()
+
   return (
     <header className="bg-white">
       <div className="mx-auto flex h-18 w-full max-w-content items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
@@ -53,20 +58,32 @@ export function AppBar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            to={paths.notifications}
-            aria-label="Notificações"
-            className="flex size-12 items-center justify-center rounded-full bg-white text-red-burgundy shadow-md"
-          >
-            <Bell aria-hidden="true" size={20} />
-          </Link>
-          <Link
-            to={paths.profile}
-            aria-label="Perfil"
-            className="hidden size-10 items-center justify-center rounded-full bg-rose-vintage text-gray-ink lg:flex"
-          >
-            <User aria-hidden="true" size={20} />
-          </Link>
+          {status === 'authenticated' && user && (
+            <>
+              <Link
+                to={paths.notifications}
+                aria-label="Notificações"
+                className="flex size-12 items-center justify-center rounded-full bg-white text-red-burgundy shadow-md"
+              >
+                <Bell aria-hidden="true" size={20} />
+              </Link>
+              <Link
+                to={paths.profile}
+                aria-label={`Perfil de ${user.name}`}
+                className="hidden size-10 items-center justify-center rounded-full bg-rose-vintage text-label-md text-gray-ink lg:flex"
+              >
+                {getInitials(user.name)}
+              </Link>
+            </>
+          )}
+          {status === 'unauthenticated' && (
+            <Link
+              to={paths.login}
+              className="rounded-full bg-red-ruby px-6 py-3 text-label-lg text-white hover:bg-red-burgundy"
+            >
+              Entrar
+            </Link>
+          )}
         </div>
       </div>
     </header>

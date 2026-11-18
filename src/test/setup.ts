@@ -4,4 +4,7 @@ import { afterEach } from 'vitest'
 
 afterEach(() => {
   cleanup()
+  // Cada teste começa sem sessão guardada no navegador.
+  window.localStorage.clear()
+  window.sessionStorage.clear()
 })

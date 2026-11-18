@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router'
+import { RequireAuth } from '../auth/RequireAuth'
 import { AppLayout } from '../layouts/AppLayout'
 import ActivityDetailsPage from '../pages/ActivityDetailsPage'
 import AuthCallbackPage from '../pages/AuthCallbackPage'
@@ -36,14 +37,20 @@ export const routes: RouteObject[] = [
           { path: paths.destinations, element: <DestinationsPage /> },
           { path: patterns.destinationDetails, element: <DestinationDetailsPage /> },
           { path: patterns.activityDetails, element: <ActivityDetailsPage /> },
-          { path: paths.trips, element: <TripsPage /> },
-          { path: paths.tripNew, element: <TripCreatePage /> },
-          { path: patterns.tripDetails, element: <TripDetailsPage /> },
-          { path: patterns.tripEdit, element: <TripEditPage /> },
-          { path: paths.join, element: <JoinTripPage /> },
           { path: paths.reviews, element: <ReviewsPage /> },
-          { path: paths.notifications, element: <NotificationsPage /> },
-          { path: paths.profile, element: <ProfilePage /> },
+          // Rotas privadas: sem login, o usuário é levado para /login e volta depois de entrar.
+          {
+            element: <RequireAuth />,
+            children: [
+              { path: paths.trips, element: <TripsPage /> },
+              { path: paths.tripNew, element: <TripCreatePage /> },
+              { path: patterns.tripDetails, element: <TripDetailsPage /> },
+              { path: patterns.tripEdit, element: <TripEditPage /> },
+              { path: paths.join, element: <JoinTripPage /> },
+              { path: paths.notifications, element: <NotificationsPage /> },
+              { path: paths.profile, element: <ProfilePage /> },
+            ],
+          },
           { path: '*', element: <NotFoundPage /> },
         ],
       },

@@ -1,14 +1,26 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryRouter, RouterProvider, type RouteObject } from 'react-router'
+import { AuthContext, type AuthContextValue } from '../auth/authContext'
 import { AppLayout } from '../layouts/AppLayout'
 import ErrorPage from '../pages/ErrorPage'
+import { makeAuthValue } from '../test/auth'
 import { routes } from './routes'
 
-function renderAt(path: string, routeObjects: RouteObject[] = routes) {
+/** Renderiza o app em um caminho, por padrão com um usuário logado. */
+function renderAt(
+  path: string,
+  routeObjects: RouteObject[] = routes,
+  auth: AuthContextValue = makeAuthValue(),
+) {
   const router = createMemoryRouter(routeObjects, { initialEntries: [path] })
-  return render(<RouterProvider router={router} />)
+  render(
+    <AuthContext.Provider value={auth}>
+      <RouterProvider router={router} />
+    </AuthContext.Provider>,
+  )
+  return router
 }
 
 describe('routes', () => {
@@ -90,6 +102,67 @@ describe('routes', () => {
       'aria-current',
       'page',
     )
+  })
+
+  it('keeps the public pages open for visitors', () => {
+    renderAt('/destinations', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Destinos' })).toBeInTheDocument()
+  })
+
+  it.each([
+    '/trips',
+    '/trips/new',
+    '/trips/1',
+    '/trips/1/edit',
+    '/join',
+    '/notifications',
+    '/profile',
+  ])('sends a visitor from the private page %s to the login', async (path) => {
+    const router = renderAt(path, routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+
+    await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
+    expect(screen.getByRole('heading', { level: 1, name: 'Entrar' })).toBeInTheDocument()
+  })
+
+  it('shows the user initials and notifications in the top bar when signed in', () => {
+    renderAt('/')
+
+    expect(screen.getByRole('link', { name: 'Perfil de Gustavo Fidelis' })).toHaveTextContent('GF')
+    expect(screen.getByRole('link', { name: 'Notificações' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Entrar' })).not.toBeInTheDocument()
+  })
+
+  it('shows a sign-in button in the top bar for a visitor', () => {
+    renderAt('/', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+
+    expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
+    expect(screen.queryByRole('link', { name: 'Notificações' })).not.toBeInTheDocument()
+  })
+
+  it('shows neither buttons nor initials while the session is being checked', () => {
+    renderAt('/', routes, makeAuthValue({ status: 'loading', user: null }))
+
+    expect(screen.queryByRole('link', { name: 'Entrar' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Notificações' })).not.toBeInTheDocument()
+  })
+
+  it('signs the user out from the profile page and goes back to the home page', async () => {
+    const auth = makeAuthValue()
+    const router = renderAt('/profile', routes, auth)
+    let pathWhenSigningOut = ''
+    vi.mocked(auth.signOut).mockImplementation(async () => {
+      pathWhenSigningOut = router.state.location.pathname
+    })
+
+    expect(screen.getByText('gustavo@exemplo.com')).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Sair' }))
+
+    expect(auth.signOut).toHaveBeenCalledOnce()
+    // já está na home quando a sessão é limpa, então a guarda não redireciona para o login
+    expect(pathWhenSigningOut).toBe('/')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Início' })).toBeInTheDocument()
   })
 
   it('shows the error page inside the layout when a route breaks', () => {
