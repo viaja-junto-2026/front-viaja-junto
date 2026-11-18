@@ -10,31 +10,34 @@ SPA em React que consome a API do back-end (T2, submodule em `backend/`). Todo a
 
 Parte das ferramentas (pnpm, ESLint, Prettier, Vitest e o pipeline de CI) foi reaproveitada de um projeto anterior do grupo (AGES 2), porque já conhecemos a configuração e ela já foi validada.
 
-| Biblioteca escolhemos | Para que serve | Por que
-|
----------------------------------------------------------------------------------------------------------------------------------------- |
-| React, Vite, TypeScript | Base do projeto | Exigidos pelo enunciado. O Vite dá build e HMR rápidos; o TS evita erros de contrato com a API. |
-| Tailwind CSS v4 | Estilos | Os tokens ficam em um único bloco `@theme`, e as classes são geradas a partir dele (ver "Design tokens"). |
-| pnpm | Gerenciador de pacotes | Instalação rápida, lockfile estrito (`--frozen-lockfile`) e `pnpm audit` usado no CI. |
-| ESLint, typescript-eslint, plugins de React | Lint | Padrão do ecossistema. Também aplica a regra que proíbe valores soltos de estilo. |
-| Prettier, eslint-config-prettier | Formatação | Formatação única para o time, sem conflito com o ESLint. |
-| Vitest, Testing Library, jsdom, `@vitest/coverage-v8` | Testes e cobertura | Vitest usa a mesma config do Vite. Testing Library testa pelo comportamento do usuário. Cobertura mínima de 70%. |
-| `@fontsource` (DM Serif Display, Plus Jakarta Sans, Inter) | Fontes da interface | Fontes do design system hospedadas no projeto: sem requisição ao Google Fonts, funcionam offline e no Docker. |
-| lucide-react | Ícones | Traço limpo e arredondado que combina com o design, com os ícones de viagem necessários, tipado e importado ícone a ícone (bundle leve). |
-| jiti | Ler `eslint.config.ts` | Permite a configuração do ESLint em TypeScript, sem nenhum arquivo JS no projeto. |
-| nginx | Servir o build no Docker | Imagem pequena e fallback para rotas da SPA. |
-| openapi-typescript | Gerar tipos do contrato | Gera só tipos (sem código em runtime) a partir do OpenAPI do back-end, então o TS acusa qualquer divergência. |
-| openapi-fetch | Cliente HTTP tipado | Cliente leve (sobre `fetch`) que usa os tipos gerados; não adiciona dependências pesadas. |
+| Biblioteca                                                 | Para que serve           | Por que escolhemos                                                                                                                                                               |
+| ---------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React, Vite, TypeScript                                    | Base do projeto          | Exigidos pelo enunciado. O Vite dá build e HMR rápidos; o TS evita erros de contrato com a API.                                                                                  |
+| Tailwind CSS v4                                            | Estilos                  | Os tokens ficam em um único bloco `@theme`, e as classes são geradas a partir dele (ver "Design tokens").                                                                        |
+| pnpm                                                       | Gerenciador de pacotes   | Instalação rápida, lockfile estrito (`--frozen-lockfile`) e `pnpm audit` usado no CI.                                                                                            |
+| ESLint, typescript-eslint, plugins de React                | Lint                     | Padrão do ecossistema. Também aplica a regra que proíbe valores soltos de estilo.                                                                                                |
+| Prettier, eslint-config-prettier                           | Formatação               | Formatação única para o time, sem conflito com o ESLint.                                                                                                                         |
+| Vitest, Testing Library, jsdom, `@vitest/coverage-v8`      | Testes e cobertura       | Vitest usa a mesma config do Vite. Testing Library testa pelo comportamento do usuário. Cobertura mínima de 70%.                                                                 |
+| `@fontsource` (DM Serif Display, Plus Jakarta Sans, Inter) | Fontes da interface      | Fontes do design system hospedadas no projeto: sem requisição ao Google Fonts, funcionam offline e no Docker.                                                                    |
+| lucide-react                                               | Ícones                   | Traço limpo e arredondado que combina com o design, com os ícones de viagem necessários, tipado e importado ícone a ícone (bundle leve).                                         |
+| jiti                                                       | Ler `eslint.config.ts`   | Permite a configuração do ESLint em TypeScript, sem nenhum arquivo JS no projeto.                                                                                                |
+| nginx                                                      | Servir o build no Docker | Imagem pequena e fallback para rotas da SPA.                                                                                                                                     |
+| openapi-typescript                                         | Gerar tipos do contrato  | Gera só tipos (sem código em runtime) a partir do OpenAPI do back-end, então o TS acusa qualquer divergência.                                                                    |
+| openapi-fetch                                              | Cliente HTTP tipado      | Cliente leve (sobre `fetch`) que usa os tipos gerados; não adiciona dependências pesadas.                                                                                        |
+| react-router                                               | Rotas e navegação        | Padrão de mercado para SPAs em React: rotas aninhadas (layout compartilhado), links com item ativo (`aria-current`), rota de erro e roteador em memória para testar a navegação. |
 
-Bibliotecas que ainda vamos adicionar (roteador, etc.) devem ser registradas nesta tabela com a justificativa.
+Bibliotecas que ainda vamos adicionar devem ser registradas nesta tabela com a justificativa.
 
 ## Estrutura de pastas
 
 ```
 src/
   components/   componentes de UI reutilizáveis
+    layout/     barra superior (AppBar), barra inferior (BottomNav) e itens de navegação
   hooks/        hooks customizados
-  pages/        telas
+  layouts/      layouts de tela (AppLayout: barra superior, conteúdo e barra inferior)
+  pages/        telas (uma página por rota)
+  routes/       caminhos (paths.ts) e tabela de rotas (routes.tsx)
   services/     camada de acesso à API (única que fala com o back)
   config/       configuração (env.ts lê as variáveis de ambiente)
   styles/       design tokens (tokens.css)
@@ -44,6 +47,15 @@ docker/         arquivos de apoio do Docker (nginx.conf)
 docs/           documentação
 backend/        submodule do back-end (somente leitura)
 ```
+
+## Rotas e layout
+
+- **Caminhos:** `src/routes/paths.ts` é o único lugar com os caminhos. Use `paths.trips`, `paths.tripDetails(id)` etc. para links e redirects; nunca escreva a URL na mão.
+- **Tabela de rotas:** `src/routes/routes.tsx`. `/login` e `/auth/callback` ficam fora do layout principal; todas as outras ficam dentro do `AppLayout`.
+- **Layout (`AppLayout`):** barra superior (`AppBar`) + conteúdo (`max-w-content`, margens de 16, 24 e 32 px) + barra inferior (`BottomNav`). No desktop (a partir de `lg`) aparece o menu na barra superior; no celular o menu vira a barra inferior fixa.
+- **Erros:** uma rota que quebra mostra o `ErrorPage` dentro do layout, sem perder a navegação. Endereço inexistente mostra o `NotFoundPage`.
+- **Como adicionar uma tela:** crie a página em `src/pages/`, troque o componente provisório da rota em `routes.tsx` e, se a rota for nova, acrescente o caminho em `paths.ts`. As páginas ainda sem conteúdo usam o `ComingSoon` e devem ser substituídas pela issue da tela.
+- **Testes de navegação:** use `createMemoryRouter(routes, { initialEntries: [...] })` (ver `src/routes/routes.test.tsx`).
 
 ## Camada de API
 
@@ -86,12 +98,13 @@ _A definir._
 
 ## Decisões
 
-| Data       | Decisão                                     | Motivo                                                 |
-| ---------- | ------------------------------------------- | ------------------------------------------------------ |
-| 2026-11-17 | Tailwind v4 com tokens em `@theme`          | Tokens centralizados e verificáveis por lint           |
-| 2026-11-17 | Mocks só em testes; app usa o back-end real | Requisito do professor                                 |
-| 2026-11-17 | Cobertura mínima de 70%                     | Requisito do professor                                 |
-| 2026-11-17 | openapi-typescript + openapi-fetch          | Só tipos gerados; serviços e hooks são nossos          |
-| 2026-11-18 | Paleta rubi, bordô e rosa antigo sobre bege | Identidade visual escolhida pelo grupo (DESIGN.md)     |
-| 2026-11-18 | Fontes hospedadas com `@fontsource`         | Sem dependência do Google Fonts em tempo de execução   |
-| 2026-11-18 | Ícones com `lucide-react`                   | Estilo combina com o design; ícones de viagem cobertos |
+| Data       | Decisão                                          | Motivo                                                           |
+| ---------- | ------------------------------------------------ | ---------------------------------------------------------------- |
+| 2026-11-17 | Tailwind v4 com tokens em `@theme`               | Tokens centralizados e verificáveis por lint                     |
+| 2026-11-17 | Mocks só em testes; app usa o back-end real      | Requisito do professor                                           |
+| 2026-11-17 | Cobertura mínima de 70%                          | Requisito do professor                                           |
+| 2026-11-17 | openapi-typescript + openapi-fetch               | Só tipos gerados; serviços e hooks são nossos                    |
+| 2026-11-18 | Paleta rubi, bordô e rosa antigo sobre bege      | Identidade visual escolhida pelo grupo (DESIGN.md)               |
+| 2026-11-18 | Fontes hospedadas com `@fontsource`              | Sem dependência do Google Fonts em tempo de execução             |
+| 2026-11-18 | Ícones com `lucide-react`                        | Estilo combina com o design; ícones de viagem cobertos           |
+| 2026-11-18 | Rotas com react-router e um layout compartilhado | Navegação única e responsiva; cada tela só preenche a sua página |
