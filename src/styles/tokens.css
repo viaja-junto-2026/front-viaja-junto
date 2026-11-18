@@ -1,26 +1,136 @@
 /*
- * Design tokens: the single source of truth for colors, typography, radius and shadows.
- * Tailwind generates its utilities (bg-primary, text-lg, rounded-md...) from this block.
- * Never use arbitrary values (w-[137px], bg-[#fff]) in components: add a token here instead.
+ * Design tokens: única fonte de verdade para cores, tipografia, raios, sombras e breakpoints.
+ * O Tailwind gera as classes (bg-primary, text-headline-lg, rounded-md...) a partir deste bloco.
+ * Valores arbitrários (w-[137px], bg-[#fff]) são proibidos nos componentes: crie um token aqui.
+ * A documentação das escolhas está em docs/DESIGN.md.
  */
 @theme {
-  /* Disable Tailwind's default palette so only the tokens below exist. */
+  /* Desativa as escalas padrão do Tailwind: só existe o que está definido abaixo. */
   --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
 
-  --color-primary: #2563eb;
-  --color-primary-contrast: #ffffff;
-  --color-bg: #ffffff;
-  --color-surface: #f8fafc;
-  --color-text: #0f172a;
-  --color-text-muted: #64748b;
-  --color-border: #e2e8f0;
-  --color-danger: #dc2626;
-  --color-success: #16a34a;
+  /* ---------- Cores ---------- */
+  /* Os tokens levam o nome real da cor (família-nome). O uso de cada uma está em docs/DESIGN.md. */
+  --color-red-ruby: #9b111e; /* Vermelho Rubi: marca, botões, ícones de destaque */
+  --color-red-burgundy: #790e18; /* Bordô: hover, títulos, banners e véu das fotos */
+  --color-rose-vintage: #c67c82; /* Rosa Antigo: avatares, chips selecionados (nunca como texto) */
+  --color-beige-sand: #e3cab6; /* Bege: bordas, divisórias, chips e fundo de foto carregando */
+  --color-beige-light: #f2e7de; /* Bege claro: fundo das telas de trabalho */
+  --color-white: #ffffff; /* Branco: barra superior, cards, campos e modais */
+  --color-gray-ink: #1f1f1f; /* Tinta: texto principal */
+  --color-gray-dim: #5e5e5e; /* Cinza: texto secundário (legendas, datas, ajuda) */
 
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Estados (sempre com ícone e texto, nunca só a cor) */
+  --color-green-mint: #d9ead8; /* sucesso */
+  --color-yellow-wheat: #f1e2c7; /* aviso */
+  --color-rose-blush: #f4d4d1; /* erro */
+  --color-blue-mist: #d9e7f4; /* informação */
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
+  /* Véu sobre fotos (Bordô a 78%) */
+  --color-scrim-burgundy: rgb(121 14 24 / 0.78);
 
-  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.1);
+  /* ---------- Fontes ---------- */
+  --font-display: 'DM Serif Display', Georgia, serif; /* só o título do hero */
+  --font-heading: 'Plus Jakarta Sans Variable', system-ui, sans-serif; /* títulos */
+  --font-sans: 'Inter Variable', system-ui, sans-serif; /* texto, rótulos e números */
+
+  /* ---------- Tipografia ---------- */
+  /* Cada estilo define tamanho, altura de linha, peso e espaçamento entre letras. */
+  --text-display-hero: 4rem;
+  --text-display-hero--line-height: 1.04;
+  --text-display-hero--letter-spacing: -0.01em;
+  --text-display-hero--font-weight: 400;
+
+  --text-display-hero-mobile: 2.5rem;
+  --text-display-hero-mobile--line-height: 1.08;
+  --text-display-hero-mobile--font-weight: 400;
+
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 800;
+
+  --text-headline-lg: 2rem;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 1.5rem;
+  --text-headline-md--line-height: 1.25;
+  --text-headline-md--font-weight: 700;
+
+  --text-headline-sm: 1.25rem;
+  --text-headline-sm--line-height: 1.3;
+  --text-headline-sm--font-weight: 700;
+
+  --text-title-md: 1rem;
+  --text-title-md--line-height: 1.4;
+  --text-title-md--font-weight: 700;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-lg: 1rem;
+  --text-label-lg--line-height: 1.25;
+  --text-label-lg--font-weight: 600;
+
+  --text-label-md: 0.875rem;
+  --text-label-md--line-height: 1.25;
+  --text-label-md--font-weight: 600;
+
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1.33;
+  --text-label-sm--letter-spacing: 0.06em;
+  --text-label-sm--font-weight: 600;
+
+  --text-label-overline: 0.8125rem;
+  --text-label-overline--line-height: 1.3;
+  --text-label-overline--letter-spacing: 0.2em;
+  --text-label-overline--font-weight: 600;
+
+  --text-numeric-lg: 1.75rem;
+  --text-numeric-lg--line-height: 1.2;
+  --text-numeric-lg--font-weight: 700;
+
+  --text-numeric-md: 1rem;
+  --text-numeric-md--line-height: 1.4;
+  --text-numeric-md--font-weight: 600;
+
+  /* ---------- Raios (escala de 4 px; `rounded-full` já existe no Tailwind) ---------- */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* ---------- Sombras ---------- */
+  --shadow-sm: 0 2px 4px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 8px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 8px 16px rgb(0 0 0 / 0.12);
+  --shadow-xl: 0 12px 24px rgb(0 0 0 / 0.14);
+
+  /* ---------- Breakpoints: celular < 640, tablet 640-1023, desktop >= 1024 ---------- */
+  --breakpoint-sm: 40rem;
+  --breakpoint-lg: 64rem;
+
+  /* Largura máxima do conteúdo (classe max-w-content) */
+  --container-content: 75rem;
+}
+
+/* Algarismos tabulares: valores em dinheiro e contagens ficam alinhados em colunas. */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
 }

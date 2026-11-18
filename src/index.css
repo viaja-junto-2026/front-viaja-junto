@@ -1,8 +1,26 @@
 @import 'tailwindcss';
+@import '@fontsource/dm-serif-display/400.css';
+@import '@fontsource/dm-serif-display/400-italic.css';
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/inter';
 @import './styles/tokens.css';
 
 @layer base {
   body {
-    @apply bg-bg font-sans text-text;
+    @apply bg-beige-light font-sans text-body-md text-gray-ink;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+
+  /* Anel de foco visível e consistente em todos os elementos interativos. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-red-ruby;
   }
 }
