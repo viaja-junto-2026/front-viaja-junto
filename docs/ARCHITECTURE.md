@@ -10,18 +10,21 @@ SPA em React que consome a API do back-end (T2, submodule em `backend/`). Todo a
 
 Parte das ferramentas (pnpm, ESLint, Prettier, Vitest e o pipeline de CI) foi reaproveitada de um projeto anterior do grupo (AGES 2), porque já conhecemos a configuração e ela já foi validada.
 
-| Biblioteca                                            | Para que serve           | Por que escolhemos                                                                                               |
-| ----------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| React, Vite, TypeScript                               | Base do projeto          | Exigidos pelo enunciado. O Vite dá build e HMR rápidos; o TS evita erros de contrato com a API.                  |
-| Tailwind CSS v4                                       | Estilos                  | Os tokens ficam em um único bloco `@theme`, e as classes são geradas a partir dele (ver "Design tokens").        |
-| pnpm                                                  | Gerenciador de pacotes   | Instalação rápida, lockfile estrito (`--frozen-lockfile`) e `pnpm audit` usado no CI.                            |
-| ESLint, typescript-eslint, plugins de React           | Lint                     | Padrão do ecossistema. Também aplica a regra que proíbe valores soltos de estilo.                                |
-| Prettier, eslint-config-prettier                      | Formatação               | Formatação única para o time, sem conflito com o ESLint.                                                         |
-| Vitest, Testing Library, jsdom, `@vitest/coverage-v8` | Testes e cobertura       | Vitest usa a mesma config do Vite. Testing Library testa pelo comportamento do usuário. Cobertura mínima de 70%. |
-| jiti                                                  | Ler `eslint.config.ts`   | Permite a configuração do ESLint em TypeScript, sem nenhum arquivo JS no projeto.                                |
-| nginx                                                 | Servir o build no Docker | Imagem pequena e fallback para rotas da SPA.                                                                     |
-| openapi-typescript                                    | Gerar tipos do contrato  | Gera só tipos (sem código em runtime) a partir do OpenAPI do back-end, então o TS acusa qualquer divergência.    |
-| openapi-fetch                                         | Cliente HTTP tipado      | Cliente leve (sobre `fetch`) que usa os tipos gerados; não adiciona dependências pesadas.                        |
+| Biblioteca escolhemos | Para que serve | Por que
+|
+---------------------------------------------------------------------------------------------------------------------------------------- |
+| React, Vite, TypeScript | Base do projeto | Exigidos pelo enunciado. O Vite dá build e HMR rápidos; o TS evita erros de contrato com a API. |
+| Tailwind CSS v4 | Estilos | Os tokens ficam em um único bloco `@theme`, e as classes são geradas a partir dele (ver "Design tokens"). |
+| pnpm | Gerenciador de pacotes | Instalação rápida, lockfile estrito (`--frozen-lockfile`) e `pnpm audit` usado no CI. |
+| ESLint, typescript-eslint, plugins de React | Lint | Padrão do ecossistema. Também aplica a regra que proíbe valores soltos de estilo. |
+| Prettier, eslint-config-prettier | Formatação | Formatação única para o time, sem conflito com o ESLint. |
+| Vitest, Testing Library, jsdom, `@vitest/coverage-v8` | Testes e cobertura | Vitest usa a mesma config do Vite. Testing Library testa pelo comportamento do usuário. Cobertura mínima de 70%. |
+| `@fontsource` (DM Serif Display, Plus Jakarta Sans, Inter) | Fontes da interface | Fontes do design system hospedadas no projeto: sem requisição ao Google Fonts, funcionam offline e no Docker. |
+| lucide-react | Ícones | Traço limpo e arredondado que combina com o design, com os ícones de viagem necessários, tipado e importado ícone a ícone (bundle leve). |
+| jiti | Ler `eslint.config.ts` | Permite a configuração do ESLint em TypeScript, sem nenhum arquivo JS no projeto. |
+| nginx | Servir o build no Docker | Imagem pequena e fallback para rotas da SPA. |
+| openapi-typescript | Gerar tipos do contrato | Gera só tipos (sem código em runtime) a partir do OpenAPI do back-end, então o TS acusa qualquer divergência. |
+| openapi-fetch | Cliente HTTP tipado | Cliente leve (sobre `fetch`) que usa os tipos gerados; não adiciona dependências pesadas. |
 
 Bibliotecas que ainda vamos adicionar (roteador, etc.) devem ser registradas nesta tabela com a justificativa.
 
@@ -57,7 +60,7 @@ Para atualizar o contrato, se o back-end mudar: gerar um novo `openapi.json`, co
 
 ## Design tokens e estilos
 
-Cores, fontes, raios e sombras ficam somente em `src/styles/tokens.css` (bloco `@theme`). A paleta padrão do Tailwind está desativada, então só existem as cores definidas ali. O ESLint bloqueia valores arbitrários (`w-[137px]`, `bg-[#fff]`) e cores hexadecimais soltas.
+Cores, fontes, estilos de texto, raios, sombras e breakpoints ficam somente em `src/styles/tokens.css` (bloco `@theme`). As escalas padrão do Tailwind estão desativadas, então só existe o que foi definido ali. O ESLint bloqueia valores arbitrários (`w-[137px]`, `bg-[#fff]`) e cores hexadecimais soltas. As escolhas visuais (paleta, tipografia, layout responsivo e componentes) estão documentadas em [DESIGN.md](DESIGN.md).
 
 ## Componentes e hooks
 
@@ -83,9 +86,12 @@ _A definir._
 
 ## Decisões
 
-| Data       | Decisão                                     | Motivo                                        |
-| ---------- | ------------------------------------------- | --------------------------------------------- |
-| 2026-11-17 | Tailwind v4 com tokens em `@theme`          | Tokens centralizados e verificáveis por lint  |
-| 2026-11-17 | Mocks só em testes; app usa o back-end real | Requisito do professor                        |
-| 2026-11-17 | Cobertura mínima de 70%                     | Requisito do professor                        |
-| 2026-11-17 | openapi-typescript + openapi-fetch          | Só tipos gerados; serviços e hooks são nossos |
+| Data       | Decisão                                     | Motivo                                                 |
+| ---------- | ------------------------------------------- | ------------------------------------------------------ |
+| 2026-11-17 | Tailwind v4 com tokens em `@theme`          | Tokens centralizados e verificáveis por lint           |
+| 2026-11-17 | Mocks só em testes; app usa o back-end real | Requisito do professor                                 |
+| 2026-11-17 | Cobertura mínima de 70%                     | Requisito do professor                                 |
+| 2026-11-17 | openapi-typescript + openapi-fetch          | Só tipos gerados; serviços e hooks são nossos          |
+| 2026-11-18 | Paleta rubi, bordô e rosa antigo sobre bege | Identidade visual escolhida pelo grupo (DESIGN.md)     |
+| 2026-11-18 | Fontes hospedadas com `@fontsource`         | Sem dependência do Google Fonts em tempo de execução   |
+| 2026-11-18 | Ícones com `lucide-react`                   | Estilo combina com o design; ícones de viagem cobertos |
