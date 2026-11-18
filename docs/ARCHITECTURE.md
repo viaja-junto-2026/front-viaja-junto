@@ -32,6 +32,7 @@ Bibliotecas que ainda vamos adicionar devem ser registradas nesta tabela com a j
 
 ```
 src/
+  auth/         sessão do usuário (AuthProvider, useAuth, RequireAuth)
   components/   componentes de UI reutilizáveis
     layout/     barra superior (AppBar), barra inferior (BottomNav) e itens de navegação
   hooks/        hooks customizados
@@ -56,6 +57,17 @@ backend/        submodule do back-end (somente leitura)
 - **Erros:** uma rota que quebra mostra o `ErrorPage` dentro do layout, sem perder a navegação. Endereço inexistente mostra o `NotFoundPage`.
 - **Como adicionar uma tela:** crie a página em `src/pages/`, troque o componente provisório da rota em `routes.tsx` e, se a rota for nova, acrescente o caminho em `paths.ts`. As páginas ainda sem conteúdo usam o `ComingSoon` e devem ser substituídas pela issue da tela.
 - **Testes de navegação:** use `createMemoryRouter(routes, { initialEntries: [...] })` (ver `src/routes/routes.test.tsx`).
+
+## Autenticação
+
+O login é só com Google (ver `docs/SCOPE.md`). Esta base cuida da sessão; as telas de login e de retorno usam as peças abaixo.
+
+- **Token:** guardado em `localStorage` junto com o horário de expiração (`expires_in`), em `src/services/session.ts`. Assim a sessão sobrevive a recarregar a página, mas um token expirado nunca é usado. O token dura cerca de 1 hora e o React escapa o conteúdo por padrão (não usamos `dangerouslySetInnerHTML`), o que reduz o risco de XSS roubar o token. O token nunca vai para logs nem para a URL depois do login.
+- **Chamadas:** o `apiClient` tem um middleware que envia `Authorization: Bearer <token>` quando há sessão. Se a API responde **401**, a sessão é descartada e a interface é avisada.
+- **Estado:** `AuthProvider` (em `App.tsx`) expõe `useAuth()` com `status` (`loading`, `authenticated` ou `unauthenticated`), `user`, `signIn(token, expiresInSeconds)` e `signOut()`. Com token guardado, o provider confirma o usuário em `GET /auth/me` antes de liberar o app.
+- **Rotas privadas:** `RequireAuth` envolve as rotas que exigem login (`/trips*`, `/join`, `/notifications` e `/profile`). Sem sessão, leva para `/login` e guarda a página pedida com `saveRedirectTarget`; depois do login, a tela de retorno lê o destino com `consumeRedirectTarget`. Só caminhos internos são aceitos, para ninguém ser levado a outro site.
+- **Sair:** `signOut()` chama `POST /auth/logout` (invalida os tokens do usuário em todos os dispositivos) e descarta o token mesmo que a chamada falhe.
+- **Testes:** use `AuthContext.Provider` com `makeAuthValue()` (em `src/test/auth.ts`) para simular usuário logado, visitante ou carregando.
 
 ## Camada de API
 
@@ -98,13 +110,14 @@ _A definir._
 
 ## Decisões
 
-| Data       | Decisão                                          | Motivo                                                           |
-| ---------- | ------------------------------------------------ | ---------------------------------------------------------------- |
-| 2026-11-17 | Tailwind v4 com tokens em `@theme`               | Tokens centralizados e verificáveis por lint                     |
-| 2026-11-17 | Mocks só em testes; app usa o back-end real      | Requisito do professor                                           |
-| 2026-11-17 | Cobertura mínima de 70%                          | Requisito do professor                                           |
-| 2026-11-17 | openapi-typescript + openapi-fetch               | Só tipos gerados; serviços e hooks são nossos                    |
-| 2026-11-18 | Paleta rubi, bordô e rosa antigo sobre bege      | Identidade visual escolhida pelo grupo (DESIGN.md)               |
-| 2026-11-18 | Fontes hospedadas com `@fontsource`              | Sem dependência do Google Fonts em tempo de execução             |
-| 2026-11-18 | Ícones com `lucide-react`                        | Estilo combina com o design; ícones de viagem cobertos           |
-| 2026-11-18 | Rotas com react-router e um layout compartilhado | Navegação única e responsiva; cada tela só preenche a sua página |
+| Data       | Decisão                                          | Motivo                                                                                     |
+| ---------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| 2026-11-17 | Tailwind v4 com tokens em `@theme`               | Tokens centralizados e verificáveis por lint                                               |
+| 2026-11-17 | Mocks só em testes; app usa o back-end real      | Requisito do professor                                                                     |
+| 2026-11-17 | Cobertura mínima de 70%                          | Requisito do professor                                                                     |
+| 2026-11-17 | openapi-typescript + openapi-fetch               | Só tipos gerados; serviços e hooks são nossos                                              |
+| 2026-11-18 | Paleta rubi, bordô e rosa antigo sobre bege      | Identidade visual escolhida pelo grupo (DESIGN.md)                                         |
+| 2026-11-18 | Fontes hospedadas com `@fontsource`              | Sem dependência do Google Fonts em tempo de execução                                       |
+| 2026-11-18 | Ícones com `lucide-react`                        | Estilo combina com o design; ícones de viagem cobertos                                     |
+| 2026-11-18 | Rotas com react-router e um layout compartilhado | Navegação única e responsiva; cada tela só preenche a sua página                           |
+| 2026-11-18 | Token da sessão em localStorage com expiração    | Sessão sobrevive ao recarregar e nunca usa token vencido; risco de XSS reduzido pelo React |
