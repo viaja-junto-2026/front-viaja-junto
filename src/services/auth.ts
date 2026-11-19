@@ -1,4 +1,5 @@
 import { env } from '../config/env'
+import { unwrap } from './apiError'
 import { apiClient } from './apiClient'
 import type { components } from './generated/schema'
 
@@ -12,19 +13,12 @@ export function getGoogleLoginUrl(): string {
   return `${env.apiUrl}/api/auth/google`
 }
 
-/** Usuário dono do token atual. */
+/** Usuário dono do token atual. Lança `ApiError` se a API recusar. */
 export async function getCurrentUser(): Promise<User> {
-  const { data, response } = await apiClient.GET('/api/auth/me')
-  if (!data) {
-    throw new Error(`Failed to load the current user (HTTP ${response.status})`)
-  }
-  return data
+  return unwrap(await apiClient.GET('/api/auth/me'))
 }
 
 /** Encerra a sessão no back-end, invalidando os tokens do usuário em todos os dispositivos. */
 export async function logout(): Promise<void> {
-  const { response } = await apiClient.POST('/api/auth/logout')
-  if (!response.ok) {
-    throw new Error(`Failed to sign out (HTTP ${response.status})`)
-  }
+  unwrap(await apiClient.POST('/api/auth/logout'))
 }

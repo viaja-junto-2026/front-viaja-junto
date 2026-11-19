@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Plane } from 'lucide-react'
 import { describe, expect, it, vi } from 'vitest'
+import { ApiError } from '../../services/apiError'
 import { Button } from '../ui/Button'
 import { EmptyState } from './EmptyState'
 import { ErrorState } from './ErrorState'
@@ -154,6 +155,34 @@ describe('QueryState', () => {
     expect(screen.getByText('Falhou, tente de novo.')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'Tentar de novo' }))
     expect(onRetry).toHaveBeenCalledOnce()
+  })
+
+  it('translates the error from the hook into a Portuguese message', () => {
+    const { rerender } = render(
+      <QueryState isLoading={false} isError error={ApiError.fromResponse(404)}>
+        Conteúdo
+      </QueryState>,
+    )
+    expect(screen.getByText('Não encontramos o que você procurou.')).toBeInTheDocument()
+
+    rerender(
+      <QueryState isLoading={false} isError error={new TypeError('Failed to fetch')}>
+        Conteúdo
+      </QueryState>,
+    )
+    expect(screen.getByText(/Sem conexão com o servidor/)).toBeInTheDocument()
+
+    rerender(
+      <QueryState
+        isLoading={false}
+        isError
+        error={ApiError.fromResponse(404)}
+        errorMessage="Mensagem da tela"
+      >
+        Conteúdo
+      </QueryState>,
+    )
+    expect(screen.getByText('Mensagem da tela')).toBeInTheDocument()
   })
 
   it('shows the empty state, default or custom', () => {

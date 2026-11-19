@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { getErrorMessage } from '../../utils/errorMessages'
 import { EmptyState } from './EmptyState'
 import { ErrorState } from './ErrorState'
 import { LoadingSkeleton } from './LoadingSkeleton'
@@ -10,7 +11,9 @@ type QueryStateProps = {
   isEmpty?: boolean
   /** Refaz a chamada: ligado ao botão "Tentar de novo". */
   onRetry?: () => void
-  /** Mensagem de erro em português (opcional). */
+  /** O erro do hook: vira uma mensagem em português (401, 404, rede...) com `getErrorMessage`. */
+  error?: unknown
+  /** Mensagem de erro em português; tem prioridade sobre a gerada a partir de `error`. */
   errorMessage?: string
   /** Substitui o skeleton padrão. */
   loading?: ReactNode
@@ -29,13 +32,17 @@ export function QueryState({
   isError,
   isEmpty = false,
   onRetry,
+  error,
   errorMessage,
   loading,
   empty,
   children,
 }: QueryStateProps) {
   if (isLoading) return <>{loading ?? <LoadingSkeleton />}</>
-  if (isError) return <ErrorState message={errorMessage} onRetry={onRetry} />
+  if (isError) {
+    const message = errorMessage ?? (error ? getErrorMessage(error) : undefined)
+    return <ErrorState message={message} onRetry={onRetry} />
+  }
   if (isEmpty) return <>{empty ?? <EmptyState title="Nada por aqui ainda" />}</>
   return <>{children}</>
 }
