@@ -26,6 +26,11 @@ Parte das ferramentas (pnpm, ESLint, Prettier, Vitest e o pipeline de CI) foi re
 | openapi-fetch                                              | Cliente HTTP tipado      | Cliente leve (sobre `fetch`) que usa os tipos gerados; não adiciona dependências pesadas.                                                                                        |
 | react-router                                               | Rotas e navegação        | Padrão de mercado para SPAs em React: rotas aninhadas (layout compartilhado), links com item ativo (`aria-current`), rota de erro e roteador em memória para testar a navegação. |
 
+| clsx | Juntar classes condicionais | Minúscula (menos de 1 KB) e sem dependências. Evita montar strings de classe na mão. |
+| class-variance-authority (cva) | Variantes dos componentes | Declara as variantes (`primary`, `secondary`...) em um objeto tipado: o TypeScript acusa variante inexistente e o estilo de cada uma fica num lugar só. |
+
+Não usamos `tailwind-merge`: os componentes não sobrescrevem classes uns dos outros, e as escalas de design estão fechadas pelos tokens, então não há conflito de classes a resolver.
+
 Bibliotecas que ainda vamos adicionar devem ser registradas nesta tabela com a justificativa.
 
 ## Estrutura de pastas
@@ -34,6 +39,7 @@ Bibliotecas que ainda vamos adicionar devem ser registradas nesta tabela com a j
 src/
   auth/         sessão do usuário (AuthProvider, useAuth, RequireAuth)
   components/   componentes de UI reutilizáveis
+    ui/         componentes base do design system (Button, Input, Card, Modal...)
     layout/     barra superior (AppBar), barra inferior (BottomNav) e itens de navegação
   hooks/        hooks customizados
   layouts/      layouts de tela (AppLayout: barra superior, conteúdo e barra inferior)
@@ -43,6 +49,7 @@ src/
   config/       configuração (env.ts lê as variáveis de ambiente)
   styles/       design tokens (tokens.css)
   types/        tipos compartilhados
+  utils/        funções puras compartilhadas (getInitials...)
   test/         setup dos testes
 docker/         arquivos de apoio do Docker (nginx.conf)
 docs/           documentação
@@ -88,7 +95,24 @@ Cores, fontes, estilos de texto, raios, sombras e breakpoints ficam somente em `
 
 ## Componentes e hooks
 
-_A definir._
+Os componentes base do design system ficam em `src/components/ui/`. Cada tela monta a interface com eles, sem repetir estilos.
+
+| Componente                         | Uso                                                                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `Button`                           | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira) e `pill`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
+| `Input`, `Textarea`, `Select`      | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                      |
+| `Card`, `CardCompact`, `CardTitle` | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                        |
+| `Badge`, `Chip`                    | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                |
+| `Avatar`, `AvatarGroup`            | Iniciais e avatares empilhados com "+N"                                                                                       |
+| `Alert`                            | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                              |
+| `Tabs`, `ProgressBar`              | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                       |
+| `Modal`, `ConfirmDialog`           | Janela com foco preso, Esc e rolagem travada; confirmação de ação destrutiva                                                  |
+
+- **Como compor estilos:** `cva` declara as variantes e `clsx` junta classes condicionais. Só entram classes geradas pelos tokens (o ESLint barra valores arbitrários).
+- **Acessibilidade:** elementos semânticos (`button`, `label`, `dialog`), foco visível por teclado (`focusRing`, em `ui/focus.ts`) e o estado nunca depende só da cor.
+- **Ícones:** `lucide-react`, com `aria-hidden="true"` quando decorativos.
+- **Modal:** feito sem biblioteca (poucas linhas) para não depender de um pacote só para prender o foco. Sempre use `ConfirmDialog` antes de excluir ou remover algo.
+- **Hooks:** a pasta `src/hooks/` recebe os hooks de dados (issue de estados compartilhados).
 
 ## Tratamento de erro, carregamento e estado vazio
 
@@ -121,3 +145,4 @@ _A definir._
 | 2026-11-18 | Ícones com `lucide-react`                        | Estilo combina com o design; ícones de viagem cobertos                                     |
 | 2026-11-18 | Rotas com react-router e um layout compartilhado | Navegação única e responsiva; cada tela só preenche a sua página                           |
 | 2026-11-18 | Token da sessão em localStorage com expiração    | Sessão sobrevive ao recarregar e nunca usa token vencido; risco de XSS reduzido pelo React |
+| 2026-11-18 | Componentes com `cva` + `clsx`, modal próprio    | Variantes tipadas, sem `tailwind-merge` e sem biblioteca só para o modal                   |

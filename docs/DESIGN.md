@@ -7,13 +7,15 @@ colors:
   red-burgundy: '#6a0d16'
   white: '#FFFFFF'
   rose-vintage: '#C67C82'
+  rose-dusty: '#B5827E'
   gray-ink: '#1F1F1F'
   beige-sand: '#E3CAB6'
-  beige-light: '#F2E7DE'
+  beige-light: '#EDE6DF'
   gray-dim: '#5E5E5E'
-  green-mint: '#D9EAD8'
+  brown-espresso: '#36211D'
+  green-mint: '#BFDCBC'
   yellow-wheat: '#f4d08d'
-  rose-blush: '#F4D4D1'
+  rose-blush: '#F0B6B0'
   blue-mist: '#b6d8f7'
   scrim-burgundy: 'rgba(121, 14, 24, 0.78)'
 typography:
@@ -169,29 +171,32 @@ components:
     backgroundColor: '{colors.red-burgundy}'
     textColor: '{colors.white}'
   button-secondary:
-    backgroundColor: '{colors.white}'
-    textColor: '{colors.red-ruby}'
+    backgroundColor: '{colors.rose-dusty}'
+    textColor: '{colors.brown-espresso}'
     typography: '{typography.label-lg}'
     rounded: '{rounded.md}'
     height: 48px
     padding: 24px
   button-secondary-hover:
-    backgroundColor: '{colors.beige-sand}'
-    textColor: '{colors.red-burgundy}'
+    backgroundColor: '{colors.rose-vintage}'
+    textColor: '{colors.brown-espresso}'
   button-compact:
-    backgroundColor: '{colors.beige-sand}'
+    backgroundColor: '{colors.rose-vintage}'
     textColor: '{colors.gray-ink}'
     typography: '{typography.label-md}'
     rounded: '{rounded.sm}'
     height: 36px
     padding: 12px
   button-danger:
-    backgroundColor: '{colors.white}'
-    textColor: '{colors.red-burgundy}'
+    backgroundColor: '{colors.rose-dusty}'
+    textColor: '{colors.brown-espresso}'
     typography: '{typography.label-lg}'
     rounded: '{rounded.md}'
     height: 48px
     padding: 24px
+  button-danger-hover:
+    backgroundColor: '{colors.rose-vintage}'
+    textColor: '{colors.brown-espresso}'
   button-pill:
     backgroundColor: '{colors.red-ruby}'
     textColor: '{colors.white}'
@@ -384,16 +389,18 @@ A paleta tem **três cores de marca** (rubi, bordô e rosa antigo), **dois beges
 
 Os tokens levam o **nome real da cor**, no formato `família-nome` (`red-ruby`, `rose-vintage`...), e não o papel que ela exerce. O uso de cada cor está na coluna "Uso". Em código, a classe é a do próprio nome: `bg-red-ruby`, `text-red-burgundy`, `border-beige-sand`. Se a marca mudar de cor, o token e a classe precisam ser renomeados junto.
 
-| Token          | Valor     | Nome        | Uso                                                                                                               |
-| -------------- | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| `red-ruby`     | `#9B111E` | Rubi        | Cor da marca: botões principais, ícones de destaque, barra de progresso, aba ativa, anel de foco, itálico do hero |
-| `red-burgundy` | `#790E18` | Bordô       | Hover dos botões, títulos de página e de card, links, banners de destaque e véu das fotos                         |
-| `rose-vintage` | `#C67C82` | Rosa Antigo | Avatares, chips selecionados e ilustrações. **Nunca como cor de texto**                                           |
-| `beige-sand`   | `#E3CAB6` | Bege        | Bordas, divisórias, chips, trilha de progresso e fundo de foto enquanto carrega                                   |
-| `beige-light`  | `#F2E7DE` | Bege claro  | Fundo das telas de trabalho, atrás dos cards (versão mais clara do bege)                                          |
-| `white`        | `#FFFFFF` | Branco      | Barra superior, telas de descoberta, cards, busca, campos, modais e menus                                         |
-| `gray-ink`     | `#1F1F1F` | Tinta       | Todo o texto principal                                                                                            |
-| `gray-dim`     | `#5E5E5E` | Cinza       | Texto secundário: legendas, datas, textos de ajuda                                                                |
+| Token            | Valor     | Nome        | Uso                                                                                                               |
+| ---------------- | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------- |
+| `red-ruby`       | `#9B111E` | Rubi        | Cor da marca: botões principais, ícones de destaque, barra de progresso, aba ativa, anel de foco, itálico do hero |
+| `red-burgundy`   | `#790E18` | Bordô       | Hover dos botões, títulos de página e de card, links, banners de destaque e véu das fotos                         |
+| `rose-vintage`   | `#C67C82` | Rosa Antigo | Avatares, chips selecionados e ilustrações. **Nunca como cor de texto**                                           |
+| `rose-dusty`     | `#B5827E` | Rosa fosco  | Botões `secondary` e `danger` (texto `brown-espresso`, 4,6:1). **Nunca como cor de texto**                        |
+| `brown-espresso` | `#36211D` | Marrom      | Texto dos botões `secondary` e `danger` sobre `rose-dusty`                                                        |
+| `beige-sand`     | `#E3CAB6` | Bege        | Bordas, divisórias, chips, trilha de progresso e fundo de foto enquanto carrega                                   |
+| `beige-light`    | `#EDE6DF` | Bege claro  | Fundo das telas de trabalho, atrás dos cards (versão mais clara do bege)                                          |
+| `white`          | `#FFFFFF` | Branco      | Barra superior, telas de descoberta, cards, busca, campos, modais e menus                                         |
+| `gray-ink`       | `#1F1F1F` | Tinta       | Todo o texto principal                                                                                            |
+| `gray-dim`       | `#5E5E5E` | Cinza       | Texto secundário: legendas, datas, textos de ajuda                                                                |
 
 **Estados** (`green-mint`, `yellow-wheat`, `rose-blush`, `blue-mist`) são só fundos de alertas e badges, sempre com texto `gray-ink` e um **ícone + texto** que diga o estado. A marca é vermelha, então **a cor nunca é o único sinal**: erro e ação perigosa sempre vêm com ícone, palavra ("Erro", "Excluir") e, nas ações destrutivas, confirmação.
 
@@ -403,19 +410,20 @@ Status da viagem (FR07): **Planejando** usa `blue-mist`, **Confirmada** usa `gre
 
 Valores medidos entre as cores da paleta:
 
-| Combinação                                         | Contraste      | Pode usar?                                 |
-| -------------------------------------------------- | -------------- | ------------------------------------------ |
-| Branco sobre Rubi                                  | 8,4:1          | Sim, qualquer tamanho                      |
-| Branco sobre Bordô                                 | 11,1:1         | Sim, qualquer tamanho                      |
-| Rubi como texto sobre branco                       | 8,4:1          | Sim                                        |
-| Rubi como texto sobre bege claro                   | 6,9:1          | Sim                                        |
-| Rubi como texto sobre bege (`beige-sand`)          | 5,4:1          | Sim                                        |
-| Bordô como texto sobre branco / bege claro         | 11,1:1 / 9,1:1 | Sim                                        |
-| Tinta sobre Rosa Antigo                            | 5,2:1          | Sim (é o par obrigatório do rosa)          |
-| Branco sobre Rosa Antigo                           | 3,2:1          | **Não**: abaixo de 4,5:1                   |
-| Rosa Antigo como texto (sobre branco / bege claro) | 3,2:1 / 2,6:1  | **Não**                                    |
-| Cinza (`gray-dim`) sobre branco / bege claro       | 6,5:1 / 5,3:1  | Sim                                        |
-| Cinza (`gray-dim`) sobre bege (`beige-sand`)       | 4,1:1          | **Não** para texto pequeno: use `gray-ink` |
+| Combinação                                                | Contraste      | Pode usar?                                                      |
+| --------------------------------------------------------- | -------------- | --------------------------------------------------------------- |
+| Branco sobre Rubi                                         | 8,4:1          | Sim, qualquer tamanho                                           |
+| Branco sobre Bordô                                        | 11,1:1         | Sim, qualquer tamanho                                           |
+| Rubi como texto sobre branco                              | 8,4:1          | Sim                                                             |
+| Rubi como texto sobre bege claro                          | 6,9:1          | Sim                                                             |
+| Rubi como texto sobre bege (`beige-sand`)                 | 5,4:1          | Sim                                                             |
+| Bordô como texto sobre branco / bege claro                | 11,1:1 / 9,1:1 | Sim                                                             |
+| Tinta sobre Rosa Antigo                                   | 5,2:1          | Sim (é o par obrigatório do rosa)                               |
+| Branco sobre Rosa Antigo                                  | 3,2:1          | **Não**: abaixo de 4,5:1                                        |
+| Marrom (`brown-espresso`) sobre Rosa fosco (`rose-dusty`) | 4,6:1          | Sim, qualquer tamanho (usado nos botões `secondary` e `danger`) |
+| Rosa Antigo como texto (sobre branco / bege claro)        | 3,2:1 / 2,6:1  | **Não**                                                         |
+| Cinza (`gray-dim`) sobre branco / bege claro              | 6,5:1 / 5,3:1  | Sim                                                             |
+| Cinza (`gray-dim`) sobre bege (`beige-sand`)              | 4,1:1          | **Não** para texto pequeno: use `gray-ink`                      |
 
 ## Typography
 
@@ -525,7 +533,7 @@ Fotos seguem o raio do card que as contém. A foto do hero é a exceção: usa u
 
 Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de cada grupo.
 
-- **Botões:** `button-primary` (Rubi, texto branco; hover Bordô) para **uma** ação principal por tela ou card, como "Nova viagem". `button-secondary` (branco, borda de 1 px e texto Rubi) para ações alternativas. `button-compact` (bege, 36 px) para ações dentro de listas e cards. `button-danger` (branco, borda e texto Bordô, com ícone de lixeira) só para remover ou sair, **sempre com confirmação**: como a marca é vermelha, o perigo não pode depender só da cor. Ícone à esquerda do texto, 20 px, gap de 8 px. Desabilitado: opacidade de 40% e cursor padrão.
+- **Botões:** `button-primary` (Rubi, texto branco; hover Bordô) para **uma** ação principal por tela ou card, como "Nova viagem". `button-secondary` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`) para ações alternativas. `button-compact` (`rose-vintage`, texto tinta; hover `rose-dusty`, 36 px) para ações dentro de listas e cards. `button-danger` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`, com ícone de lixeira) só para remover ou sair, **sempre com confirmação**: como a marca é vermelha, o perigo não pode depender só da cor. Ícone à esquerda do texto, 20 px, gap de 8 px. Desabilitado: fundo `beige-sand` com texto `gray-ink`, opacidade de 60% e cursor "não permitido" (bem diferente de um botão ativo). Carregando: mantém a cor da variante, com opacidade de 70%.
 - **Campos (`input`):** rótulo acima, campo branco de 48 px com borda de 1 px em `beige-sand`, texto de ajuda abaixo. No foco, borda de 2 px em `red-ruby` mais anel de 3 px em `red-ruby` a 35%. No erro, borda em `red-burgundy`, ícone de alerta e uma mensagem que diga como corrigir.
 - **Cards:** `card` para conteúdo principal (viagem, resumo do orçamento) e `card-compact` para itens repetidos (atividade, despesa). Card clicável inteiro ganha `shadow-md` no hover e foco visível.
 - **Chips:** filtros e categorias de atividade (Passeio, Comida, Hospedagem, Transporte, Outros). `chip-selected` em Rosa Antigo com ícone de check e texto `gray-ink`.
@@ -560,7 +568,7 @@ Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de
 - Mostre ações de edição apenas para quem pode editar (OWNER e EDITOR); para VIEWER, a mesma tela em modo leitura.
 - Use fotos reais dos destinos (`photoUrl` da API) sempre que existirem; sem foto, use o bege `beige-sand` com o ícone do destino, nunca uma imagem genérica de banco de imagens.
 - Não use cores fora da paleta, gradientes chamativos ou sombras coloridas. O único gradiente permitido é o véu `scrim-burgundy`.
-- Não use Rosa Antigo como cor de texto, nem texto branco sobre ele.
+- Não use Rosa Antigo como cor de texto, nem texto branco sobre ele. Nos botões `secondary` e `danger` o fundo é `rose-dusty` com texto `brown-espresso`.
 - Não use o cinza (`gray-dim`) sobre o bege `beige-sand`.
 - Não use a serifa do hero fora do título do hero, nem crie mais de um hero por tela.
 - Não misture raios fora da escala (como 6 px ou 10 px) nem cantos retos em componentes interativos.

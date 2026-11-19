@@ -18,17 +18,19 @@
   --color-red-ruby: #9b111e; /* Vermelho Rubi: marca, botões, ícones de destaque */
   --color-red-burgundy: #790e18; /* Bordô: hover, títulos, banners e véu das fotos */
   --color-rose-vintage: #c67c82; /* Rosa Antigo: avatares, chips selecionados (nunca como texto) */
+  --color-rose-dusty: #b5827e; /* Rosa fosco: botões secundário e de perigo (texto Bordô) */
   --color-beige-sand: #e3cab6; /* Bege: bordas, divisórias, chips e fundo de foto carregando */
-  --color-beige-light: #f2e7de; /* Bege claro: fundo das telas de trabalho */
+  --color-beige-light: #ede6df; /* Bege claro: fundo das telas de trabalho */
   --color-white: #ffffff; /* Branco: barra superior, cards, campos e modais */
   --color-gray-ink: #1f1f1f; /* Tinta: texto principal */
   --color-gray-dim: #5e5e5e; /* Cinza: texto secundário (legendas, datas, ajuda) */
+  --color-brown-espresso: #36211d; /* Marrom: texto dos botões secundário e de perigo sobre rosa fosco */
 
   /* Estados (sempre com ícone e texto, nunca só a cor) */
-  --color-green-mint: #d9ead8; /* sucesso */
-  --color-yellow-wheat: #f1e2c7; /* aviso */
-  --color-rose-blush: #f4d4d1; /* erro */
-  --color-blue-mist: #d9e7f4; /* informação */
+  --color-green-mint: #bfdcbc; /* sucesso */
+  --color-yellow-wheat: #f4d08d; /* aviso */
+  --color-rose-blush: #f0b6b0; /* erro */
+  --color-blue-mist: #b6d8f7; /* informação */
 
   /* Véu sobre fotos (Bordô a 78%) */
   --color-scrim-burgundy: rgb(121 14 24 / 0.78);
