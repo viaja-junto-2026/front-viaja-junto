@@ -52,7 +52,7 @@ src/
   config/       configuração (env.ts lê as variáveis de ambiente)
   styles/       design tokens (tokens.css)
   types/        tipos compartilhados
-  utils/        funções puras compartilhadas (getInitials...)
+  utils/        funções puras compartilhadas (format, labels, errorMessages, getInitials...)
   test/         setup dos testes
 docker/         arquivos de apoio do Docker (nginx.conf)
 docs/           documentação
@@ -86,7 +86,7 @@ Todo acesso ao back-end fica em `src/services/`. Ela é gerada a partir do contr
 - `src/services/openapi.json`: cópia do contrato, gerada pelo script `openapi:generate` do back-end (`npm run openapi:generate`). Como o back-end não vai mudar e o submodule fixa a versão, a cópia fica no repositório.
 - `src/services/generated/schema.ts`: tipos gerados pelo `pnpm api:generate`. Não editar à mão; fica fora do lint, da formatação e da cobertura.
 - `src/services/apiClient.ts`: único cliente HTTP (`openapi-fetch`), com a URL vinda de `VITE_API_URL`.
-- Funções de serviço (uma por recurso) usam o `apiClient`. Hooks e telas chamam apenas essas funções, nunca o `fetch`.
+- Funções de serviço (uma por recurso) usam o `apiClient` e devolvem o resultado com `unwrap(...)`, que lança um `ApiError` quando a API falha. Hooks e telas chamam apenas essas funções, nunca o `fetch`.
 - O CI roda `pnpm api:generate` e falha se os tipos gerados estiverem desatualizados.
 - `VITE_API_URL` é só a origem (`http://localhost:3000`): as rotas do contrato já incluem o prefixo `/api`.
 
@@ -138,7 +138,7 @@ Toda tela que busca dados precisa tratar **carregando, erro e vazio**. Os blocos
 - `useQuery` (da própria biblioteca): busca um item ou uma lista simples.
 - `usePaginatedQuery`: lista com `page`, `limit` e filtros, no formato `{ data, meta }` da API. Mudar filtro ou `limit` volta para a página 1, e a página anterior fica na tela enquanto a nova carrega.
 - `useApiMutation`: criar, editar ou excluir; ao dar certo, refaz as buscas de `invalidateKeys`. O erro fica em `error` e `isError`.
-- Funções de serviço (`src/services/`) devem **lançar erro** quando a API falhar, para os hooks perceberem.
+- Funções de serviço (`src/services/`) devem **lançar erro** quando a API falhar, para os hooks perceberem: use `unwrap`, que lança o `ApiError`. Passe `error` ao `QueryState` para a mensagem sair em português.
 
 **Exemplo de uma tela de lista:**
 
@@ -177,6 +177,44 @@ const remove = useApiMutation({ mutationFn: deleteTrip, invalidateKeys: [['trips
 
 **Testes:** use `createQueryWrapper()` (em `src/test/query.tsx`) como `wrapper` do `render` ou `renderHook`. Ele cria um cache sem nova tentativa, para o erro aparecer na hora.
 
+## Formatação e erros da API
+
+Valores e mensagens padronizados, para todas as telas mostrarem a mesma coisa. Nunca formate na mão (`toFixed`, `toLocaleString` solto) nem escreva mensagens de erro de API na tela.
+
+**Formatação** (`src/utils/format.ts`, seguindo o `DESIGN.md`):
+
+| Função                            | Exemplo                                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `formatCurrency(1250)`            | `R$ 1.250,00` (orçamento e custo de atividade vêm em valor decimal)                                           |
+| `formatCurrencyFromCents(125000)` | `R$ 1.250,00` (**despesas** vêm em centavos)                                                                  |
+| `formatDate('2027-03-12')`        | `12 mar. 2027`                                                                                                |
+| `formatDateRange(início, fim)`    | `12 de mar. – 2 de abr. de 2027` (mesmo mês: `12 – 20 de mar. de 2027`; anos diferentes mostram os dois anos) |
+| `nightsBetween(início, fim)`      | número de noites (nunca negativo)                                                                             |
+| `daysUntil(data)`                 | dias até a data (`0` é hoje, negativo é passado)                                                              |
+
+As datas da API são dias de calendário e são tratadas em UTC, para o dia não mudar com o fuso do navegador. Uma data inválida vira `—`. Mostre valores com `numeric-*` e a classe `tabular`.
+
+**Nomes de domínio** (`src/utils/labels.ts`): `tripStatusLabels`, `destinationCategoryLabels`, `activityTypeLabels` e `memberRoleLabels` traduzem os valores da API (`BEACH`, `PLANNING`, `VIEWER`...) para a interface. O `Badge` já usa `tripStatusLabels`.
+
+**Erros da API:**
+
+- `ApiError` (`src/services/apiError.ts`) tem `status`, `message` (para quem desenvolve) e `issues`. Em um 422, `issues` e `fieldErrors` trazem um item por campo, com o texto em português, prontos para o formulário: `error.fieldErrors.name` vira "deve ter pelo menos 2 caracteres".
+- `unwrap(await apiClient.GET(...))` devolve os dados ou lança o `ApiError`. Toda função de serviço deve terminar assim.
+- `getErrorMessage(error)` (`src/utils/errorMessages.ts`) devolve a mensagem em português para o usuário: 401, 403, 404, 409, 422 (listando os campos), 429, erro do servidor e falha de rede (o `fetch` lança `TypeError`).
+
+```ts
+// serviço
+export async function getTrip(id: string) {
+  return unwrap(await apiClient.GET('/api/trips/{id}', { params: { path: { id } } }))
+}
+
+// formulário: erro por campo e mensagem geral
+const create = useApiMutation({ mutationFn: createTrip })
+const fieldErrors = create.error instanceof ApiError ? create.error.fieldErrors : {}
+// <Input label="Nome" error={fieldErrors.name} />
+// {create.isError && <Alert variant="error">{getErrorMessage(create.error)}</Alert>}
+```
+
 ## Testes
 
 - **Unitários e de componente:** Vitest + Testing Library. Mocks são permitidos apenas nos testes; a aplicação em si sempre usa o back-end real.
@@ -206,3 +244,4 @@ const remove = useApiMutation({ mutationFn: deleteTrip, invalidateKeys: [['trips
 | 2026-11-18 | Token da sessão em localStorage com expiração    | Sessão sobrevive ao recarregar e nunca usa token vencido; risco de XSS reduzido pelo React |
 | 2026-11-18 | Componentes com `cva` + `clsx`, modal próprio    | Variantes tipadas, sem `tailwind-merge` e sem biblioteca só para o modal                   |
 | 2026-11-18 | TanStack Query para buscas e mutações            | Cache, refetch e invalidação prontos; evita cada tela reescrever isso                      |
+| 2026-11-18 | `ApiError` + `unwrap` e textos de erro em pt-BR  | Toda tela mostra as mesmas mensagens; 422 devolve o erro por campo                         |
