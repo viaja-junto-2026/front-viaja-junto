@@ -1,38 +1,42 @@
-import { useEffect } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { LockKeyhole } from 'lucide-react'
+import { Outlet, useLocation } from 'react-router'
+import { EmptyState } from '../components/feedback/EmptyState'
+import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
+import { ButtonLink } from '../components/ui/ButtonLink'
 import { paths } from '../routes/paths'
 import { saveRedirectTarget } from '../services/session'
 import { useAuth } from './useAuth'
 
-/** Leva para o login e guarda a página pedida, para voltar a ela depois de entrar. */
-function RedirectToLogin() {
+/**
+ * Aviso para quem não entrou: a página continua dentro do layout (com a barra e a aba
+ * ativa) e o botão leva ao login, guardando a página pedida para voltar a ela depois.
+ */
+function SignInPrompt() {
   const location = useLocation()
-  const navigate = useNavigate()
 
-  useEffect(() => {
-    saveRedirectTarget(location.pathname + location.search + location.hash)
-    navigate(paths.login, { replace: true, state: { from: location } })
-  }, [location, navigate])
-
-  return null
+  return (
+    <EmptyState
+      icon={LockKeyhole}
+      title="Entre para continuar"
+      description="Esta página é só para quem tem conta. Entre com o Google para ver tudo o que é seu."
+      action={
+        <ButtonLink
+          to={paths.login}
+          state={{ from: location }}
+          onClick={() => saveRedirectTarget(location.pathname + location.search + location.hash)}
+        >
+          Entrar
+        </ButtonLink>
+      }
+    />
+  )
 }
 
 /** Guarda das rotas privadas: só mostra o conteúdo para quem está logado. */
 export function RequireAuth() {
   const { status } = useAuth()
 
-  if (status === 'loading') {
-    // Provisório: trocar pelo componente de carregamento da issue de estados compartilhados.
-    return (
-      <p role="status" className="py-8 text-body-md text-gray-dim">
-        Carregando...
-      </p>
-    )
-  }
-
-  if (status === 'unauthenticated') {
-    return <RedirectToLogin />
-  }
-
+  if (status === 'loading') return <LoadingSkeleton />
+  if (status === 'unauthenticated') return <SignInPrompt />
   return <Outlet />
 }

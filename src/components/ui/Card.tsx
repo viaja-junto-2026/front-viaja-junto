@@ -6,6 +6,7 @@ const cardStyles = cva('bg-white text-gray-ink', {
     size: {
       default: 'rounded-lg p-6',
       compact: 'rounded-sm p-4',
+      floating: 'rounded-lg p-4 shadow-xl',
     },
     interactive: {
       true: 'transition-shadow hover:shadow-md focus-within:shadow-md',
@@ -29,7 +30,7 @@ function CardBase({
   className,
   ...rest
 }: CardBaseProps & {
-  size: 'default' | 'compact'
+  size: 'default' | 'compact' | 'floating'
 }) {
   return <Tag className={cardStyles({ size, interactive, className })} {...rest} />
 }
@@ -42,6 +43,11 @@ export function Card(props: CardBaseProps) {
 /** Card compacto para itens repetidos (atividade, despesa). */
 export function CardCompact(props: CardBaseProps) {
   return <CardBase size="compact" {...props} />
+}
+
+/** Card que flutua sobre uma foto (resumo social, destaque), com sombra ampla. */
+export function FloatingCard(props: CardBaseProps) {
+  return <CardBase size="floating" {...props} />
 }
 
 /** Título de card em Bordô. */

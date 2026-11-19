@@ -518,14 +518,15 @@ Modais têm um véu `gray-ink` a 40% atrás. Sobre fotos, a legenda fica sobre o
 
 Formas **suaves e acolhedoras**, todas na escala de 4 px:
 
-| Classe         | Raio    | Uso                                                                                                        |
-| -------------- | ------- | ---------------------------------------------------------------------------------------------------------- |
-| `rounded-xs`   | 4 px    | Chips, badges                                                                                              |
-| `rounded-sm`   | 8 px    | Botões compactos, cards compactos, itens do menu                                                           |
-| `rounded-md`   | 12 px   | Botões principais e secundários, campos e alertas                                                          |
-| `rounded-lg`   | 16 px   | Cards principais, painéis, modais, cards de foto                                                           |
-| `rounded-xl`   | 24 px   | Banners e cards grandes de destaque (capa da viagem)                                                       |
-| `rounded-full` | círculo | Pílulas (botão do hero, busca, selos), círculos de ícone, botões circulares, avatares, barras de progresso |
+| Classe            | Raio    | Uso                                                                                                        |
+| ----------------- | ------- | ---------------------------------------------------------------------------------------------------------- |
+| `rounded-xs`      | 4 px    | Chips, badges                                                                                              |
+| `rounded-sm`      | 8 px    | Botões compactos, cards compactos, itens do menu                                                           |
+| `rounded-md`      | 12 px   | Botões principais e secundários, campos e alertas                                                          |
+| `rounded-lg`      | 16 px   | Cards principais, painéis, modais, cards de foto                                                           |
+| `rounded-xl`      | 24 px   | Banners e cards grandes de destaque (capa da viagem)                                                       |
+| `rounded-organic` | 96 px   | Só a foto do hero, com cantos grandes e assimétricos (`rounded-tl-organic rounded-br-organic`)             |
+| `rounded-full`    | círculo | Pílulas (botão do hero, busca, selos), círculos de ícone, botões circulares, avatares, barras de progresso |
 
 Fotos seguem o raio do card que as contém. A foto do hero é a exceção: usa um **recorte orgânico** (`clip-path` com curvas suaves), sem cantos retos à vista.
 

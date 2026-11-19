@@ -99,3 +99,13 @@ export function daysUntil(input: DateInput, now: Date = new Date()): number {
   const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
   return Math.round((toDayNumber(date) - today) / MS_PER_DAY)
 }
+
+const ratingFormat = new Intl.NumberFormat(LOCALE, {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+})
+
+/** Nota média com uma casa decimal e vírgula: `4,8`. */
+export function formatRating(value: number): string {
+  return ratingFormat.format(value)
+}
