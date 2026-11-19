@@ -26,3 +26,7 @@ Estas regras valem para todas as pessoas que trabalham neste repositório, human
    - **Se faltar um valor:** crie o token em `tokens.css` e use a classe gerada a partir dele.
    - Essa regra é verificada automaticamente pelo ESLint (`pnpm lint`) e o CI falha se for violada.
 6. **O submodule `backend/` é somente leitura.** Ele aponta para o repositório do back-end (`ViajaJunto/viaja-junto.server`). Não edite arquivos dentro dele neste repositório.
+7. **Componentes: use os existentes ou crie um novo, nunca algo solto.** Toda interface é montada com os componentes de `src/components/` (botões, campos, cards, alertas, estados de carregamento, erro e vazio etc.).
+   - **Antes de escrever uma tela:** veja se já existe um componente que resolve (`src/components/ui/` e os demais). Se existir, use-o.
+   - **Se faltar algo:** crie um componente novo e reutilizável em `src/components/`, com tipos e testes, e use-o na tela.
+   - **Proibido:** repetir na página um botão, campo, card, selo ou aviso montado "na mão" com `div`, `button` ou `input` estilizados, e copiar e colar estilos de um componente.

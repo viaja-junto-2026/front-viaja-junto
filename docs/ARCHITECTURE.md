@@ -29,6 +29,8 @@ Parte das ferramentas (pnpm, ESLint, Prettier, Vitest e o pipeline de CI) foi re
 | clsx | Juntar classes condicionais | Minúscula (menos de 1 KB) e sem dependências. Evita montar strings de classe na mão. |
 | class-variance-authority (cva) | Variantes dos componentes | Declara as variantes (`primary`, `secondary`...) em um objeto tipado: o TypeScript acusa variante inexistente e o estilo de cada uma fica num lugar só. |
 
+| @tanstack/react-query | Busca de dados, cache e mutações | Cache, `refetch`, estados de carregamento e erro e invalidação depois de criar, editar ou excluir já vêm prontos (ver "Tratamento de erro, carregamento e estado vazio"). Alternativa descartada: hook próprio. |
+
 Não usamos `tailwind-merge`: os componentes não sobrescrevem classes uns dos outros, e as escalas de design estão fechadas pelos tokens, então não há conflito de classes a resolver.
 
 Bibliotecas que ainda vamos adicionar devem ser registradas nesta tabela com a justificativa.
@@ -41,7 +43,8 @@ src/
   components/   componentes de UI reutilizáveis
     ui/         componentes base do design system (Button, Input, Card, Modal...)
     layout/     barra superior (AppBar), barra inferior (BottomNav) e itens de navegação
-  hooks/        hooks customizados
+    feedback/   estados de carregamento, erro e vazio (Spinner, LoadingSkeleton, ErrorState, EmptyState, QueryState)
+  hooks/        hooks de dados (usePaginatedQuery, useApiMutation) e hooks das telas
   layouts/      layouts de tela (AppLayout: barra superior, conteúdo e barra inferior)
   pages/        telas (uma página por rota)
   routes/       caminhos (paths.ts) e tabela de rotas (routes.tsx)
@@ -112,11 +115,67 @@ Os componentes base do design system ficam em `src/components/ui/`. Cada tela mo
 - **Acessibilidade:** elementos semânticos (`button`, `label`, `dialog`), foco visível por teclado (`focusRing`, em `ui/focus.ts`) e o estado nunca depende só da cor.
 - **Ícones:** `lucide-react`, com `aria-hidden="true"` quando decorativos.
 - **Modal:** feito sem biblioteca (poucas linhas) para não depender de um pacote só para prender o foco. Sempre use `ConfirmDialog` antes de excluir ou remover algo.
-- **Hooks:** a pasta `src/hooks/` recebe os hooks de dados (issue de estados compartilhados).
+- **Regra:** use os componentes existentes ou crie um novo em `src/components/`. Nada de botão, campo, card ou aviso montado "solto" na página (regra 7 do `RULES.md`).
+- **Hooks:** a pasta `src/hooks/` tem os hooks de dados (próxima seção).
 
 ## Tratamento de erro, carregamento e estado vazio
 
-_A definir._
+Toda tela que busca dados precisa tratar **carregando, erro e vazio**. Os blocos prontos ficam em `src/components/feedback/`:
+
+| Componente        | Uso                                                                                 |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `LoadingSkeleton` | Forma do conteúdo enquanto carrega (`text`, `card` ou `list`)                       |
+| `Spinner`         | Indicador pequeno, para ações (salvar, enviar)                                      |
+| `ErrorState`      | Mensagem em pt-BR e botão "Tentar de novo" (`onRetry`)                              |
+| `EmptyState`      | Ícone, uma frase e o botão da ação ("Você ainda não tem viagens. Crie a primeira!") |
+| `QueryState`      | Escolhe entre carregando, erro, vazio e conteúdo, nessa ordem                       |
+
+**Por que TanStack Query e não um hook próprio (`useAsync`)?** O hook próprio é pequeno, mas cada tela acabaria reescrevendo cache, nova tentativa, refazer a lista depois de uma mutação e evitar chamadas repetidas, com risco de erro. A biblioteca já faz isso, é padrão de mercado e custa cerca de 13 KB (gzip). O hook próprio só ganharia em tamanho.
+
+**Peças:**
+
+- `src/services/queryClient.ts`: cliente de cache do app (dados frescos por 30 s, 1 nova tentativa, sem refazer ao voltar para a janela). O `QueryClientProvider` está em `App.tsx`.
+- `useQuery` (da própria biblioteca): busca um item ou uma lista simples.
+- `usePaginatedQuery`: lista com `page`, `limit` e filtros, no formato `{ data, meta }` da API. Mudar filtro ou `limit` volta para a página 1, e a página anterior fica na tela enquanto a nova carrega.
+- `useApiMutation`: criar, editar ou excluir; ao dar certo, refaz as buscas de `invalidateKeys`. O erro fica em `error` e `isError`.
+- Funções de serviço (`src/services/`) devem **lançar erro** quando a API falhar, para os hooks perceberem.
+
+**Exemplo de uma tela de lista:**
+
+```tsx
+function TripsPage() {
+  const trips = usePaginatedQuery({
+    queryKey: ['trips'],
+    queryFn: ({ page, limit, status }) => getTrips({ page, limit, status }), // serviço
+  })
+
+  return (
+    <QueryState
+      isLoading={trips.isLoading}
+      isError={trips.isError}
+      isEmpty={trips.isEmpty}
+      onRetry={trips.refetch}
+      loading={<LoadingSkeleton variant="card" />}
+      empty={
+        <EmptyState
+          icon={Plane}
+          title="Você ainda não tem viagens. Crie a primeira!"
+          action={<Button onClick={goToNewTrip}>Nova viagem</Button>}
+        />
+      }
+    >
+      {trips.items.map((trip) => (
+        <TripCard key={trip.id} trip={trip} />
+      ))}
+    </QueryState>
+  )
+}
+
+// Excluir e refazer a lista:
+const remove = useApiMutation({ mutationFn: deleteTrip, invalidateKeys: [['trips']] })
+```
+
+**Testes:** use `createQueryWrapper()` (em `src/test/query.tsx`) como `wrapper` do `render` ou `renderHook`. Ele cria um cache sem nova tentativa, para o erro aparecer na hora.
 
 ## Testes
 
@@ -146,3 +205,4 @@ _A definir._
 | 2026-11-18 | Rotas com react-router e um layout compartilhado | Navegação única e responsiva; cada tela só preenche a sua página                           |
 | 2026-11-18 | Token da sessão em localStorage com expiração    | Sessão sobrevive ao recarregar e nunca usa token vencido; risco de XSS reduzido pelo React |
 | 2026-11-18 | Componentes com `cva` + `clsx`, modal próprio    | Variantes tipadas, sem `tailwind-merge` e sem biblioteca só para o modal                   |
+| 2026-11-18 | TanStack Query para buscas e mutações            | Cache, refetch e invalidação prontos; evita cada tela reescrever isso                      |
