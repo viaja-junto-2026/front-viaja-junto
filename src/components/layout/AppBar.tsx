@@ -1,6 +1,7 @@
-import { Bell, Compass } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
-import { getInitials } from '../../auth/getInitials'
+import logo from '../../assets/logo-vj.png'
+import { getInitials } from '../../utils/getInitials'
 import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
 import { topNavItems } from './navigation'
@@ -21,11 +22,9 @@ export function AppBar() {
           aria-label="ViajaJunto, ir para a página inicial"
           className="flex items-center gap-3"
         >
-          <span className="flex size-10 items-center justify-center rounded-full bg-beige-sand text-red-ruby">
-            <Compass aria-hidden="true" size={20} />
-          </span>
+          <img src={logo} alt="" width={58} height={40} className="h-10 w-auto" />
           <span className="flex flex-col">
-            <span className="font-heading text-headline-sm text-red-burgundy">ViajaJunto</span>
+            <span className="font-heading text-headline-sm text-red-ruby">ViajaJunto</span>
             <span className="hidden text-body-sm text-gray-dim lg:block">Viagens em grupo</span>
           </span>
         </Link>
