@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { consumeRedirectTarget } from '../services/session'
@@ -25,6 +26,8 @@ function renderGuarded(auth: AuthContextValue, initialPath = '/private') {
   return router
 }
 
+const signedOut = () => makeAuthValue({ status: 'unauthenticated', user: null })
+
 describe('RequireAuth', () => {
   it('shows the content to a signed-in user', () => {
     renderGuarded(makeAuthValue())
@@ -32,22 +35,35 @@ describe('RequireAuth', () => {
     expect(screen.getByText('secret content')).toBeInTheDocument()
   })
 
-  it('shows a loading message while the session is being checked', () => {
+  it('shows the loading skeleton while the session is being checked', () => {
     renderGuarded(makeAuthValue({ status: 'loading', user: null }))
 
-    expect(screen.getByRole('status')).toHaveTextContent('Carregando...')
+    expect(screen.getByRole('status')).toHaveTextContent('Carregando')
     expect(screen.queryByText('secret content')).not.toBeInTheDocument()
   })
 
-  it('sends a signed-out user to the login and remembers the requested page', async () => {
-    const router = renderGuarded(
-      makeAuthValue({ status: 'unauthenticated', user: null }),
-      '/private?tab=budget',
-    )
+  it('keeps a signed-out user on the page and asks them to sign in', () => {
+    const router = renderGuarded(signedOut(), '/private?tab=budget')
 
-    await waitFor(() => expect(screen.getByText('login page')).toBeInTheDocument())
-    expect(router.state.location.pathname).toBe('/login')
+    expect(screen.getByRole('heading', { name: 'Entre para continuar' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
     expect(screen.queryByText('secret content')).not.toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/private')
+  })
+
+  it('goes to the login on click and remembers the requested page', async () => {
+    const router = renderGuarded(signedOut(), '/private?tab=budget')
+
+    await userEvent.click(screen.getByRole('link', { name: 'Entrar' }))
+
+    expect(screen.getByText('login page')).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/login')
     expect(consumeRedirectTarget()).toBe('/private?tab=budget')
+  })
+
+  it('does not remember any page until the user chooses to sign in', () => {
+    renderGuarded(signedOut(), '/private')
+
+    expect(consumeRedirectTarget()).toBeNull()
   })
 })

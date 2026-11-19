@@ -46,7 +46,7 @@ src/
     feedback/   estados de carregamento, erro e vazio (Spinner, LoadingSkeleton, ErrorState, EmptyState, QueryState)
   hooks/        hooks de dados (usePaginatedQuery, useApiMutation) e hooks das telas
   layouts/      layouts de tela (AppLayout: barra superior, conteúdo e barra inferior)
-  pages/        telas (uma página por rota)
+  pages/        telas (uma página por rota; as seções de uma tela ficam em uma pasta própria, como `pages/home/`)
   routes/       caminhos (paths.ts) e tabela de rotas (routes.tsx)
   services/     camada de acesso à API (única que fala com o back)
   config/       configuração (env.ts lê as variáveis de ambiente)
@@ -75,7 +75,7 @@ O login é só com Google (ver `docs/SCOPE.md`). Esta base cuida da sessão; as 
 - **Token:** guardado em `localStorage` junto com o horário de expiração (`expires_in`), em `src/services/session.ts`. Assim a sessão sobrevive a recarregar a página, mas um token expirado nunca é usado. O token dura cerca de 1 hora e o React escapa o conteúdo por padrão (não usamos `dangerouslySetInnerHTML`), o que reduz o risco de XSS roubar o token. O token nunca vai para logs nem para a URL depois do login.
 - **Chamadas:** o `apiClient` tem um middleware que envia `Authorization: Bearer <token>` quando há sessão. Se a API responde **401**, a sessão é descartada e a interface é avisada.
 - **Estado:** `AuthProvider` (em `App.tsx`) expõe `useAuth()` com `status` (`loading`, `authenticated` ou `unauthenticated`), `user`, `signIn(token, expiresInSeconds)` e `signOut()`. Com token guardado, o provider confirma o usuário em `GET /auth/me` antes de liberar o app.
-- **Rotas privadas:** `RequireAuth` envolve as rotas que exigem login (`/trips*`, `/join`, `/notifications` e `/profile`). Sem sessão, leva para `/login` e guarda a página pedida com `saveRedirectTarget`; depois do login, a tela de retorno lê o destino com `consumeRedirectTarget`. Só caminhos internos são aceitos, para ninguém ser levado a outro site.
+- **Rotas privadas:** `RequireAuth` envolve as rotas que exigem login (`/trips*`, `/join`, `/notifications` e `/profile`). Sem sessão, a página continua dentro do layout (a barra e a aba ativa ficam visíveis) e mostra o aviso "Entre para continuar" com o botão Entrar. Ao clicar, o botão guarda a página pedida com `saveRedirectTarget` e leva para `/login`; depois do login, a tela de retorno lê o destino com `consumeRedirectTarget`. Só caminhos internos são aceitos, para ninguém ser levado a outro site.
 - **Sair:** `signOut()` chama `POST /auth/logout` (invalida os tokens do usuário em todos os dispositivos) e descarta o token mesmo que a chamada falhe.
 - **Testes:** use `AuthContext.Provider` com `makeAuthValue()` (em `src/test/auth.ts`) para simular usuário logado, visitante ou carregando.
 
@@ -100,16 +100,21 @@ Cores, fontes, estilos de texto, raios, sombras e breakpoints ficam somente em `
 
 Os componentes base do design system ficam em `src/components/ui/`. Cada tela monta a interface com eles, sem repetir estilos.
 
-| Componente                         | Uso                                                                                                                           |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `Button`                           | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira) e `pill`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
-| `Input`, `Textarea`, `Select`      | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                      |
-| `Card`, `CardCompact`, `CardTitle` | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                        |
-| `Badge`, `Chip`                    | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                |
-| `Avatar`, `AvatarGroup`            | Iniciais e avatares empilhados com "+N"                                                                                       |
-| `Alert`                            | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                              |
-| `Tabs`, `ProgressBar`              | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                       |
-| `Modal`, `ConfirmDialog`           | Janela com foco preso, Esc e rolagem travada; confirmação de ação destrutiva                                                  |
+| Componente                                     | Uso                                                                                                                           |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `Button`                                       | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira) e `pill`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
+| `Input`, `Textarea`, `Select`                  | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                      |
+| `Card`, `CardCompact`, `CardTitle`             | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                        |
+| `Badge`, `Chip`                                | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                |
+| `Avatar`, `AvatarGroup`                        | Iniciais e avatares empilhados com "+N"                                                                                       |
+| `Alert`                                        | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                              |
+| `Tabs`, `ProgressBar`                          | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                       |
+| `Modal`, `ConfirmDialog`                       | Janela com foco preso, Esc e rolagem travada; confirmação de ação destrutiva                                                  |
+| `ButtonLink`, `TextLink`                       | Link com a aparência de botão (`pill` traz o círculo com seta) e link de texto com seta ("Ver todas")                         |
+| `IconCircle`, `SectionHeader`                  | Ícone em círculo tingido e cabeçalho de faixa (título e ações)                                                                |
+| `Carousel`                                     | Faixa horizontal com `scroll-snap`; setas só no desktop                                                                       |
+| `FloatingCard`                                 | Card que flutua sobre uma foto, com sombra ampla                                                                              |
+| `DestinationCard` (`components/destinations/`) | Card de foto de um destino: foto (ou bege com ícone), nome, país e nota                                                       |
 
 - **Como compor estilos:** `cva` declara as variantes e `clsx` junta classes condicionais. Só entram classes geradas pelos tokens (o ESLint barra valores arbitrários).
 - **Acessibilidade:** elementos semânticos (`button`, `label`, `dialog`), foco visível por teclado (`focusRing`, em `ui/focus.ts`) e o estado nunca depende só da cor.
@@ -214,6 +219,23 @@ const fieldErrors = create.error instanceof ApiError ? create.error.fieldErrors 
 // <Input label="Nome" error={fieldErrors.name} />
 // {create.isError && <Alert variant="error">{getErrorMessage(create.error)}</Alert>}
 ```
+
+## Exemplo de tela: a Home
+
+A Home (`src/pages/HomePage.tsx`) é a tela de referência para quem for criar as outras. Ela junta todas as peças acima:
+
+- **Service:** `listTopDestinations` (`src/services/destinations.ts`) usa o `apiClient` e `unwrap`.
+- **Hook:** `useTopDestinations` (`src/hooks/useTopDestinations.ts`) é um `useQuery` com a chave e a função do service.
+- **Seções em uma pasta própria** (`src/pages/home/`): `HomeHero`, `HomeFeatures` e `TopDestinationsSection`. A página só as monta.
+- **Estados:** `TopDestinationsSection` mostra carregando (`LoadingSkeleton`), erro com "Tentar de novo" e vazio (`EmptyState`, com a ação) usando o `QueryState`, e o conteúdo em um `Carousel` de `DestinationCard`.
+- **Componentes, não estilos soltos:** botões e links via `ButtonLink` e `TextLink`, cards via `Card` e `FloatingCard`.
+- **Testes:** `HomePage.test.tsx` cobre cada estado, mockando só o service com `vi.mock`.
+
+Pontos de atenção:
+
+- A foto do hero é `src/assets/hero-tokyo.webp`.
+- `GET /api/destination-catalog/top` só lista destinos que já têm avaliação. No catálogo de demonstração ainda não há nenhuma, então a faixa mostra o estado vazio até alguém concluir uma viagem e avaliar um destino. Os destinos do catálogo de demonstração também não têm foto: o card usa o bege com o ícone.
+- O cartão sobre a foto mostra o destino mais bem avaliado (dado real da API) e só aparece quando existe um.
 
 ## Testes
 

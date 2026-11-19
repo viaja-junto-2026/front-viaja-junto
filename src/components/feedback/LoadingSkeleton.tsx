@@ -1,7 +1,10 @@
-type SkeletonVariant = 'text' | 'card' | 'list'
+type SkeletonVariant = 'text' | 'card' | 'list' | 'photo'
 
 type LoadingSkeletonProps = {
-  /** `text`: linhas de texto; `card`: blocos grandes; `list`: itens com círculo e duas linhas. */
+  /**
+   * `text`: linhas de texto; `card`: blocos grandes; `list`: itens com círculo e duas linhas;
+   * `photo`: fileira de cards de foto (para os carrosséis).
+   */
   variant?: SkeletonVariant
   /** Quantas linhas, cards ou itens. */
   count?: number
@@ -18,11 +21,24 @@ export function LoadingSkeleton({
   label = 'Carregando',
 }: LoadingSkeletonProps) {
   const items = Array.from({ length: count }, (_, index) => index)
+  const isRow = variant === 'photo'
 
   return (
-    <div role="status" aria-busy="true" className="flex flex-col gap-4">
+    <div
+      role="status"
+      aria-busy="true"
+      className={isRow ? 'flex gap-6 overflow-hidden' : 'flex flex-col gap-4'}
+    >
       <span className="sr-only">{label}</span>
       {items.map((index) => {
+        if (variant === 'photo') {
+          return (
+            <div
+              key={index}
+              className="aspect-4/5 w-64 shrink-0 animate-pulse rounded-lg bg-beige-sand sm:w-72"
+            />
+          )
+        }
         if (variant === 'card') {
           return <div key={index} className="h-40 animate-pulse rounded-lg bg-beige-sand" />
         }

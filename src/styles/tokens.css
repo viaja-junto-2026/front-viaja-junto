@@ -117,6 +117,7 @@
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+  --radius-organic: 6rem; /* só a foto do hero: cantos grandes e assimétricos (recorte orgânico) */
 
   /* ---------- Sombras ---------- */
   --shadow-sm: 0 2px 4px rgb(0 0 0 / 0.08);
@@ -135,4 +136,12 @@
 /* Algarismos tabulares: valores em dinheiro e contagens ficam alinhados em colunas. */
 @utility tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Esconde a barra de rolagem dos carrosséis (a rolagem por gesto e pelas setas continua). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

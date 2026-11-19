@@ -5,6 +5,7 @@ import {
   formatCurrencyFromCents,
   formatDate,
   formatDateRange,
+  formatRating,
   nightsBetween,
 } from './format'
 
@@ -111,5 +112,13 @@ describe('daysUntil', () => {
   it('returns zero for an invalid date and uses the current date by default', () => {
     expect(daysUntil('x', now)).toBe(0)
     expect(daysUntil(new Date(Date.now() + 5 * 86_400_000).toISOString())).toBeGreaterThanOrEqual(4)
+  })
+})
+
+describe('formatRating', () => {
+  it('shows one decimal digit with a comma', () => {
+    expect(formatRating(4.8)).toBe('4,8')
+    expect(formatRating(5)).toBe('5,0')
+    expect(formatRating(3.14159)).toBe('3,1')
   })
 })

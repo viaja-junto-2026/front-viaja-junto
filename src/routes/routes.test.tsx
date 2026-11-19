@@ -1,4 +1,5 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryRouter, RouterProvider, type RouteObject } from 'react-router'
@@ -6,7 +7,13 @@ import { AuthContext, type AuthContextValue } from '../auth/authContext'
 import { AppLayout } from '../layouts/AppLayout'
 import ErrorPage from '../pages/ErrorPage'
 import { makeAuthValue } from '../test/auth'
+import { createTestQueryClient } from '../test/query'
 import { routes } from './routes'
+
+// A home busca os destinos mais bem avaliados: nos testes de rota a lista vem vazia.
+vi.mock('../services/destinations', () => ({
+  listTopDestinations: vi.fn().mockResolvedValue([]),
+}))
 
 /** Renderiza o app em um caminho, por padrão com um usuário logado. */
 function renderAt(
@@ -16,9 +23,11 @@ function renderAt(
 ) {
   const router = createMemoryRouter(routeObjects, { initialEntries: [path] })
   render(
-    <AuthContext.Provider value={auth}>
-      <RouterProvider router={router} />
-    </AuthContext.Provider>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <AuthContext.Provider value={auth}>
+        <RouterProvider router={router} />
+      </AuthContext.Provider>
+    </QueryClientProvider>,
   )
   return router
 }
@@ -29,7 +38,7 @@ describe('routes', () => {
   })
 
   it.each([
-    ['/', 'Início'],
+    ['/', 'Sua viagem começa aqui.'],
     ['/login', 'Entrar'],
     ['/auth/callback', 'Entrando...'],
     ['/destinations', 'Destinos'],
@@ -77,6 +86,19 @@ describe('routes', () => {
     )
   })
 
+  it('highlights "Minhas viagens" for a visitor too, since the page stays in the layout', async () => {
+    renderAt('/', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+    const topNav = screen.getByRole('navigation', { name: 'Navegação principal' })
+
+    await userEvent.click(within(topNav).getByRole('link', { name: 'Minhas viagens' }))
+
+    expect(within(topNav).getByRole('link', { name: 'Minhas viagens' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    )
+    expect(screen.getByRole('heading', { name: 'Entre para continuar' })).toBeInTheDocument()
+  })
+
   it('keeps the section highlighted on its sub-pages', () => {
     renderAt('/trips/new')
     const topNav = screen.getByRole('navigation', { name: 'Navegação principal' })
@@ -118,11 +140,15 @@ describe('routes', () => {
     '/join',
     '/notifications',
     '/profile',
-  ])('sends a visitor from the private page %s to the login', async (path) => {
+  ])('keeps a visitor on the private page %s and asks them to sign in', (path) => {
     const router = renderAt(path, routes, makeAuthValue({ status: 'unauthenticated', user: null }))
 
-    await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
-    expect(screen.getByRole('heading', { level: 1, name: 'Entrar' })).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe(path)
+    expect(screen.getByRole('heading', { name: 'Entre para continuar' })).toBeInTheDocument()
+    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Entrar' })).toHaveAttribute(
+      'href',
+      '/login',
+    )
   })
 
   it('shows the user initials and notifications in the top bar when signed in', () => {
@@ -136,7 +162,9 @@ describe('routes', () => {
   it('shows a sign-in button in the top bar for a visitor', () => {
     renderAt('/', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
 
-    expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
+    const topBar = within(screen.getByRole('banner'))
+
+    expect(topBar.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
     expect(screen.queryByRole('link', { name: 'Notificações' })).not.toBeInTheDocument()
   })
 
@@ -162,7 +190,9 @@ describe('routes', () => {
     expect(auth.signOut).toHaveBeenCalledOnce()
     // já está na home quando a sessão é limpa, então a guarda não redireciona para o login
     expect(pathWhenSigningOut).toBe('/')
-    expect(await screen.findByRole('heading', { level: 1, name: 'Início' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Sua viagem começa aqui.' }),
+    ).toBeInTheDocument()
   })
 
   it('shows the error page inside the layout when a route breaks', () => {

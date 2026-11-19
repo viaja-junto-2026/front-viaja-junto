@@ -38,6 +38,7 @@ describe('LoadingSkeleton', () => {
     ['text', 2, 2],
     ['card', 4, 4],
     ['list', 3, 9],
+    ['photo', 4, 4],
   ] as const)('renders the %s variant', (variant, count, expectedBars) => {
     const { container } = render(<LoadingSkeleton variant={variant} count={count} />)
 

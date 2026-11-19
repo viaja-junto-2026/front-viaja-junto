@@ -1,5 +1,6 @@
 import { CircleAlert, RotateCw } from 'lucide-react'
 import { Button } from '../ui/Button'
+import { IconCircle } from '../ui/IconCircle'
 
 type ErrorStateProps = {
   title?: string
@@ -20,9 +21,7 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <div role="alert" className="flex flex-col items-center gap-4 px-4 py-12 text-center">
-      <span className="flex size-14 items-center justify-center rounded-full bg-rose-blush text-red-burgundy">
-        <CircleAlert aria-hidden="true" size={28} />
-      </span>
+      <IconCircle icon={CircleAlert} tone="blush" size="lg" />
       <div className="flex flex-col gap-1">
         <h2 className="font-heading text-headline-sm text-red-burgundy">{title}</h2>
         <p className="max-w-md text-body-md text-gray-dim">{message}</p>
