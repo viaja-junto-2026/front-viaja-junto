@@ -89,7 +89,6 @@ describe('routes', () => {
 
   it.each([
     ['/', 'Sua viagem começa aqui.'],
-    ['/login', 'Entrar'],
     ['/auth/callback', 'Entrando...'],
     ['/destinations', 'Destinos'],
     ['/destinations/1', 'Paris'],
@@ -115,10 +114,17 @@ describe('routes', () => {
     expect(screen.getByRole('link', { name: 'Voltar para o início' })).toHaveAttribute('href', '/')
   })
 
-  it('keeps login outside the main layout', () => {
-    renderAt('/login')
+  it('keeps login outside the main layout for visitors', () => {
+    renderAt('/login', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
 
+    expect(screen.getByRole('heading', { level: 1, name: 'Entrar' })).toBeInTheDocument()
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
+  })
+
+  it('redirects an authenticated user away from /login to /trips', () => {
+    renderAt('/login', routes, makeAuthValue())
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Minhas viagens' })).toBeInTheDocument()
   })
 
   it('navigates through the top menu and highlights the active item', async () => {
