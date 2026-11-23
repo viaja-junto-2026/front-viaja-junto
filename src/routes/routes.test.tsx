@@ -14,6 +14,34 @@ import { routes } from './routes'
 vi.mock('../services/destinations', () => ({
   listTopDestinations: vi.fn().mockResolvedValue([]),
 }))
+vi.mock('../services/activities', () => ({
+  getActivityDetails: vi.fn().mockResolvedValue({
+    id: '1',
+    name: 'Museu do Louvre',
+    description: null,
+    type: 'TOUR',
+    location: null,
+    city: 'Paris',
+    country: 'França',
+    latitude: null,
+    longitude: null,
+    googlePlaceId: null,
+    photoUrl: null,
+    mapsUrl: null,
+    source: null,
+    averageRating: null,
+    reviewCount: 0,
+    createdAt: '2026-02-01T12:00:00.000Z',
+    destinationId: null,
+    latestReviews: [],
+  }),
+}))
+vi.mock('../services/reviews', () => ({
+  listReviews: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { page: 1, limit: 10, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
+  }),
+}))
 
 /** Renderiza o app em um caminho, por padrão com um usuário logado. */
 function renderAt(
@@ -43,7 +71,7 @@ describe('routes', () => {
     ['/auth/callback', 'Entrando...'],
     ['/destinations', 'Destinos'],
     ['/destinations/1', 'Destino'],
-    ['/activities/1', 'Atividade'],
+    ['/activities/1', 'Museu do Louvre'],
     ['/trips', 'Minhas viagens'],
     ['/trips/new', 'Nova viagem'],
     ['/trips/1', 'Viagem'],
@@ -52,10 +80,10 @@ describe('routes', () => {
     ['/reviews', 'Avaliações'],
     ['/notifications', 'Avisos'],
     ['/profile', 'Perfil'],
-  ])('renders the page for %s', (path, heading) => {
+  ])('renders the page for %s', async (path, heading) => {
     renderAt(path)
 
-    expect(screen.getByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: heading })).toBeInTheDocument()
   })
 
   it('shows the 404 page for an unknown address', () => {
