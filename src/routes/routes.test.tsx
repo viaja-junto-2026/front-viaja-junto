@@ -12,6 +12,10 @@ import { routes } from './routes'
 
 // A home busca os destinos mais bem avaliados: nos testes de rota a lista vem vazia.
 vi.mock('../services/destinations', () => ({
+  listDestinations: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { page: 1, limit: 12, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
+  }),
   listTopDestinations: vi.fn().mockResolvedValue([]),
   getDestinationDetails: vi.fn().mockResolvedValue({
     id: '1',

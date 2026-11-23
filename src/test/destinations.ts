@@ -1,5 +1,7 @@
 import type { Destination, DestinationDetails } from '../services/destinations'
+import type { Paginated, PaginationMeta } from '../types/pagination'
 import { makePublicReview } from './activities'
+import { makePaginationMeta } from './reviews'
 
 /** Destino do catálogo para os testes, com nota e foto por padrão. */
 export function makeDestination(overrides: Partial<Destination> = {}): Destination {
@@ -16,6 +18,21 @@ export function makeDestination(overrides: Partial<Destination> = {}): Destinati
     averageRating: 4.8,
     reviewCount: 12,
     ...overrides,
+  }
+}
+
+/** Resposta paginada de destinos para os testes. */
+export function makePaginatedDestinations(
+  data: Destination[] = [makeDestination()],
+  metaOverrides: Partial<PaginationMeta> = {},
+): Paginated<Destination> {
+  return {
+    data,
+    meta: makePaginationMeta({
+      limit: 12,
+      total: data.length,
+      ...metaOverrides,
+    }),
   }
 }
 
