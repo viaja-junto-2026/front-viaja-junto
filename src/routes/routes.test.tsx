@@ -13,6 +13,20 @@ import { routes } from './routes'
 // A home busca os destinos mais bem avaliados: nos testes de rota a lista vem vazia.
 vi.mock('../services/destinations', () => ({
   listTopDestinations: vi.fn().mockResolvedValue([]),
+  getDestinationDetails: vi.fn().mockResolvedValue({
+    id: '1',
+    name: 'Paris',
+    country: 'França',
+    countryCode: 'FR',
+    category: 'CITY',
+    description: null,
+    latitude: null,
+    longitude: null,
+    photoUrl: null,
+    averageRating: null,
+    reviewCount: 0,
+    latestReviews: [],
+  }),
 }))
 vi.mock('../services/activities', () => ({
   getActivityDetails: vi.fn().mockResolvedValue({
@@ -34,6 +48,10 @@ vi.mock('../services/activities', () => ({
     createdAt: '2026-02-01T12:00:00.000Z',
     destinationId: null,
     latestReviews: [],
+  }),
+  listActivities: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { page: 1, limit: 9, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
   }),
 }))
 vi.mock('../services/reviews', () => ({
@@ -70,7 +88,7 @@ describe('routes', () => {
     ['/login', 'Entrar'],
     ['/auth/callback', 'Entrando...'],
     ['/destinations', 'Destinos'],
-    ['/destinations/1', 'Destino'],
+    ['/destinations/1', 'Paris'],
     ['/activities/1', 'Museu do Louvre'],
     ['/trips', 'Minhas viagens'],
     ['/trips/new', 'Nova viagem'],

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { makeDestination } from '../test/destinations'
+import { makeDestination, makeDestinationDetails } from '../test/destinations'
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -52,5 +52,28 @@ describe('destinations service', () => {
 
     expect(error).toBeInstanceOf(ApiError)
     expect((error as InstanceType<typeof ApiError>).status).toBe(422)
+  })
+
+  it('fetches destination details by id', async () => {
+    const details = makeDestinationDetails({ id: 'paris-id' })
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(details))
+    const { getDestinationDetails } = await loadService(fetchMock)
+
+    await expect(getDestinationDetails('paris-id')).resolves.toEqual(details)
+
+    const request: Request = fetchMock.mock.calls[0][0]
+    expect(request.method).toBe('GET')
+    expect(request.url).toBe('http://api.test/api/destination-catalog/paris-id/details')
+  })
+
+  it('throws an ApiError when the destination is not found', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ message: 'Not found' }, 404))
+    const { getDestinationDetails } = await loadService(fetchMock)
+    const { ApiError } = await import('./apiError')
+
+    const error = await getDestinationDetails('missing').catch((caught: unknown) => caught)
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect((error as InstanceType<typeof ApiError>).status).toBe(404)
   })
 })

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { makeActivityDetails } from '../test/activities'
+import { makeActivity, makeActivityDetails, makePaginatedActivities } from '../test/activities'
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -42,5 +42,45 @@ describe('activities service', () => {
 
     expect(error).toBeInstanceOf(ApiError)
     expect((error as InstanceType<typeof ApiError>).status).toBe(404)
+  })
+
+  it('lists activities with destination, type, minRating, sort and pagination params', async () => {
+    const paginated = makePaginatedActivities([makeActivity({ id: 'a1' })], {
+      page: 2,
+      limit: 9,
+      total: 12,
+      totalPages: 2,
+      hasPrevious: true,
+    })
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(paginated))
+    const { listActivities } = await loadService(fetchMock)
+
+    await expect(
+      listActivities({
+        destinationId: 'd1',
+        type: 'FOOD',
+        minRating: 4,
+        sort: 'rating',
+        page: 2,
+        limit: 9,
+      }),
+    ).resolves.toEqual(paginated)
+
+    const request: Request = fetchMock.mock.calls[0][0]
+    expect(request.method).toBe('GET')
+    expect(request.url).toBe(
+      'http://api.test/api/activity-catalog?destinationId=d1&type=FOOD&minRating=4&sort=rating&page=2&limit=9',
+    )
+  })
+
+  it('normalizes an omitted data array to an empty array when listing activities', async () => {
+    const meta = makePaginatedActivities([]).meta
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ meta }))
+    const { listActivities } = await loadService(fetchMock)
+
+    await expect(listActivities()).resolves.toEqual({ data: [], meta })
+
+    const request: Request = fetchMock.mock.calls[0][0]
+    expect(request.url).toBe('http://api.test/api/activity-catalog')
   })
 })
