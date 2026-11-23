@@ -1,3 +1,5 @@
+import type { Paginated } from '../types/pagination'
+import type { DestinationCategory } from '../utils/labels'
 import { apiClient } from './apiClient'
 import { unwrap } from './apiError'
 import type { components } from './generated/schema'
@@ -11,6 +13,38 @@ export type DestinationDetails = components['schemas']['DestinationCatalogDetail
 type ListTopDestinationsParams = {
   /** Quantos destinos trazer (de 1 a 50; o padrão da API é 10). */
   limit?: number
+}
+
+export type ListDestinationsParams = {
+  /** Número da página, começando em 1. */
+  page?: number
+  /** Quantidade de registros por página (máximo 100). */
+  limit?: number
+  /** Busca textual pelo nome do destino. */
+  q?: string
+  /** Nome do país ou código ISO (ex.: `França` ou `FR`). */
+  country?: string
+  /** Categoria de descoberta (`CITY`, `BEACH`, `NATURE`, `CULTURAL`). */
+  category?: DestinationCategory
+}
+
+/**
+ * Lista destinos do catálogo público com busca, filtros e paginação.
+ * Rota pública; lança `ApiError` se a API falhar.
+ */
+export async function listDestinations(
+  params: ListDestinationsParams = {},
+): Promise<Paginated<Destination>> {
+  const response = unwrap(
+    await apiClient.GET('/api/destination-catalog', {
+      params: { query: params },
+    }),
+  )
+
+  return {
+    data: response.data ?? [],
+    meta: response.meta,
+  }
 }
 
 /**

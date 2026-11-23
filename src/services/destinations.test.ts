@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { makeDestination, makeDestinationDetails } from '../test/destinations'
+import {
+  makeDestination,
+  makeDestinationDetails,
+  makePaginatedDestinations,
+} from '../test/destinations'
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -75,5 +79,44 @@ describe('destinations service', () => {
 
     expect(error).toBeInstanceOf(ApiError)
     expect((error as InstanceType<typeof ApiError>).status).toBe(404)
+  })
+
+  it('lists destinations with search, country, category and pagination params', async () => {
+    const paginated = makePaginatedDestinations([makeDestination({ id: 'd1', name: 'Paris' })], {
+      page: 2,
+      limit: 12,
+      total: 15,
+      totalPages: 2,
+      hasPrevious: true,
+    })
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(paginated))
+    const { listDestinations } = await loadService(fetchMock)
+
+    await expect(
+      listDestinations({
+        page: 2,
+        limit: 12,
+        q: 'Paris',
+        country: 'FR',
+        category: 'CITY',
+      }),
+    ).resolves.toEqual(paginated)
+
+    const request: Request = fetchMock.mock.calls[0][0]
+    expect(request.method).toBe('GET')
+    expect(request.url).toBe(
+      'http://api.test/api/destination-catalog?page=2&limit=12&q=Paris&country=FR&category=CITY',
+    )
+  })
+
+  it('normalizes an omitted data array to an empty array when listing destinations', async () => {
+    const meta = makePaginatedDestinations([]).meta
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ meta }))
+    const { listDestinations } = await loadService(fetchMock)
+
+    await expect(listDestinations()).resolves.toEqual({ data: [], meta })
+
+    const request: Request = fetchMock.mock.calls[0][0]
+    expect(request.url).toBe('http://api.test/api/destination-catalog')
   })
 })
