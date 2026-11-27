@@ -4,6 +4,7 @@ import logo from '../../assets/logo-vj.png'
 import { getInitials } from '../../utils/getInitials'
 import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
+import { ButtonLink } from '../ui/ButtonLink'
 import { topNavItems } from './navigation'
 
 /**
@@ -76,12 +77,9 @@ export function AppBar() {
             </>
           )}
           {status === 'unauthenticated' && (
-            <Link
-              to={paths.login}
-              className="rounded-full bg-red-ruby px-6 py-3 text-label-lg text-white hover:bg-red-burgundy"
-            >
+            <ButtonLink to={paths.login} variant="solid">
               Entrar
-            </Link>
+            </ButtonLink>
           )}
         </div>
       </div>

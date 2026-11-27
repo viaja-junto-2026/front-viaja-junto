@@ -7,6 +7,8 @@ export type FieldProps = {
   label: string
   /** Texto de ajuda abaixo do campo. */
   helperText?: string
+  /** Rótulo em branco, para campos sobre fundo escuro (Bordô). */
+  inverted?: boolean
   /** Mensagem de erro: diga como corrigir. Substitui o texto de ajuda. */
   error?: string
 }
@@ -17,12 +19,19 @@ type FieldShellProps = FieldProps & {
 }
 
 /** Estrutura comum de Input, Textarea e Select: rótulo, campo e ajuda ou erro. */
-export function FieldShell({ id, label, helperText, error, children }: FieldShellProps) {
+export function FieldShell({
+  id,
+  label,
+  helperText,
+  error,
+  inverted = false,
+  children,
+}: FieldShellProps) {
   const message = error ?? helperText
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-label-md text-gray-ink">
+      <label htmlFor={id} className={`text-label-md ${inverted ? 'text-white' : 'text-gray-ink'}`}>
         {label}
       </label>
       {children}

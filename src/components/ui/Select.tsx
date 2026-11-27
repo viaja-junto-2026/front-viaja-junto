@@ -33,6 +33,7 @@ export function Select({
   label,
   helperText,
   error,
+  inverted,
   options,
   value,
   defaultValue = '',
@@ -122,7 +123,13 @@ export function Select({
   }
 
   return (
-    <FieldShell id={selectId} label={label} helperText={helperText} error={error}>
+    <FieldShell
+      id={selectId}
+      label={label}
+      helperText={helperText}
+      error={error}
+      inverted={inverted}
+    >
       <div ref={wrapperRef} className="relative">
         {name && <input type="hidden" name={name} value={current} />}
         <button
