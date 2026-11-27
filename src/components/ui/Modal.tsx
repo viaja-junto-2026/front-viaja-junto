@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { focusRing } from './focus'
+import { IconButton } from './IconButton'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -83,14 +83,9 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
           <h2 id={titleId} className="font-heading text-headline-sm text-red-burgundy">
             {title}
           </h2>
-          <button
-            type="button"
-            aria-label="Fechar"
-            onClick={onClose}
-            className={`flex size-8 shrink-0 items-center justify-center rounded-full text-gray-dim hover:bg-beige-light ${focusRing}`}
-          >
+          <IconButton label="Fechar" variant="ghost" size="sm" onClick={onClose}>
             <X aria-hidden="true" size={20} />
-          </button>
+          </IconButton>
         </div>
         <div className="text-body-md">{children}</div>
         {footer && (

@@ -1,10 +1,11 @@
 import { Bell } from 'lucide-react'
 import { Link, NavLink } from 'react-router'
-import logo from '../../assets/logo-vj.png'
-import { getInitials } from '../../utils/getInitials'
 import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
+import { Avatar } from '../ui/Avatar'
 import { ButtonLink } from '../ui/ButtonLink'
+import { IconButtonLink } from '../ui/IconButton'
+import { BrandLogo } from './BrandLogo'
 import { topNavItems } from './navigation'
 
 /**
@@ -23,7 +24,7 @@ export function AppBar() {
           aria-label="ViajaJunto, ir para a página inicial"
           className="flex items-center gap-3"
         >
-          <img src={logo} alt="" width={58} height={40} className="h-10 w-auto" />
+          <BrandLogo alt="" size="md" />
           <span className="flex flex-col">
             <span className="font-heading text-headline-sm text-red-ruby">ViajaJunto</span>
             <span className="hidden text-body-sm text-gray-dim lg:block">Viagens em grupo</span>
@@ -60,19 +61,21 @@ export function AppBar() {
         <div className="flex items-center gap-3">
           {status === 'authenticated' && user && (
             <>
-              <Link
+              <IconButtonLink
                 to={paths.notifications}
-                aria-label="Notificações"
-                className="flex size-12 items-center justify-center rounded-full bg-white text-red-burgundy shadow-md"
+                label="Notificações"
+                variant="brand"
+                shape="round"
+                size="md"
               >
                 <Bell aria-hidden="true" size={20} />
-              </Link>
+              </IconButtonLink>
               <Link
                 to={paths.profile}
                 aria-label={`Perfil de ${user.name}`}
-                className="hidden size-10 items-center justify-center rounded-full bg-rose-vintage text-label-md text-gray-ink lg:flex"
+                className="hidden rounded-full lg:flex"
               >
-                {getInitials(user.name)}
+                <Avatar name={user.name} />
               </Link>
             </>
           )}

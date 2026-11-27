@@ -7,11 +7,10 @@ export const buttonShape = cva(
   {
     variants: {
       variant: {
-        primary: 'h-12 rounded-md px-6 text-label-lg',
-        secondary: 'h-12 rounded-md px-6 text-label-lg',
-        compact: 'h-9 rounded-sm px-3 text-label-md',
-        danger: 'h-12 rounded-md px-6 text-label-lg',
-        pill: 'h-14 rounded-full px-6 text-label-lg',
+        primary: 'h-12 rounded-xs px-6 text-label-lg',
+        secondary: 'h-12 rounded-xs px-6 text-label-lg',
+        compact: 'h-9 rounded-xs px-3 text-label-md',
+        danger: 'h-12 rounded-xs px-6 text-label-lg',
         // Estilo editorial (retangular, em maiúsculas), usado na home.
         solid: 'h-12 rounded-xs px-6 text-label-sm uppercase',
         outline: 'h-12 rounded-xs border border-red-burgundy px-6 text-label-sm uppercase',
@@ -34,7 +33,6 @@ export const buttonTone: Record<ButtonVariant, string> = {
   secondary: 'bg-rose-dusty text-brown-espresso enabled:hover:bg-rose-vintage',
   compact: 'bg-rose-vintage text-gray-ink enabled:hover:bg-rose-dusty',
   danger: 'bg-rose-dusty text-brown-espresso enabled:hover:bg-rose-vintage',
-  pill: 'bg-red-ruby text-white enabled:hover:bg-red-burgundy',
   solid: 'bg-red-burgundy text-white enabled:hover:bg-red-ruby',
   outline: 'text-red-burgundy enabled:hover:bg-red-burgundy enabled:hover:text-white',
   light: 'bg-beige-sand text-red-burgundy enabled:hover:bg-white',
@@ -52,7 +50,6 @@ export const linkTone: Record<ButtonVariant, string> = {
   secondary: 'bg-rose-dusty text-brown-espresso hover:bg-rose-vintage',
   compact: 'bg-rose-vintage text-gray-ink hover:bg-rose-dusty',
   danger: 'bg-rose-dusty text-brown-espresso hover:bg-rose-vintage',
-  pill: 'bg-red-ruby text-white hover:bg-red-burgundy',
   solid: 'bg-red-burgundy text-white hover:bg-red-ruby',
   outline: 'text-red-burgundy hover:bg-red-burgundy hover:text-white',
   light: 'bg-beige-sand text-red-burgundy hover:bg-white',

@@ -16,7 +16,7 @@ describe('Button', () => {
     ['secondary', 'bg-rose-dusty'],
     ['compact', 'h-9'],
     ['danger', 'bg-rose-dusty'],
-    ['pill', 'rounded-full'],
+    ['solid', 'uppercase'],
   ] as const)('applies the %s variant', (variant, expectedClass) => {
     render(<Button variant={variant}>Ação</Button>)
 

@@ -1,6 +1,5 @@
 import { Loader2, Trash2 } from 'lucide-react'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import { ArrowCircle } from './ArrowCircle'
 import { buttonDisabledTone, buttonShape, buttonTone, type ButtonVariant } from './buttonStyles'
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -9,7 +8,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean
   /** Ícone à esquerda do texto (use ícones do lucide-react com `size={20}`). */
   leftIcon?: ReactNode
-  /** Ícone à direita do texto. A variante `pill` já traz o círculo com seta. */
+  /** Ícone à direita do texto. */
   rightIcon?: ReactNode
   fullWidth?: boolean
 }
@@ -31,7 +30,6 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const icon = leftIcon ?? (variant === 'danger' ? <Trash2 aria-hidden="true" size={20} /> : null)
-  const trailing = rightIcon ?? (variant === 'pill' ? <ArrowCircle /> : null)
   // Carregando mantém a cor da variante (um pouco esmaecida); só "desabilitado" muda de aparência.
   const tone = disabled && !loading ? buttonDisabledTone : buttonTone[variant]
 
@@ -45,7 +43,7 @@ export function Button({
     >
       {loading ? <Loader2 aria-hidden="true" size={20} className="animate-spin" /> : icon}
       {children}
-      {trailing}
+      {rightIcon}
     </button>
   )
 }
