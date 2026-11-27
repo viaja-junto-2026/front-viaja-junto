@@ -5,13 +5,16 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuthContext } from '../auth/authContext'
 import { ApiError } from '../services/apiError'
+import { listTripDestinations } from '../services/itinerary'
 import { createTrip, deleteTrip, getTrip, updateTrip } from '../services/trips'
 import { makeAuthValue } from '../test/auth'
+import { makeStop } from '../test/itinerary'
 import { createTestQueryClient } from '../test/query'
 import { makeTrip } from '../test/trips'
 import TripCreatePage from './TripCreatePage'
 import TripEditPage from './TripEditPage'
 
+vi.mock('../services/itinerary', () => ({ listTripDestinations: vi.fn() }))
 vi.mock('../services/trips', () => ({
   createTrip: vi.fn(),
   getTrip: vi.fn(),
@@ -94,6 +97,7 @@ describe('TripEditPage', () => {
     vi.mocked(getTrip).mockReset()
     vi.mocked(updateTrip).mockReset()
     vi.mocked(deleteTrip).mockReset()
+    vi.mocked(listTripDestinations).mockReset().mockResolvedValue([])
   })
 
   it('shows a loading skeleton while opening', () => {
@@ -125,6 +129,28 @@ describe('TripEditPage', () => {
       'abc',
       expect.objectContaining({ name: 'Europa', startDate: '2027-07-01', endDate: null }),
     )
+  })
+
+  it('does not save new dates that would leave a destination outside the trip', async () => {
+    vi.mocked(getTrip).mockResolvedValue(savedTrip)
+    vi.mocked(listTripDestinations).mockResolvedValue([
+      makeStop({ arrival: '2027-07-02T00:00:00.000Z', departure: '2027-07-05T00:00:00.000Z' }),
+    ])
+    renderAt('/trips/abc/edit')
+    await screen.findByLabelText('Nome da viagem')
+
+    await userEvent.click(screen.getByRole('combobox', { name: 'Data final' }))
+    await userEvent.click(screen.getByRole('button', { name: '3 de julho de 2027' }))
+    const save = screen.getByRole('button', { name: 'Salvar alterações' })
+    await waitFor(() => expect(save).toBeEnabled())
+    await userEvent.click(save)
+
+    expect(
+      screen.getByText(
+        'Com essas datas, 1 destino ficaria fora da viagem. Antes, ajuste as datas no roteiro.',
+      ),
+    ).toBeInTheDocument()
+    expect(updateTrip).not.toHaveBeenCalled()
   })
 
   it('deletes only after the confirmation and goes back to the list', async () => {

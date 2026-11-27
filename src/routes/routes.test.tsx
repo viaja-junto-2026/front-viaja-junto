@@ -12,6 +12,7 @@ import { routes } from './routes'
 
 // A home busca os destinos mais bem avaliados: nos testes de rota a lista vem vazia.
 vi.mock('../services/destinations', () => ({
+  getDestination: vi.fn(),
   listDestinations: vi.fn().mockResolvedValue({
     data: [],
     meta: { page: 1, limit: 12, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
@@ -33,6 +34,7 @@ vi.mock('../services/destinations', () => ({
   }),
 }))
 vi.mock('../services/activities', () => ({
+  getActivity: vi.fn(),
   getActivityDetails: vi.fn().mockResolvedValue({
     id: '1',
     name: 'Museu do Louvre',
@@ -57,6 +59,10 @@ vi.mock('../services/activities', () => ({
     data: [],
     meta: { page: 1, limit: 9, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
   }),
+}))
+vi.mock('../services/itinerary', () => ({
+  listTripDestinations: vi.fn().mockResolvedValue([]),
+  listTripActivities: vi.fn().mockResolvedValue([]),
 }))
 vi.mock('../services/trips', () => ({
   createTrip: vi.fn(),
@@ -116,7 +122,7 @@ describe('routes', () => {
     ['/activities/1', 'Museu do Louvre'],
     ['/trips', 'Minhas viagens'],
     ['/trips/new', 'Nova viagem'],
-    ['/trips/1', 'Viagem'],
+    ['/trips/1', 'Eurotrip'],
     ['/trips/1/edit', 'Editar viagem'],
     ['/join', 'Entrar com código'],
     ['/reviews', 'Avaliações'],

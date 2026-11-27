@@ -100,6 +100,43 @@ export function daysUntil(input: DateInput, now: Date = new Date()): number {
   return Math.round((toDayNumber(date) - today) / MS_PER_DAY)
 }
 
+const dayFormat = new Intl.DateTimeFormat(LOCALE, {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+})
+
+/** Título de um dia do roteiro: `Sexta-feira, 15 de janeiro`. */
+export function formatDayTitle(input: DateInput): string {
+  const date = toDate(input)
+  if (!date) return EMPTY_DATE
+  const title = dayFormat.format(date)
+  return title.charAt(0).toUpperCase() + title.slice(1)
+}
+
+/**
+ * Hora de uma atividade: `14:00`. A API guarda a hora marcada no destino como UTC, então
+ * ela é mostrada sem converter para o fuso do navegador.
+ */
+export function formatTime(input: DateInput): string {
+  const date = toDate(input)
+  return date ? date.toISOString().slice(11, 16) : EMPTY_DATE
+}
+
+/** Duração em minutos: `45 min`, `3 h`, `1 h 30 min`, `4 dias`, `1 dia e 2 h`. */
+export function formatDuration(minutes: number): string {
+  const days = Math.floor(minutes / 1440)
+  const rest = minutes % 1440
+  const hours = Math.floor(rest / 60)
+  const mins = rest % 60
+  const time = [hours > 0 && `${hours} h`, mins > 0 && `${mins} min`].filter(Boolean).join(' ')
+
+  if (days === 0) return time || '0 min'
+  const dayText = days === 1 ? '1 dia' : `${days} dias`
+  return time ? `${dayText} e ${time}` : dayText
+}
+
 const ratingFormat = new Intl.NumberFormat(LOCALE, {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,

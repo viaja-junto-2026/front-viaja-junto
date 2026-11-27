@@ -55,6 +55,13 @@ export function Select({
   const selected = options.find((option) => option.value === current)
   const hasMessage = Boolean(error ?? helperText)
 
+  const listRef = useRef<HTMLUListElement>(null)
+
+  // Aberta no fim da tela ou de uma janela, a lista rola até ficar visível.
+  useEffect(() => {
+    if (open) listRef.current?.scrollIntoView?.({ block: 'nearest' })
+  }, [open])
+
   useEffect(() => {
     if (!open) return
     function closeOnOutsideClick(event: MouseEvent) {
@@ -156,6 +163,7 @@ export function Select({
         </button>
         {open && (
           <ul
+            ref={listRef}
             id={listboxId}
             role="listbox"
             aria-label={label}

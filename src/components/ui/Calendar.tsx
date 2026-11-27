@@ -27,7 +27,16 @@ type CalendarProps = {
   value: string | null
   /** Primeiro dia que pode ser escolhido. */
   min?: string
+  /** Último dia que pode ser escolhido. */
+  max?: string
   onSelect: (day: string) => void
+}
+
+/** Hoje, se puder ser escolhido; senão o limite mais próximo dele. */
+function startingDay(today: string, min?: string, max?: string): string {
+  if (min && today < min) return min
+  if (max && today > max) return max
+  return today
 }
 
 function dayStyle(selected: boolean, today: boolean): string {
@@ -40,11 +49,11 @@ function dayStyle(selected: boolean, today: boolean): string {
  * Calendário de um mês. Teclado: setas andam por dia e por semana, Home e End vão para o
  * começo e o fim da semana, PageUp e PageDown trocam de mês (com Shift, de ano).
  */
-export function Calendar({ value, min, onSelect }: CalendarProps) {
+export function Calendar({ value, min, max, onSelect }: CalendarProps) {
   const titleId = useId()
   const today = todayIso()
   // Dia que recebe o foco; ele também define o mês mostrado.
-  const [active, setActive] = useState(() => value ?? (min && min > today ? min : today))
+  const [active, setActive] = useState(() => value ?? startingDay(today, min, max))
   const gridRef = useRef<HTMLTableElement>(null)
   // O foco só acompanha o dia ao abrir e no teclado, não ao usar as setas do cabeçalho.
   const focusActive = useRef(true)
@@ -121,7 +130,9 @@ export function Calendar({ value, min, onSelect }: CalendarProps) {
                       tabIndex={day === active ? 0 : -1}
                       aria-label={formatLongDate(day)}
                       aria-current={day === today ? 'date' : undefined}
-                      disabled={min !== undefined && day < min}
+                      disabled={
+                        (min !== undefined && day < min) || (max !== undefined && day > max)
+                      }
                       onClick={() => onSelect(day)}
                       className={`h-9 w-full rounded-xs text-body-sm tabular transition-colors disabled:cursor-not-allowed disabled:opacity-35 ${dayStyle(day === value, day === today)} ${focusRing}`}
                     >

@@ -18,6 +18,14 @@ export const tripStatusLabels: Record<TripStatus, string> = {
   COMPLETED: 'Concluída',
 }
 
+export type ActivityStatus = Schemas['TripActivityResponseDto']['status']
+
+export const activityStatusLabels: Record<ActivityStatus, string> = {
+  PENDING: 'Pendente',
+  CONFIRMED: 'Confirmada',
+  COMPLETED: 'Concluída',
+}
+
 export const destinationCategoryLabels: Record<DestinationCategory, string> = {
   CITY: 'Cidade',
   BEACH: 'Praia',

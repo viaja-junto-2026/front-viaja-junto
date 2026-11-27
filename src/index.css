@@ -28,6 +28,39 @@
     cursor: pointer;
   }
 
+  /*
+   * Barra de rolagem fina e delicada, sem setas nem trilho. Chrome, Edge e Safari usam os
+   * pseudo-elementos; o Firefox, que não os conhece, usa as propriedades padrão (no Chrome
+   * elas anulariam os pseudo-elementos, por isso ficam separadas).
+   */
+  @supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+      width: --spacing(1.5);
+      height: --spacing(1.5);
+    }
+
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: calc(infinity * 1px);
+      background: --alpha(var(--color-rose-vintage) / 60%);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-rose-vintage);
+    }
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-rose-vintage) transparent;
+    }
+  }
+
   /* Anel de foco visível e consistente em todos os elementos interativos. */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-red-ruby;

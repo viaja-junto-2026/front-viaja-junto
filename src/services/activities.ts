@@ -65,3 +65,8 @@ export async function getActivityDetails(id: string): Promise<ActivityDetails> {
     }),
   )
 }
+
+/** Busca uma atividade do catálogo (nome, tipo, local e foto). Lança `ApiError`. */
+export async function getActivity(id: string): Promise<Activity> {
+  return unwrap(await apiClient.GET('/api/activity-catalog/{id}', { params: { path: { id } } }))
+}
