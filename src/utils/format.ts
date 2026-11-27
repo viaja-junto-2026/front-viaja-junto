@@ -24,6 +24,11 @@ export function formatCurrencyFromCents(cents: number, currency = 'BRL'): string
   return formatCurrency(cents / 100, currency)
 }
 
+/** Porcentagem inteira como no DESIGN.md: `62 %`, sem quebrar a linha no meio. */
+export function formatPercent(value: number): string {
+  return `${new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(value)}\u00a0%`
+}
+
 function toDate(input: DateInput): Date | null {
   const date = input instanceof Date ? input : new Date(input)
   return Number.isNaN(date.getTime()) ? null : date

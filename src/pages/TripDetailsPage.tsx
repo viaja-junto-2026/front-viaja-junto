@@ -1,14 +1,4 @@
-import {
-  Lock,
-  MapPin,
-  MapPinOff,
-  Moon,
-  Pencil,
-  Ticket,
-  UserRound,
-  Users,
-  Wallet,
-} from 'lucide-react'
+import { Lock, MapPin, MapPinOff, Moon, Pencil, Ticket, UserRound, Users } from 'lucide-react'
 import { useParams } from 'react-router'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
@@ -31,6 +21,7 @@ import type { Trip } from '../services/trips'
 import { getErrorMessage } from '../utils/errorMessages'
 import { formatDateRange, nightsBetween } from '../utils/format'
 import { memberRoleLabels } from '../utils/labels'
+import { BudgetTab } from './trip/BudgetTab'
 import { ItineraryTab } from './trip/ItineraryTab'
 
 const backToTrips = <ButtonLink to={paths.trips}>Voltar para minhas viagens</ButtonLink>
@@ -97,14 +88,7 @@ function TripContent({ trip }: { trip: Trip }) {
             {
               id: 'budget',
               label: 'Orçamento',
-              content: (
-                <EmptyState
-                  icon={Wallet}
-                  plainIcon
-                  title="O orçamento chega em breve"
-                  description="Aqui o grupo vai acompanhar o total, o que já foi planejado e o saldo."
-                />
-              ),
+              content: <BudgetTab trip={trip} />,
             },
             {
               id: 'members',
