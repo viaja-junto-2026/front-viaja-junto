@@ -19,7 +19,8 @@ export function PageBanner({ eyebrow, title, description, children }: PageBanner
   return (
     <header className="bg-white">
       <Container className="relative flex flex-col items-center gap-3 pt-10 pb-10 text-center">
-        <FlightRoute />
+        {/* Um título com mais de uma palavra ocupa a largura toda no celular. */}
+        <FlightRoute raised={title.includes(' ')} />
         <p className="text-label-overline text-red-ruby uppercase">{eyebrow}</p>
         <DisplayTitle size="page">{title}</DisplayTitle>
         <CompassDivider />

@@ -1,10 +1,13 @@
 import { LockKeyhole } from 'lucide-react'
-import { Outlet, useLocation } from 'react-router'
+import { useEffect } from 'react'
+import { Navigate, Outlet, useLocation } from 'react-router'
 import { EmptyState } from '../components/feedback/EmptyState'
+import { ErrorState } from '../components/feedback/ErrorState'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { paths } from '../routes/paths'
 import { saveRedirectTarget } from '../services/session'
+import { getErrorMessage } from '../utils/errorMessages'
 import { useAuth } from './useAuth'
 
 /**
@@ -32,11 +35,39 @@ function SignInPrompt() {
   )
 }
 
+/** Sessão que acabou no meio do uso: vai direto ao login e volta para a mesma página depois. */
+function ExpiredSessionRedirect() {
+  const location = useLocation()
+  const target = location.pathname + location.search + location.hash
+
+  useEffect(() => saveRedirectTarget(target), [target])
+
+  return (
+    <Navigate
+      to={paths.login}
+      replace
+      state={{ error: 'Sua sessão expirou. Entre de novo para continuar.' }}
+    />
+  )
+}
+
 /** Guarda das rotas privadas: só mostra o conteúdo para quem está logado. */
 export function RequireAuth() {
-  const { status } = useAuth()
+  const { status, sessionExpired, sessionError, retrySession } = useAuth()
 
-  if (status === 'loading') return <LoadingSkeleton />
-  if (status === 'unauthenticated') return <SignInPrompt />
-  return <Outlet />
+  if (status === 'authenticated') return <Outlet />
+  if (status === 'unauthenticated' && sessionExpired) return <ExpiredSessionRedirect />
+
+  return (
+    // A altura mínima mantém o rodapé das telas de largura total fora da primeira dobra.
+    <div className="min-h-screen">
+      {status === 'loading' ? (
+        <LoadingSkeleton />
+      ) : sessionError ? (
+        <ErrorState message={getErrorMessage(sessionError)} onRetry={retrySession} />
+      ) : (
+        <SignInPrompt />
+      )}
+    </div>
+  )
 }

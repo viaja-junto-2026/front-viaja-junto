@@ -75,7 +75,7 @@ O login é só com Google (ver `docs/SCOPE.md`). Esta base cuida da sessão; as 
 - **Token:** guardado em `localStorage` junto com o horário de expiração (`expires_in`), em `src/services/session.ts`. Assim a sessão sobrevive a recarregar a página, mas um token expirado nunca é usado. O token dura cerca de 1 hora e o React escapa o conteúdo por padrão (não usamos `dangerouslySetInnerHTML`), o que reduz o risco de XSS roubar o token. O token nunca vai para logs nem para a URL depois do login.
 - **Chamadas:** o `apiClient` tem um middleware que envia `Authorization: Bearer <token>` quando há sessão. Se a API responde **401**, a sessão é descartada e a interface é avisada.
 - **Estado:** `AuthProvider` (em `App.tsx`) expõe `useAuth()` com `status` (`loading`, `authenticated` ou `unauthenticated`), `user`, `signIn(token, expiresInSeconds)` e `signOut()`. Com token guardado, o provider confirma o usuário em `GET /auth/me` antes de liberar o app.
-- **Rotas privadas:** `RequireAuth` envolve as rotas que exigem login (`/trips*`, `/join`, `/notifications` e `/profile`). Sem sessão, a página continua dentro do layout (a barra e a aba ativa ficam visíveis) e mostra o aviso "Entre para continuar" com o botão Entrar. Ao clicar, o botão guarda a página pedida com `saveRedirectTarget` e leva para `/login`; depois do login, a tela de retorno lê o destino com `consumeRedirectTarget`. Só caminhos internos são aceitos, para ninguém ser levado a outro site.
+- **Rotas privadas:** `RequireAuth` envolve as rotas que exigem login (`/trips*`, `/join`, `/notifications` e `/profile`). Se a sessão não puder ser confirmada por falha de rede ou do servidor, o token é mantido e a guarda mostra o erro com "Tentar de novo". Se a sessão **expirar** (a API responde 401), a guarda leva direto para o login, com o aviso e a página guardada para voltar. Para quem ainda não entrou, a página continua dentro do layout (a barra e a aba ativa ficam visíveis) e mostra o aviso "Entre para continuar" com o botão Entrar. Ao clicar, o botão guarda a página pedida com `saveRedirectTarget` e leva para `/login`; depois do login, a tela de retorno lê o destino com `consumeRedirectTarget`. Só caminhos internos são aceitos, para ninguém ser levado a outro site.
 - **Sair:** `signOut()` chama `POST /auth/logout` (invalida os tokens do usuário em todos os dispositivos) e descarta o token mesmo que a chamada falhe.
 - **Testes:** use `AuthContext.Provider` com `makeAuthValue()` (em `src/test/auth.ts`) para simular usuário logado, visitante ou carregando.
 
@@ -105,7 +105,8 @@ Os componentes base do design system ficam em `src/components/ui/`. Cada tela mo
 | `Button`                                                 | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira), `solid`, `outline` e `light`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
 | `Input`, `Textarea`, `Select`                            | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                                           |
 | `Card`, `CardCompact`, `CardTitle`                       | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                                             |
-| `Badge`, `Chip`                                          | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                                     |
+| `Chip`                                                   | Filtros e categorias (`selected`)                                                                                                                  |
+| `TripCard`, `TripStatusBadge`, `TicketPerforation`       | Viagem em forma de cartão de embarque, selo do status com ícone e picote compartilhado com o login                                                 |
 | `Avatar`, `AvatarGroup`                                  | Iniciais e avatares empilhados com "+N"                                                                                                            |
 | `Alert`                                                  | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                                                   |
 | `Tabs`, `ProgressBar`                                    | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                                            |
@@ -123,6 +124,7 @@ Os componentes base do design system ficam em `src/components/ui/`. Cada tela mo
 | `TicketCard`, `CurvedEdge`, `CompassDivider`             | Cartão de embarque do login, curva ao lado da foto e filete dos títulos                                                                            |
 | `FlightRoute`                                            | Rota tracejada nas laterais do título das listas                                                                                                   |
 | `DisplayTitle`, `LocationLine`, `RatingSummary`          | Título em serifa, localização e resumo da nota dos topos de detalhe                                                                                |
+| `StatFilter`                                             | Filtro com a quantidade de itens em cada opção                                                                                                     |
 | `BandOverlap`                                            | Faz o fundo do topo continuar até a metade do bloco seguinte                                                                                       |
 | `DestinationShowcaseCard`, `FlushCard`                   | Card de destino (home e catálogo) e card sem respiro interno, para itens com foto                                                                  |
 
@@ -209,7 +211,7 @@ Valores e mensagens padronizados, para todas as telas mostrarem a mesma coisa. N
 
 As datas da API são dias de calendário e são tratadas em UTC, para o dia não mudar com o fuso do navegador. Uma data inválida vira `—`. Mostre valores com `numeric-*` e a classe `tabular`.
 
-**Nomes de domínio** (`src/utils/labels.ts`): `tripStatusLabels`, `destinationCategoryLabels`, `activityTypeLabels` e `memberRoleLabels` traduzem os valores da API (`BEACH`, `PLANNING`, `VIEWER`...) para a interface. O `Badge` já usa `tripStatusLabels`.
+**Nomes de domínio** (`src/utils/labels.ts`): `tripStatusLabels`, `destinationCategoryLabels`, `activityTypeLabels` e `memberRoleLabels` traduzem os valores da API (`BEACH`, `PLANNING`, `VIEWER`...) para a interface. O `TripStatusBadge` já usa `tripStatusLabels`.
 
 **Erros da API:**
 

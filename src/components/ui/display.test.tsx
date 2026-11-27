@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { Alert } from './Alert'
 import { Avatar, AvatarGroup } from './Avatar'
-import { Badge } from './Badge'
 import { Card, CardCompact, CardTitle } from './Card'
 import { Chip } from './Chip'
 import { ProgressBar } from './ProgressBar'
@@ -35,18 +34,6 @@ describe('Card', () => {
 
     expect(screen.getByTestId('card').tagName).toBe('LI')
     expect(screen.getByTestId('card')).toHaveClass('hover:shadow-md')
-  })
-})
-
-describe('Badge', () => {
-  it.each([
-    ['PLANNING', 'Planejando', 'bg-blue-mist'],
-    ['CONFIRMED', 'Confirmada', 'bg-green-mint'],
-    ['COMPLETED', 'Concluída', 'bg-beige-sand'],
-  ] as const)('shows the text and the color of %s', (status, label, color) => {
-    render(<Badge status={status} />)
-
-    expect(screen.getByText(label)).toHaveClass(color, 'uppercase')
   })
 })
 

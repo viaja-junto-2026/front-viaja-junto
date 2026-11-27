@@ -50,7 +50,7 @@ export const routes: RouteObject[] = [
           {
             element: <RequireAuth />,
             children: [
-              { path: paths.trips, element: <TripsPage /> },
+              { path: paths.trips, element: <TripsPage />, handle: { fullBleed: true } },
               { path: paths.tripNew, element: <TripCreatePage /> },
               { path: patterns.tripDetails, element: <TripDetailsPage /> },
               { path: patterns.tripEdit, element: <TripEditPage /> },

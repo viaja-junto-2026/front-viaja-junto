@@ -7,7 +7,7 @@ const sizes = {
     viewBox: '0 0 80 56',
     dash: '3 6',
     stroke: 1.5,
-    placement: 'top-8 h-14 w-20 lg:hidden',
+    placement: 'h-14 w-20 lg:hidden',
   },
   wide: {
     viewBox: '0 0 280 180',
@@ -48,19 +48,22 @@ function RouteSide({ size, path, children, className }: RouteSideProps) {
  * Rota de viagem ao lado de um título centralizado: sai de um alfinete à esquerda e termina
  * em um avião à direita. É só enfeite. Vai dentro de um bloco `relative`.
  */
-export function FlightRoute() {
+export function FlightRoute({ raised = false }: { raised?: boolean }) {
+  // `raised` mantém a versão de celular acima do título, para ela não encostar em um título longo.
+  const compactTop = raised ? 'top-1' : 'top-8'
+
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 text-red-ruby">
       <RouteSide
         size="compact"
-        className="left-4"
+        className={`left-4 ${compactTop}`}
         path="M18 46C38 56 62 46 56 32C50 21 36 30 46 38C58 44 72 28 76 10"
       >
         <MapPin x={0} y={28} width={18} height={18} strokeWidth={1.5} />
       </RouteSide>
       <RouteSide
         size="compact"
-        className="right-4"
+        className={`right-4 ${compactTop}`}
         path="M4 46C14 22 24 52 42 44C56 36 46 24 36 32C28 42 50 46 62 22"
       >
         <Plane x={59} y={2} width={20} height={20} strokeWidth={1.5} />

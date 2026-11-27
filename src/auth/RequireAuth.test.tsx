@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { consumeRedirectTarget } from '../services/session'
 import { makeAuthValue } from '../test/auth'
@@ -59,6 +59,36 @@ describe('RequireAuth', () => {
     expect(screen.getByText('login page')).toBeInTheDocument()
     expect(router.state.location.pathname).toBe('/login')
     expect(consumeRedirectTarget()).toBe('/private?tab=budget')
+  })
+
+  it('sends an expired session straight to the login and remembers the page', () => {
+    const router = renderGuarded(
+      makeAuthValue({ status: 'unauthenticated', user: null, sessionExpired: true }),
+      '/private?tab=budget',
+    )
+
+    expect(screen.getByText('login page')).toBeInTheDocument()
+    expect(router.state.location.state).toEqual({
+      error: 'Sua sessão expirou. Entre de novo para continuar.',
+    })
+    expect(consumeRedirectTarget()).toBe('/private?tab=budget')
+  })
+
+  it('shows an error with retry when the session cannot be confirmed', async () => {
+    const retrySession = vi.fn()
+    renderGuarded(
+      makeAuthValue({
+        status: 'unauthenticated',
+        user: null,
+        sessionError: new TypeError('Failed to fetch'),
+        retrySession,
+      }),
+    )
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Sem conexão com o servidor.')
+    await userEvent.click(screen.getByRole('button', { name: 'Tentar de novo' }))
+
+    expect(retrySession).toHaveBeenCalledOnce()
   })
 
   it('does not remember any page until the user chooses to sign in', () => {

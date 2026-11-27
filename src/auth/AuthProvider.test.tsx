@@ -13,11 +13,14 @@ vi.mock('../services/auth', () => ({
 }))
 
 function Probe() {
-  const { status, user, signIn, signOut } = useAuth()
+  const { status, user, sessionExpired, sessionError, retrySession, signIn, signOut } = useAuth()
   return (
     <div>
       <p data-testid="status">{status}</p>
       <p data-testid="user">{user?.name ?? 'nobody'}</p>
+      <p data-testid="expired">{sessionExpired ? 'expired' : 'no'}</p>
+      <p data-testid="error">{sessionError ? 'error' : 'no'}</p>
+      <button onClick={retrySession}>retry</button>
       <button onClick={() => signIn('new-token', 3600).catch(() => {})}>sign in</button>
       <button onClick={() => signOut()}>sign out</button>
     </div>
@@ -121,7 +124,49 @@ describe('AuthProvider', () => {
     notifyUnauthorized()
 
     await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('unauthenticated'))
+    expect(screen.getByTestId('expired')).toHaveTextContent('expired')
     expect(getToken()).toBeNull()
+  })
+
+  it('keeps the expired flag when the stored token is refused at startup', async () => {
+    saveToken('stored-token', 3600)
+    vi.mocked(getCurrentUser).mockImplementation(async () => {
+      await Promise.resolve()
+      notifyUnauthorized()
+      throw new Error('401')
+    })
+
+    renderProvider()
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('unauthenticated'))
+    expect(screen.getByTestId('expired')).toHaveTextContent('expired')
+  })
+
+  it('does not treat a sign out as an expired session', async () => {
+    saveToken('stored-token', 3600)
+    vi.mocked(getCurrentUser).mockResolvedValue(testUser)
+    vi.mocked(logout).mockImplementation(async () => notifyUnauthorized())
+    renderProvider()
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('authenticated'))
+
+    await userEvent.click(screen.getByText('sign out'))
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('unauthenticated'))
+    expect(screen.getByTestId('expired')).toHaveTextContent('no')
+  })
+
+  it('keeps the token and allows a retry when the API is unreachable', async () => {
+    saveToken('stored-token', 3600)
+    vi.mocked(getCurrentUser).mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    renderProvider()
+    await waitFor(() => expect(screen.getByTestId('error')).toHaveTextContent('error'))
+    expect(getToken()).toBe('stored-token')
+
+    vi.mocked(getCurrentUser).mockResolvedValue(testUser)
+    await userEvent.click(screen.getByText('retry'))
+
+    await waitFor(() => expect(screen.getByTestId('status')).toHaveTextContent('authenticated'))
+    expect(screen.getByTestId('error')).toHaveTextContent('no')
   })
 
   it('requires the provider to use the hook', () => {
