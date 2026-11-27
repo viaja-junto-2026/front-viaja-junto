@@ -124,6 +124,7 @@ Os componentes base do design system ficam em `src/components/ui/`. Cada tela mo
 | `TicketCard`, `CurvedEdge`, `CompassDivider`             | Cartão de embarque do login, curva ao lado da foto e filete dos títulos                                                                            |
 | `FlightRoute`                                            | Rota tracejada nas laterais do título das listas                                                                                                   |
 | `DisplayTitle`, `LocationLine`, `RatingSummary`          | Título em serifa, localização e resumo da nota dos topos de detalhe                                                                                |
+| `StatFilter`                                             | Filtro com a quantidade de itens em cada opção                                                                                                     |
 | `BandOverlap`                                            | Faz o fundo do topo continuar até a metade do bloco seguinte                                                                                       |
 | `DestinationShowcaseCard`, `FlushCard`                   | Card de destino (home e catálogo) e card sem respiro interno, para itens com foto                                                                  |
 

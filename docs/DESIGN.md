@@ -538,6 +538,7 @@ Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de
 - **Cards:** `card` para conteúdo principal (viagem, resumo do orçamento) e `card-compact` para itens repetidos (atividade, despesa). Card clicável inteiro ganha `shadow-md` no hover e foco visível.
 - **Chips:** filtros e categorias de atividade (Passeio, Comida, Hospedagem, Transporte, Outros). `chip-selected` em Rosa Antigo com ícone de check e texto `gray-ink`.
 - **Badges de status (`TripStatusBadge`):** `badge-planning`, `badge-confirmed` e `badge-completed`, em `label-sm` caixa alta, sempre com ícone e texto ("PLANEJANDO").
+- **Painel de filtro com contagem (`StatFilter`):** para uma escolha entre poucas opções (2 a 5). Dentro da caixa marrom, partes iguais com ícone, quantidade (`numeric-lg`) e nome; a escolhida fica em `beige-light` com check. No celular vira uma grade 2 x 2. Usado no filtro de status das viagens.
 - **Card de viagem (`TripCard`):** cartão de embarque, com o mesmo picote do login (`TicketPerforation`). Em cima, status, nome (`font-heading`) e descrição; no canhoto, datas e o papel da pessoa. Usa `drop-shadow-ticket-rest` em repouso e `drop-shadow-ticket` no hover.
 - **Alertas:** `alert-success`, `alert-warning`, `alert-error` e `alert-info`, com ícone à esquerda e texto em `body-sm`.
 - **Abas:** navegação dentro da viagem (Roteiro, Orçamento, Despesas, Membros). A aba ativa tem texto Bordô e sublinhado de 3 px em `red-ruby`.
@@ -565,7 +566,7 @@ Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de
 - Faça todos os valores em dinheiro com algarismos tabulares e formato pt-BR (`R$ 1.250,00`).
 - Faça os estados (sucesso, aviso, erro, status da viagem, perigo) com ícone e texto além da cor.
 - Faça o layout funcionar de 360 px de largura até o desktop, sem rolagem horizontal.
-- Faça estados vazios úteis: ícone, uma frase do que fazer e o botão da ação ("Você ainda não tem viagens. Crie a primeira!").
+- Faça estados vazios úteis: ícone, uma frase do que fazer e o botão da ação ("Você ainda não tem viagens. Crie a primeira!"). Em Minhas viagens o ícone fica solto, sem círculo (`plainIcon`).
 - Mostre ações de edição apenas para quem pode editar (OWNER e EDITOR); para VIEWER, a mesma tela em modo leitura.
 - Use fotos reais dos destinos (`photoUrl` da API) sempre que existirem; sem foto, use o bege `beige-sand` com o ícone do destino, nunca uma imagem genérica de banco de imagens.
 - Não use cores fora da paleta, gradientes chamativos ou sombras coloridas. Os gradientes permitidos são os véus sobre fotos e o degradê do banner com o rodapé (`red-burgundy` em cima e `brown-espresso` embaixo, sem divisão). A barra superior é **branca em todas as páginas**, sem faixas marrons ou degradês no topo. Fora da home, uma sombra suave (`shadow-md`), sem linha, a separa do conteúdo; na home não há sombra. No catálogo, o branco do topo desce até a metade da caixa de filtros (`BandOverlap`).

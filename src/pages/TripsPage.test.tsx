@@ -81,21 +81,45 @@ describe('TripsPage', () => {
     renderPage()
     await screen.findByRole('link', { name: 'Eurotrip 2027' })
 
-    await userEvent.click(screen.getByRole('button', { name: 'Concluída' }))
+    await userEvent.click(screen.getByRole('button', { name: /Concluída/ }))
 
     expect(
       await screen.findByRole('heading', { name: 'Nenhuma viagem com esse status' }),
     ).toBeInTheDocument()
-    expect(listTrips).toHaveBeenLastCalledWith({ page: 1, limit: 9, status: 'COMPLETED' })
+    expect(listTrips).toHaveBeenCalledWith({ page: 1, limit: 9, status: 'COMPLETED' })
 
     await userEvent.click(screen.getByRole('button', { name: 'Ver todas' }))
 
     expect(await screen.findByRole('link', { name: 'Eurotrip 2027' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Todas' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: /Todas/ })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('shows how many trips there are in each status', async () => {
+    const totals = { PLANNING: 2, CONFIRMED: 0, COMPLETED: 1 }
+    vi.mocked(listTrips).mockImplementation(async ({ status } = {}) =>
+      makePaginatedTrips([makeTrip()], { total: status ? totals[status] : 3 }),
+    )
+    renderPage()
+
+    expect(await screen.findByRole('button', { name: /3\s*Todas/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /2\s*Planejando/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /0\s*Confirmada/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /1\s*Concluída/ })).toBeInTheDocument()
+  })
+
+  it('keeps the filter usable when the counts fail', async () => {
+    vi.mocked(listTrips).mockImplementation(async ({ limit } = {}) => {
+      if (limit === 1) throw ApiError.fromResponse(429)
+      return makePaginatedTrips()
+    })
+    renderPage()
+
+    expect(await screen.findByRole('link', { name: 'Eurotrip 2027' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /–\s*Todas/ })).toBeInTheDocument()
   })
 
   it('shows the error with a retry button that reloads', async () => {
-    vi.mocked(listTrips).mockRejectedValueOnce(ApiError.fromResponse(500))
+    vi.mocked(listTrips).mockRejectedValue(ApiError.fromResponse(500))
     renderPage()
 
     expect(await screen.findByRole('alert')).toHaveTextContent(

@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { PageBanner } from '../components/ui/PageBanner'
 import { Pagination } from '../components/ui/Pagination'
+import { useTripCounts } from '../hooks/useTripCounts'
 import { useTrips } from '../hooks/useTrips'
 import { paths } from '../routes/paths'
 import { TripsStatusFilter } from './trips/TripsStatusFilter'
@@ -24,6 +25,7 @@ function NewTripLink() {
 /** Minhas viagens (`/trips`): as viagens do usuário, com filtro por status e paginação. */
 export default function TripsPage() {
   const trips = useTrips()
+  const counts = useTripCounts()
 
   return (
     <>
@@ -45,21 +47,26 @@ export default function TripsPage() {
       </PageBanner>
 
       <BandOverlap>
-        <TripsStatusFilter status={trips.status} onChange={trips.setStatus} />
+        <TripsStatusFilter status={trips.status} counts={counts.data} onChange={trips.setStatus} />
       </BandOverlap>
 
-      <Container className="py-12">
+      {/* Altura mínima igual em todos os filtros, para o rodapé não pular ao alternar. */}
+      <Container className="min-h-112 py-12 lg:min-h-96">
         <QueryState
           isLoading={trips.isLoading}
           isError={trips.isError}
           isEmpty={trips.isEmpty}
           error={trips.error}
-          onRetry={() => void trips.refetch()}
+          onRetry={() => {
+            void trips.refetch()
+            void counts.refetch()
+          }}
           loading={<LoadingSkeleton variant="card" count={3} label="Carregando viagens" />}
           empty={
             trips.status ? (
               <EmptyState
                 icon={Plane}
+                plainIcon
                 title="Nenhuma viagem com esse status"
                 description="Escolha outro status ou veja todas as suas viagens."
                 action={
@@ -71,6 +78,7 @@ export default function TripsPage() {
             ) : (
               <EmptyState
                 icon={Plane}
+                plainIcon
                 title="Você ainda não tem viagens. Crie a primeira!"
                 action={<NewTripLink />}
               />
