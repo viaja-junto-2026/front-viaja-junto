@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../auth/useAuth'
 import { createTrip, deleteTrip, updateTrip, type Trip, type TripInput } from '../services/trips'
+import { budgetSummaryKey } from './budgetKeys'
 import { useApiMutation } from './useApiMutation'
 import { tripKey } from './useTrip'
 import { tripsKey } from './useTrips'
@@ -17,7 +18,8 @@ export function useUpdateTrip(id: string, onSuccess: (trip: Trip) => void) {
 
   return useApiMutation({
     mutationFn: (input: TripInput) => updateTrip(id, input),
-    invalidateKeys: [tripsKey],
+    // O resumo do orçamento usa a moeda da viagem.
+    invalidateKeys: [tripsKey, budgetSummaryKey(user?.id, id)],
     onSuccess: (trip: Trip) => {
       queryClient.setQueryData(tripKey(user?.id, id), trip)
       onSuccess(trip)

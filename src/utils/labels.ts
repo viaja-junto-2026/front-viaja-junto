@@ -41,6 +41,12 @@ export const activityTypeLabels: Record<ActivityType, string> = {
   OTHER: 'Outros',
 }
 
+/** Os mesmos tipos como categorias do orçamento. */
+export const budgetCategoryLabels: Record<ActivityType, string> = {
+  ...activityTypeLabels,
+  TOUR: 'Passeios',
+}
+
 export const memberRoleLabels: Record<MemberRole, string> = {
   OWNER: 'Criador',
   EDITOR: 'Editor',

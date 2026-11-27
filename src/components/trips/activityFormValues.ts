@@ -1,5 +1,6 @@
 import type { FieldErrors } from '../../hooks/useFormFields'
 import type { TripActivity, TripActivityInput } from '../../services/itinerary'
+import { amountToText, parseAmount } from '../../utils/money'
 import { describePeriod, isOutside, type Period } from './stopFormValues'
 
 export const ACTIVITY_FIELDS = [
@@ -32,19 +33,9 @@ export function toActivityValues(activity?: TripActivity): ActivityValues {
     time: activity?.dateTime?.slice(11, 16) ?? '',
     hours: duration === null ? '' : String(Math.floor(duration / 60)),
     minutes: duration === null ? '' : String(duration % 60),
-    expectedCost:
-      activity?.expectedCost === null || activity?.expectedCost === undefined
-        ? ''
-        : String(activity.expectedCost).replace('.', ','),
+    expectedCost: amountToText(activity?.expectedCost),
     status: activity?.status ?? 'PENDING',
   }
-}
-
-/** `1.250,50` ou `1250.5` viram número; `null` se não for um valor válido. */
-export function parseCost(text: string): number | null {
-  const clean = text.trim()
-  const normalized = clean.includes(',') ? clean.replace(/\./g, '').replace(',', '.') : clean
-  return /^\d+(\.\d{1,2})?$/.test(normalized) ? Number(normalized) : null
 }
 
 function totalMinutes({ hours, minutes }: ActivityValues): number | null {
@@ -69,7 +60,7 @@ export function validateActivity(values: ActivityValues, stay: Period): FieldErr
     errors.durationMinutes = 'A duração vai de 1 minuto a 168 horas (uma semana).'
   }
 
-  if (values.expectedCost.trim() && parseCost(values.expectedCost) === null) {
+  if (values.expectedCost.trim() && parseAmount(values.expectedCost) === null) {
     errors.expectedCost = 'Informe um valor como 150 ou 150,50.'
   }
 
@@ -81,7 +72,7 @@ export function toActivityInput(values: ActivityValues): TripActivityInput {
   return {
     dateTime: values.dateTime && values.time ? `${values.dateTime}T${values.time}:00.000Z` : null,
     durationMinutes: totalMinutes(values),
-    expectedCost: values.expectedCost.trim() ? parseCost(values.expectedCost) : null,
+    expectedCost: values.expectedCost.trim() ? parseAmount(values.expectedCost) : null,
     status: values.status,
   }
 }

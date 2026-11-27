@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeTripActivity } from '../../test/itinerary'
 import {
-  parseCost,
   timeOptions,
   toActivityInput,
   toActivityValues,
@@ -62,18 +61,6 @@ describe('activity form values', () => {
       hours: '',
       minutes: '',
     })
-  })
-
-  it.each([
-    ['150', 150],
-    ['150,50', 150.5],
-    ['1.250,00', 1250],
-    ['99.9', 99.9],
-    ['-3', null],
-    ['10,999', null],
-    ['abc', null],
-  ])('reads the cost "%s"', (text, value) => {
-    expect(parseCost(text)).toBe(value)
   })
 
   it.each([

@@ -13,13 +13,14 @@ import {
   type StopInput,
   type TripActivityInput,
 } from '../services/itinerary'
+import { budgetSummaryKey } from './budgetKeys'
 import { useApiMutation } from './useApiMutation'
 import { tripRouteKey } from './useTripRoute'
 
-/** O roteiro é buscado de novo depois de qualquer mudança. */
+/** Depois de qualquer mudança, o roteiro e o orçamento (que soma os custos) são buscados de novo. */
 function useRouteKeys(tripId: string) {
   const { user } = useAuth()
-  return [tripRouteKey(user?.id, tripId)]
+  return [tripRouteKey(user?.id, tripId), budgetSummaryKey(user?.id, tripId)]
 }
 
 /**

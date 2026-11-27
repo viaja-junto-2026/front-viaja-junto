@@ -6,11 +6,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuthContext } from '../auth/authContext'
 import { getActivity } from '../services/activities'
 import { ApiError } from '../services/apiError'
+import { getBudgetSummary } from '../services/budgets'
 import { getDestination } from '../services/destinations'
 import { listTripActivities, listTripDestinations } from '../services/itinerary'
 import { getTrip } from '../services/trips'
 import { makeActivity } from '../test/activities'
 import { makeAuthValue } from '../test/auth'
+import { makeBudgetSummary } from '../test/budgets'
 import { makeDestination } from '../test/destinations'
 import { makeStop, makeTripActivity } from '../test/itinerary'
 import { createTestQueryClient } from '../test/query'
@@ -18,6 +20,7 @@ import { makeTrip } from '../test/trips'
 import TripDetailsPage from './TripDetailsPage'
 
 vi.mock('../services/trips', () => ({ getTrip: vi.fn() }))
+vi.mock('../services/budgets', () => ({ getBudgetSummary: vi.fn() }))
 vi.mock('../services/itinerary', () => ({
   listTripDestinations: vi.fn(),
   listTripActivities: vi.fn(),
@@ -135,7 +138,8 @@ describe('TripDetailsPage', () => {
     expect(screen.queryByText('Duração:')).not.toBeInTheDocument()
   })
 
-  it('has the three tabs and the future ones say they are coming', async () => {
+  it('has the three tabs, with the budget one working and members still to come', async () => {
+    vi.mocked(getBudgetSummary).mockResolvedValue(makeBudgetSummary())
     renderPage()
     const tabs = within(await screen.findByRole('tablist', { name: 'Seções da viagem' }))
     expect(tabs.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
@@ -145,7 +149,7 @@ describe('TripDetailsPage', () => {
     ])
 
     await userEvent.click(tabs.getByRole('tab', { name: 'Orçamento' }))
-    expect(screen.getByRole('heading', { name: 'O orçamento chega em breve' })).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'Resumo do orçamento' })).toBeInTheDocument()
     await userEvent.click(tabs.getByRole('tab', { name: 'Membros' }))
     expect(screen.getByRole('heading', { name: 'Os membros chegam em breve' })).toBeInTheDocument()
   })
