@@ -34,7 +34,7 @@ describe('useTrips', () => {
     expect(result.current.isLoading).toBe(true)
 
     await waitFor(() => expect(result.current.items).toHaveLength(1))
-    expect(listTrips).toHaveBeenCalledWith({ page: 1, limit: 9, status: undefined })
+    expect(listTrips).toHaveBeenCalledWith({ page: 1, limit: 6, status: undefined })
     expect(result.current.isEmpty).toBe(false)
   })
 
@@ -47,12 +47,12 @@ describe('useTrips', () => {
 
     act(() => result.current.setPage(2))
     await waitFor(() =>
-      expect(listTrips).toHaveBeenLastCalledWith({ page: 2, limit: 9, status: undefined }),
+      expect(listTrips).toHaveBeenLastCalledWith({ page: 2, limit: 6, status: undefined }),
     )
 
     act(() => result.current.setStatus('COMPLETED'))
     await waitFor(() =>
-      expect(listTrips).toHaveBeenLastCalledWith({ page: 1, limit: 9, status: 'COMPLETED' }),
+      expect(listTrips).toHaveBeenLastCalledWith({ page: 1, limit: 6, status: 'COMPLETED' }),
     )
     expect(result.current.status).toBe('COMPLETED')
   })

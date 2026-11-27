@@ -10,6 +10,7 @@ import { BandOverlap } from '../components/ui/BandOverlap'
 import { Pagination } from '../components/ui/Pagination'
 import { useDestinations } from '../hooks/useDestinations'
 import { DestinationsFilters } from './destinations/DestinationsFilters'
+import { PhotoGrid } from '../components/ui/PhotoGrid'
 
 /** Tela pública do catálogo de destinos (`/destinations`), com busca, filtros na URL e paginação. */
 export default function DestinationsPage() {
@@ -68,16 +69,13 @@ export default function DestinationsPage() {
           }
         >
           <div className="flex flex-col gap-8">
-            <ul
-              aria-label="Lista de destinos"
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
+            <PhotoGrid label="Lista de destinos">
               {destinations.items.map((destination) => (
                 <li key={destination.id}>
                   <DestinationShowcaseCard destination={destination} />
                 </li>
               ))}
-            </ul>
+            </PhotoGrid>
 
             <Pagination
               label="Paginação dos destinos"

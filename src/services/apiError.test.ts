@@ -14,6 +14,12 @@ describe('parseValidationMessage', () => {
       'deve ter no máximo 80 caracteres',
     ],
     ['name should not be empty', 'name', 'não pode ficar vazio'],
+    [
+      'endDate must not be earlier than startDate',
+      'endDate',
+      'não pode ser antes da data de início',
+    ],
+    ['currency must be a valid ISO4217 currency code', 'currency', 'escolha uma moeda válida'],
     ['rating must not be less than 1', 'rating', 'deve ser no mínimo 1'],
     ['rating must not be greater than 5', 'rating', 'deve ser no máximo 5'],
     ['amount must be a positive number', 'amount', 'deve ser um número maior que zero'],

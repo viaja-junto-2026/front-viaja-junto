@@ -17,6 +17,7 @@ type ActivityCardProps = {
 /**
  * Card clicável de uma atividade do catálogo: foto (ou fundo bege com ícone), tipo,
  * nome, localização, descrição resumida e nota média. Leva para `/activities/:id`.
+ * No celular é pequeno (dois por linha) e não mostra a descrição.
  */
 export function ActivityCard({ activity }: ActivityCardProps) {
   return (
@@ -31,10 +32,10 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       >
         <CoverPhoto src={activity.photoUrl} fallbackIcon={Compass} ratio="video" />
 
-        <div className="flex flex-1 flex-col gap-3 p-4">
+        <div className="flex flex-1 flex-col gap-2 p-3 sm:gap-3 sm:p-4">
           <Tag>{activityTypeLabels[activity.type]}</Tag>
 
-          <h3 className="font-display text-headline-sm font-normal text-brown-espresso">
+          <h3 className="font-display text-title-md font-normal text-brown-espresso sm:text-headline-sm">
             {activity.name}
           </h3>
 
@@ -46,7 +47,9 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           )}
 
           {activity.description && (
-            <p className="line-clamp-2 text-body-sm text-gray-ink">{activity.description}</p>
+            <p className="hidden text-body-sm text-gray-ink sm:line-clamp-2">
+              {activity.description}
+            </p>
           )}
 
           <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">

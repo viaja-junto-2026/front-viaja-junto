@@ -66,7 +66,8 @@ export function useDestinations({ limit = 12 }: UseDestinationsOptions = {}) {
     if (next.category) params.set('category', next.category)
     if (next.page && next.page > 1) params.set('page', String(next.page))
 
-    setSearchParams(params)
+    // Trocar filtro ou página não deve levar a rolagem para o topo.
+    setSearchParams(params, { preventScrollReset: true })
   }
 
   function setFilters(changes: Partial<DestinationFilters>) {
@@ -85,7 +86,7 @@ export function useDestinations({ limit = 12 }: UseDestinationsOptions = {}) {
   }
 
   function clearFilters() {
-    setSearchParams(new URLSearchParams())
+    setSearchParams(new URLSearchParams(), { preventScrollReset: true })
   }
 
   const items = query.data?.data ?? []

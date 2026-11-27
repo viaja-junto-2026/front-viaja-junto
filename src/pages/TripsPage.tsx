@@ -9,6 +9,7 @@ import { Button } from '../components/ui/Button'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { PageBanner } from '../components/ui/PageBanner'
 import { Pagination } from '../components/ui/Pagination'
+import { SwipeList } from '../components/ui/SwipeList'
 import { useTripCounts } from '../hooks/useTripCounts'
 import { useTrips } from '../hooks/useTrips'
 import { paths } from '../routes/paths'
@@ -50,8 +51,7 @@ export default function TripsPage() {
         <TripsStatusFilter status={trips.status} counts={counts.data} onChange={trips.setStatus} />
       </BandOverlap>
 
-      {/* Altura mínima igual em todos os filtros, para o rodapé não pular ao alternar. */}
-      <Container className="min-h-112 py-12 lg:min-h-96">
+      <Container className="py-8 sm:py-12">
         <QueryState
           isLoading={trips.isLoading}
           isError={trips.isError}
@@ -86,16 +86,12 @@ export default function TripsPage() {
           }
         >
           <div className="flex flex-col gap-8">
-            <ul
-              aria-label="Lista de viagens"
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
+            {/* A chave faz o deslize voltar ao primeiro cartão ao trocar de filtro ou de página. */}
+            <SwipeList key={`${trips.status ?? 'all'}-${trips.page}`} label="Lista de viagens">
               {trips.items.map((trip) => (
-                <li key={trip.id}>
-                  <TripCard trip={trip} />
-                </li>
+                <TripCard key={trip.id} trip={trip} />
               ))}
-            </ul>
+            </SwipeList>
 
             <Pagination
               label="Paginação das viagens"

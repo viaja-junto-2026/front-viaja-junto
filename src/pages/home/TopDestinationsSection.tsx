@@ -8,12 +8,16 @@ import { ButtonLink } from '../../components/ui/ButtonLink'
 import { SectionTitle } from '../../components/ui/SectionTitle'
 import { useTopDestinations } from '../../hooks/useTopDestinations'
 import { paths } from '../../routes/paths'
+import { PhotoGrid } from '../../components/ui/PhotoGrid'
 
 const TITLE = 'Destinos mais bem avaliados'
 
-/** Os três destinos mais bem avaliados, em cards, com carregando, erro e vazio. */
+/**
+ * Os destinos mais bem avaliados, com carregando, erro e vazio. Vêm quatro, para fechar a
+ * grade de duas colunas; no desktop aparecem três, em uma linha.
+ */
 export function TopDestinationsSection() {
-  const { data, isLoading, isError, error, refetch } = useTopDestinations(3)
+  const { data, isLoading, isError, error, refetch } = useTopDestinations(4)
   const destinations = data ?? []
 
   return (
@@ -35,13 +39,13 @@ export function TopDestinationsSection() {
             />
           }
         >
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <PhotoGrid>
             {destinations.map((destination) => (
-              <li key={destination.id}>
+              <li key={destination.id} className="lg:nth-4:hidden">
                 <DestinationShowcaseCard destination={destination} />
               </li>
             ))}
-          </ul>
+          </PhotoGrid>
         </QueryState>
         <div className="flex justify-center">
           <ButtonLink to={paths.destinations} variant="outline">

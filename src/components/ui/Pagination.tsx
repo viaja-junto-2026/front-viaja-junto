@@ -26,14 +26,14 @@ export function Pagination({
   if ((totalPages ?? 1) <= 1 && !hasPrevious && !hasNext) return null
 
   return (
-    <nav aria-label={label} className="flex flex-wrap items-center justify-between gap-4">
+    <nav aria-label={label} className="flex items-center justify-between gap-3">
       <Button
         variant="outline"
         disabled={!hasPrevious || busy}
         leftIcon={<ChevronLeft aria-hidden="true" size={20} />}
         onClick={() => onPageChange(page - 1)}
       >
-        Anterior
+        <span className="sr-only sm:not-sr-only">Anterior</span>
       </Button>
       <span aria-live="polite" className="text-body-sm text-gray-dim tabular">
         Página {page}
@@ -45,7 +45,7 @@ export function Pagination({
         rightIcon={<ChevronRight aria-hidden="true" size={20} />}
         onClick={() => onPageChange(page + 1)}
       >
-        Próxima
+        <span className="sr-only sm:not-sr-only">Próxima</span>
       </Button>
     </nav>
   )

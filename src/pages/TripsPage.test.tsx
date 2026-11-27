@@ -86,7 +86,7 @@ describe('TripsPage', () => {
     expect(
       await screen.findByRole('heading', { name: 'Nenhuma viagem com esse status' }),
     ).toBeInTheDocument()
-    expect(listTrips).toHaveBeenCalledWith({ page: 1, limit: 9, status: 'COMPLETED' })
+    expect(listTrips).toHaveBeenCalledWith({ page: 1, limit: 6, status: 'COMPLETED' })
 
     await userEvent.click(screen.getByRole('button', { name: 'Ver todas' }))
 

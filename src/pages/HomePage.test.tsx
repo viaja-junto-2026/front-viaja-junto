@@ -115,24 +115,24 @@ describe('HomePage', () => {
       )
     })
 
-    it('shows the three best destinations as cards that lead to their page', async () => {
+    it('shows the best destinations as cards that lead to their page', async () => {
       vi.mocked(listTopDestinations).mockResolvedValue([
         makeDestination({ id: 'a', name: 'Kyoto' }),
         makeDestination({ id: 'b', name: 'Lisboa', country: 'Portugal' }),
       ])
       renderHome()
 
-      const link = await screen.findByRole('link', { name: 'Ver detalhes de Kyoto' })
+      const link = await screen.findByRole('link', { name: 'Kyoto' })
 
       expect(link).toHaveAttribute('href', '/destinations/a')
-      expect(screen.getByRole('link', { name: 'Ver detalhes de Lisboa' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: 'Lisboa' })).toHaveAttribute(
         'href',
         '/destinations/b',
       )
       expect(
         within(destinationsRegion()).getByRole('link', { name: 'Ver todos os destinos' }),
       ).toHaveAttribute('href', '/destinations')
-      expect(listTopDestinations).toHaveBeenCalledWith({ limit: 3 })
+      expect(listTopDestinations).toHaveBeenCalledWith({ limit: 4 })
     })
 
     it('shows an empty state when there are no rated destinations', async () => {
@@ -152,7 +152,7 @@ describe('HomePage', () => {
       vi.mocked(listTopDestinations).mockResolvedValue([makeDestination({ name: 'Kyoto' })])
       await userEvent.click(screen.getByRole('button', { name: 'Tentar de novo' }))
 
-      expect(await screen.findByRole('link', { name: 'Ver detalhes de Kyoto' })).toBeInTheDocument()
+      expect(await screen.findByRole('link', { name: 'Kyoto' })).toBeInTheDocument()
       expect(listTopDestinations).toHaveBeenCalledTimes(2)
     })
   })

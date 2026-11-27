@@ -26,6 +26,6 @@ export function makePaginatedTrips(
 ): Paginated<Trip> {
   return {
     data,
-    meta: makePaginationMeta({ limit: 9, total: data.length, ...metaOverrides }),
+    meta: makePaginationMeta({ limit: 6, total: data.length, ...metaOverrides }),
   }
 }

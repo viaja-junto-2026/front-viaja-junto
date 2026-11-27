@@ -19,6 +19,15 @@
     @apply font-heading;
   }
 
+  /*
+   * Mãozinha em tudo o que dá para clicar (o Tailwind deixa os botões com o cursor comum).
+   * Botões desativados ficam de fora e usam o `cursor-not-allowed` de cada componente.
+   */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   /* Anel de foco visível e consistente em todos os elementos interativos. */
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-red-ruby;

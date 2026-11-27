@@ -9,12 +9,12 @@ export const tripsKey = ['trips'] as const
 type TripFilters = { status?: TripStatus }
 
 type UseTripsOptions = {
-  /** Quantas viagens por página (padrão 9: três linhas no desktop). */
+  /** Quantas viagens por página (padrão 6: duas linhas no desktop, seis no deslize do celular). */
   limit?: number
 }
 
 /** Viagens do usuário logado, com filtro por status e paginação. */
-export function useTrips({ limit = 9 }: UseTripsOptions = {}) {
+export function useTrips({ limit = 6 }: UseTripsOptions = {}) {
   const { user } = useAuth()
 
   const trips = usePaginatedQuery({

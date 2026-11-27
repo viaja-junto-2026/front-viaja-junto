@@ -26,7 +26,7 @@ export function HomeExperiences() {
           loading={<LoadingSkeleton variant="card" count={4} label="Carregando experiências" />}
           empty={<EmptyState icon={Compass} title="Ainda não há atividades no catálogo" />}
         >
-          <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
             {activities.items.map((activity) => (
               <li key={activity.id}>
                 <ExperienceCard activity={activity} />
