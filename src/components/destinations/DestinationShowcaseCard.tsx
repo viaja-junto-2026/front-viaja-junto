@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react'
 import { paths } from '../../routes/paths'
 import type { Destination } from '../../services/destinations'
+import { formatReviewCount } from '../../utils/format'
 import { RatingStars } from '../reviews/RatingStars'
 import { ButtonLink } from '../ui/ButtonLink'
 import { CoverPhoto } from '../ui/CoverPhoto'
@@ -23,9 +24,7 @@ export function DestinationShowcaseCard({ destination }: DestinationShowcaseCard
         {averageRating !== null && (
           <p className="flex flex-wrap items-center justify-center gap-2">
             <RatingStars rating={averageRating} size="sm" showValue />
-            <span className="text-body-sm text-gray-dim">
-              ({reviewCount} {reviewCount === 1 ? 'avaliação' : 'avaliações'})
-            </span>
+            <span className="text-body-sm text-gray-dim">({formatReviewCount(reviewCount)})</span>
           </p>
         )}
         <div className="mt-auto pt-2">

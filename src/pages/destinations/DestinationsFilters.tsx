@@ -2,6 +2,7 @@ import { Search, X } from 'lucide-react'
 import type { FormEvent } from 'react'
 import { Button } from '../../components/ui/Button'
 import { Chip } from '../../components/ui/Chip'
+import { FilterPanel } from '../../components/ui/FilterPanel'
 import { Input } from '../../components/ui/Input'
 import type { DestinationFilters } from '../../hooks/useDestinations'
 import { destinationCategoryLabels, type DestinationCategory } from '../../utils/labels'
@@ -40,7 +41,7 @@ export function DestinationsFilters({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-beige-sand bg-white p-4 sm:p-6">
+    <FilterPanel>
       <form
         key={`${filters.q ?? ''}|${filters.country ?? ''}`}
         role="search"
@@ -105,6 +106,6 @@ export function DestinationsFilters({
           </Button>
         )}
       </div>
-    </div>
+    </FilterPanel>
   )
 }

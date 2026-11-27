@@ -109,3 +109,8 @@ const ratingFormat = new Intl.NumberFormat(LOCALE, {
 export function formatRating(value: number): string {
   return ratingFormat.format(value)
 }
+
+/** Contagem de avaliações no singular ou no plural: `1 avaliação`, `12 avaliações`. */
+export function formatReviewCount(count: number): string {
+  return count === 1 ? '1 avaliação' : `${count} avaliações`
+}

@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { focusRing } from '../ui/focus'
 import { paths } from '../../routes/paths'
 import type { Destination } from '../../services/destinations'
-import { formatRating } from '../../utils/format'
+import { formatRating, formatReviewCount } from '../../utils/format'
 
 type DestinationCardProps = {
   destination: Destination
@@ -43,9 +43,7 @@ export function DestinationCard({ destination, className }: DestinationCardProps
       {averageRating !== null && (
         <span
           role="img"
-          aria-label={`Nota ${formatRating(averageRating)} de 5, ${reviewCount} ${
-            reviewCount === 1 ? 'avaliação' : 'avaliações'
-          }`}
+          aria-label={`Nota ${formatRating(averageRating)} de 5, ${formatReviewCount(reviewCount)}`}
           className="absolute right-3 bottom-3 z-10 flex items-center gap-1 rounded-sm bg-white px-2 py-1 text-label-md text-gray-ink"
         >
           <Star aria-hidden="true" size={16} className="text-red-ruby" fill="currentColor" />

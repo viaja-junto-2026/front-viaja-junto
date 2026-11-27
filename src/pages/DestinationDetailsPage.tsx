@@ -1,40 +1,28 @@
-import { ArrowLeft, MapPinOff } from 'lucide-react'
-import { Link, useParams } from 'react-router'
+import { MapPinOff } from 'lucide-react'
+import { useParams } from 'react-router'
 import { ErrorState } from '../components/feedback/ErrorState'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
 import { ReviewList } from '../components/reviews/ReviewList'
 import { ButtonLink } from '../components/ui/ButtonLink'
-import { IconCircle } from '../components/ui/IconCircle'
+import { BackLink } from '../components/ui/BackLink'
+import { PageMessage } from '../components/ui/PageMessage'
 import { SectionHeader } from '../components/ui/SectionHeader'
-import { focusRing } from '../components/ui/focus'
 import { useDestinationDetails } from '../hooks/useDestinationDetails'
 import { paths } from '../routes/paths'
-import { ApiError } from '../services/apiError'
+import { isNotFoundError } from '../services/apiError'
 import { getErrorMessage } from '../utils/errorMessages'
+import { formatReviewCount } from '../utils/format'
 import { DestinationActivitiesSection } from './destination/DestinationActivitiesSection'
 import { DestinationHeader } from './destination/DestinationHeader'
 
-/** Indica se o erro da API significa destino inexistente ou identificador inválido. */
-function isNotFoundError(error: unknown): boolean {
-  return error instanceof ApiError && (error.status === 404 || error.status === 400)
-}
-
 function DestinationNotFound() {
   return (
-    <section className="flex flex-col items-center gap-4 px-4 py-12 text-center">
-      <IconCircle icon={MapPinOff} size="lg" />
-      <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-headline-md text-red-burgundy lg:text-headline-lg">
-          Destino não encontrado
-        </h1>
-        <p className="max-w-md text-body-md text-gray-dim">
-          O destino que você procurou não existe ou o endereço está incorreto.
-        </p>
-      </div>
-      <ButtonLink to={paths.destinations} variant="primary">
-        Explorar destinos
-      </ButtonLink>
-    </section>
+    <PageMessage
+      icon={MapPinOff}
+      title="Destino não encontrado"
+      description="O destino que você procurou não existe ou o endereço está incorreto."
+      action={<ButtonLink to={paths.destinations}>Explorar destinos</ButtonLink>}
+    />
   )
 }
 
@@ -68,15 +56,7 @@ function DestinationDetailsContent({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-10 py-8">
-      <div>
-        <Link
-          to={paths.destinations}
-          className={`inline-flex items-center gap-2 rounded-xs text-label-md text-red-burgundy transition-colors hover:text-red-ruby ${focusRing}`}
-        >
-          <ArrowLeft aria-hidden="true" size={20} />
-          <span>Explorar destinos</span>
-        </Link>
-      </div>
+      <BackLink to={paths.destinations}>Explorar destinos</BackLink>
 
       <DestinationHeader destination={destination} />
 
@@ -86,9 +66,7 @@ function DestinationDetailsContent({ id }: { id: string }) {
         <SectionHeader title="Avaliações">
           {destination.reviewCount > 0 && (
             <span className="text-body-sm text-gray-dim tabular">
-              {destination.reviewCount === 1
-                ? '1 avaliação'
-                : `${destination.reviewCount} avaliações`}
+              {formatReviewCount(destination.reviewCount)}
             </span>
           )}
         </SectionHeader>

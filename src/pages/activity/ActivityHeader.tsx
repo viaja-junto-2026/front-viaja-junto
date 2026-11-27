@@ -1,11 +1,13 @@
-import { Compass, ExternalLink, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { Compass, MapPin } from 'lucide-react'
 import { RatingStars } from '../../components/reviews/RatingStars'
 import { Card } from '../../components/ui/Card'
+import { CoverPhoto } from '../../components/ui/CoverPhoto'
+import { Tag } from '../../components/ui/Tag'
+import { ExternalTextLink } from '../../components/ui/ExternalTextLink'
 import { TextLink } from '../../components/ui/TextLink'
-import { focusRing } from '../../components/ui/focus'
 import { paths } from '../../routes/paths'
 import type { ActivityDetails } from '../../services/activities'
+import { formatReviewCount } from '../../utils/format'
 import { activityTypeLabels } from '../../utils/labels'
 
 type ActivityHeaderProps = {
@@ -17,42 +19,28 @@ function formatLocation(activity: ActivityDetails): string {
   return [activity.location, activity.city, activity.country].filter(Boolean).join(', ')
 }
 
-/** Texto de contagem de avaliações no singular ou plural. */
-function formatReviewCount(count: number): string {
-  return count === 1 ? '1 avaliação' : `${count} avaliações`
-}
-
 /**
  * Cabeçalho da página da atividade: foto (ou fundo bege com ícone), tipo, nome,
  * localização, nota média, quantidade de avaliações e descrição.
  */
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
-  const [photoFailed, setPhotoFailed] = useState(false)
-  const showPhoto = Boolean(activity.photoUrl) && !photoFailed
   const locationText = formatLocation(activity)
 
   return (
     <Card as="article" className="grid gap-6 border border-beige-sand lg:grid-cols-12 lg:gap-8">
-      <div className="relative aspect-video overflow-hidden rounded-lg bg-beige-sand lg:col-span-5 lg:aspect-4/3">
-        {showPhoto ? (
-          <img
-            src={activity.photoUrl ?? undefined}
-            alt={activity.name}
-            onError={() => setPhotoFailed(true)}
-            className="size-full object-cover"
-          />
-        ) : (
-          <span className="flex size-full items-center justify-center text-red-ruby">
-            <Compass aria-hidden="true" size={56} />
-          </span>
-        )}
-      </div>
+      <CoverPhoto
+        src={activity.photoUrl}
+        alt={activity.name}
+        fallbackIcon={Compass}
+        ratio="header"
+        iconSize={56}
+        loading="eager"
+        className="rounded-lg lg:col-span-5"
+      />
 
       <div className="flex flex-col justify-center gap-4 lg:col-span-7">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center rounded-xs bg-beige-sand px-3 py-1 text-label-sm uppercase text-gray-ink">
-            {activityTypeLabels[activity.type]}
-          </span>
+          <Tag>{activityTypeLabels[activity.type]}</Tag>
           {activity.destinationId && (
             <TextLink to={paths.destinationDetails(activity.destinationId)}>Ver destino</TextLink>
           )}
@@ -69,15 +57,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
               <span>{locationText}</span>
             </p>
             {activity.mapsUrl && (
-              <a
-                href={activity.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-1 rounded-xs text-label-md text-red-burgundy underline transition-colors hover:text-red-ruby ${focusRing}`}
-              >
-                <span>Ver no mapa</span>
-                <ExternalLink aria-hidden="true" size={16} />
-              </a>
+              <ExternalTextLink href={activity.mapsUrl}>Ver no mapa</ExternalTextLink>
             )}
           </div>
         )}

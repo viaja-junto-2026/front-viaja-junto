@@ -1,13 +1,13 @@
-import { ArrowLeft, LogIn } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 import { useState } from 'react'
-import { Link, Navigate, useLocation, useSearchParams } from 'react-router'
-import logoVj from '../assets/logo-vj.png'
+import { Navigate, useLocation, useSearchParams } from 'react-router'
 import { useAuth } from '../auth/useAuth'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
+import { BrandLogo } from '../components/layout/BrandLogo'
 import { Alert } from '../components/ui/Alert'
+import { BackLink } from '../components/ui/BackLink'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
-import { focusRing } from '../components/ui/focus'
 import { paths } from '../routes/paths'
 import { getGoogleLoginUrl } from '../services/auth'
 
@@ -53,17 +53,11 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-beige-light px-4 py-10">
       <div className="flex w-full max-w-md flex-col gap-6">
-        <Link
-          to={paths.home}
-          className={`inline-flex w-fit items-center gap-2 rounded-xs text-label-md text-red-burgundy transition-colors hover:text-red-ruby ${focusRing}`}
-        >
-          <ArrowLeft aria-hidden="true" size={20} />
-          <span>Voltar para o início</span>
-        </Link>
+        <BackLink to={paths.home}>Voltar para o início</BackLink>
 
         <Card className="flex flex-col gap-6 border border-beige-sand shadow-lg">
           <div className="flex flex-col items-center gap-3 text-center">
-            <img src={logoVj} alt="ViajaJunto" className="h-12 w-auto" />
+            <BrandLogo />
             <div className="flex flex-col gap-1">
               <h1 className="font-heading text-headline-md text-red-burgundy lg:text-headline-lg">
                 Entrar

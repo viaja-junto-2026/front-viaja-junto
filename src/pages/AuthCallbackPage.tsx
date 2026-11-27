@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import logoVj from '../assets/logo-vj.png'
 import { useAuth } from '../auth/useAuth'
 import { Spinner } from '../components/feedback/Spinner'
+import { BrandLogo } from '../components/layout/BrandLogo'
 import { Alert } from '../components/ui/Alert'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { Card } from '../components/ui/Card'
@@ -71,7 +71,7 @@ export default function AuthCallbackPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-beige-light px-4 py-10">
       <Card className="flex w-full max-w-md flex-col items-center gap-6 border border-beige-sand text-center shadow-lg">
-        <img src={logoVj} alt="ViajaJunto" className="h-12 w-auto" />
+        <BrandLogo />
         <h1 className="font-heading text-headline-md text-red-burgundy">Entrando...</h1>
 
         {errorMessage ? (

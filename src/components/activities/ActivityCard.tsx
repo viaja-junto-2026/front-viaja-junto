@@ -1,11 +1,13 @@
 import { Compass, MapPin } from 'lucide-react'
-import { useState } from 'react'
 import { Link } from 'react-router'
 import { paths } from '../../routes/paths'
 import type { Activity } from '../../services/activities'
+import { formatReviewCount } from '../../utils/format'
 import { activityTypeLabels } from '../../utils/labels'
 import { RatingStars } from '../reviews/RatingStars'
 import { Card } from '../ui/Card'
+import { CoverPhoto } from '../ui/CoverPhoto'
+import { Tag } from '../ui/Tag'
 import { focusRing } from '../ui/focus'
 
 type ActivityCardProps = {
@@ -17,9 +19,6 @@ type ActivityCardProps = {
  * nome, localização, descrição resumida e nota média. Leva para `/activities/:id`.
  */
 export function ActivityCard({ activity }: ActivityCardProps) {
-  const [photoFailed, setPhotoFailed] = useState(false)
-  const showPhoto = Boolean(activity.photoUrl) && !photoFailed
-
   return (
     <Card
       as="article"
@@ -30,26 +29,10 @@ export function ActivityCard({ activity }: ActivityCardProps) {
         to={paths.activityDetails(activity.id)}
         className={`group flex h-full flex-col rounded-lg ${focusRing}`}
       >
-        <div className="relative aspect-video w-full overflow-hidden bg-beige-sand">
-          {showPhoto ? (
-            <img
-              src={activity.photoUrl ?? undefined}
-              alt=""
-              loading="lazy"
-              onError={() => setPhotoFailed(true)}
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <span className="flex size-full items-center justify-center text-red-ruby">
-              <Compass aria-hidden="true" size={40} />
-            </span>
-          )}
-        </div>
+        <CoverPhoto src={activity.photoUrl} fallbackIcon={Compass} ratio="video" />
 
         <div className="flex flex-1 flex-col gap-3 p-4">
-          <span className="inline-flex w-fit items-center rounded-xs bg-beige-sand px-2 py-0.5 text-label-sm uppercase text-gray-ink">
-            {activityTypeLabels[activity.type]}
-          </span>
+          <Tag>{activityTypeLabels[activity.type]}</Tag>
 
           <h3 className="font-heading text-title-md text-red-burgundy">{activity.name}</h3>
 
@@ -69,7 +52,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
               <>
                 <RatingStars rating={activity.averageRating} size="sm" showValue />
                 <span className="text-body-sm text-gray-dim tabular">
-                  ({activity.reviewCount} {activity.reviewCount === 1 ? 'avaliação' : 'avaliações'})
+                  ({formatReviewCount(activity.reviewCount)})
                 </span>
               </>
             ) : (

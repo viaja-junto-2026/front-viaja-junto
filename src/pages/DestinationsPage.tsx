@@ -1,9 +1,10 @@
-import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { DestinationCard } from '../components/destinations/DestinationCard'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
 import { QueryState } from '../components/feedback/QueryState'
 import { Button } from '../components/ui/Button'
+import { Pagination } from '../components/ui/Pagination'
 import { useDestinations } from '../hooks/useDestinations'
 import { DestinationsFilters } from './destinations/DestinationsFilters'
 
@@ -12,7 +13,6 @@ export default function DestinationsPage() {
   const destinations = useDestinations({ limit: 12 })
   const totalPages = destinations.meta?.totalPages
   const total = destinations.meta?.total ?? 0
-  const showPagination = (totalPages ?? 1) > 1 || destinations.hasPrevious || destinations.hasNext
 
   return (
     <div className="flex flex-col gap-8 py-8">
@@ -78,33 +78,15 @@ export default function DestinationsPage() {
             ))}
           </ul>
 
-          {showPagination && (
-            <nav
-              aria-label="Paginação dos destinos"
-              className="flex flex-wrap items-center justify-between gap-4"
-            >
-              <Button
-                variant="secondary"
-                disabled={!destinations.hasPrevious || destinations.isFetching}
-                leftIcon={<ChevronLeft aria-hidden="true" size={20} />}
-                onClick={() => destinations.setPage(destinations.page - 1)}
-              >
-                Anterior
-              </Button>
-              <span aria-live="polite" className="text-body-sm text-gray-dim tabular">
-                Página {destinations.page}
-                {totalPages ? ` de ${totalPages}` : ''}
-              </span>
-              <Button
-                variant="secondary"
-                disabled={!destinations.hasNext || destinations.isFetching}
-                rightIcon={<ChevronRight aria-hidden="true" size={20} />}
-                onClick={() => destinations.setPage(destinations.page + 1)}
-              >
-                Próxima
-              </Button>
-            </nav>
-          )}
+          <Pagination
+            label="Paginação dos destinos"
+            page={destinations.page}
+            totalPages={totalPages}
+            hasPrevious={destinations.hasPrevious}
+            hasNext={destinations.hasNext}
+            busy={destinations.isFetching}
+            onPageChange={destinations.setPage}
+          />
         </div>
       </QueryState>
     </div>

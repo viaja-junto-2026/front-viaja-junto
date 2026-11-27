@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router'
 import { useAuth } from '../auth/useAuth'
+import { Button } from '../components/ui/Button'
 import { paths } from '../routes/paths'
 
 /** Provisória: mostra quem está logado e permite sair. O restante do perfil é uma tela extra. */
@@ -23,13 +24,9 @@ export default function ProfilePage() {
           <p className="text-body-md text-gray-dim">{user.email}</p>
         </>
       )}
-      <button
-        type="button"
-        onClick={handleSignOut}
-        className="mt-6 rounded-md border border-red-ruby bg-white px-6 py-3 text-label-lg text-red-ruby hover:bg-beige-sand"
-      >
+      <Button variant="secondary" className="mt-6" onClick={() => void handleSignOut()}>
         Sair
-      </button>
+      </Button>
     </section>
   )
 }
