@@ -11,10 +11,12 @@ import { PageBanner } from '../components/ui/PageBanner'
 import { PageMessage } from '../components/ui/PageMessage'
 import { useTrip } from '../hooks/useTrip'
 import { useDeleteTrip, useUpdateTrip } from '../hooks/useTripMutations'
+import { useTripStops } from '../hooks/useTripStops'
 import { paths } from '../routes/paths'
 import { ApiError, isNotFoundError } from '../services/apiError'
-import type { Trip } from '../services/trips'
+import type { Trip, TripInput } from '../services/trips'
 import { getErrorMessage } from '../utils/errorMessages'
+import { stopsOutsideTrip } from '../utils/schedule'
 
 const backToTrips = <ButtonLink to={paths.trips}>Voltar para minhas viagens</ButtonLink>
 
@@ -43,6 +45,21 @@ function NotAllowed() {
 
 function EditTrip({ trip }: { trip: Trip }) {
   const navigate = useNavigate()
+  const stops = useTripStops(trip.id)
+
+  /** A API aceitaria, mas depois recusaria qualquer edição nos destinos que ficassem de fora. */
+  function checkDates({ startDate, endDate }: TripInput): string | undefined {
+    const all = stops.data ?? []
+    // Só os que a mudança passaria a deixar de fora; o resto não impede salvar.
+    const before = stopsOutsideTrip(all, trip.startDate, trip.endDate)
+    const outside = stopsOutsideTrip(all, startDate, endDate).filter(
+      (stop) => !before.includes(stop),
+    ).length
+    if (outside === 0) return undefined
+    const subject = outside === 1 ? '1 destino ficaria' : `${outside} destinos ficariam`
+    return `Com essas datas, ${subject} fora da viagem. Antes, ajuste as datas no roteiro.`
+  }
+
   const update = useUpdateTrip(trip.id, () => void navigate(paths.trips))
   const remove = useDeleteTrip(trip.id, () => void navigate(paths.trips, { replace: true }))
 
@@ -55,8 +72,10 @@ function EditTrip({ trip }: { trip: Trip }) {
             initialValues={toTripInput(trip)}
             submitLabel="Salvar alterações"
             cancelTo={paths.trips}
-            submitting={update.isPending}
+            // Só dá para salvar depois de saber onde estão os destinos.
+            submitting={update.isPending || stops.isLoading}
             error={update.error}
+            checkDates={checkDates}
             onSubmit={(values) => update.mutate(values)}
           />
           <DeleteTripSection

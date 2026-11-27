@@ -13,6 +13,8 @@ type DatePickerProps = FieldProps & {
   onChange: (value: string | null) => void
   /** Primeiro dia que pode ser escolhido. */
   min?: string
+  /** Último dia que pode ser escolhido. */
+  max?: string
   placeholder?: string
 }
 
@@ -28,6 +30,7 @@ export function DatePicker({
   value,
   onChange,
   min,
+  max,
   placeholder = 'Escolha a data',
 }: DatePickerProps) {
   const id = useId()
@@ -35,7 +38,13 @@ export function DatePicker({
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
   const today = todayIso()
+
+  // Aberto no fim da tela ou de uma janela, o calendário rola até ficar visível.
+  useEffect(() => {
+    if (open) popoverRef.current?.scrollIntoView?.({ block: 'nearest' })
+  }, [open])
   const hasMessage = Boolean(error ?? helperText)
 
   useEffect(() => {
@@ -94,19 +103,20 @@ export function DatePicker({
 
         {open && (
           <div
+            ref={popoverRef}
             id={dialogId}
             role="dialog"
             aria-label={`Calendário: ${label}`}
             className="absolute left-0 z-10 mt-1 flex w-72 max-w-full flex-col gap-2 rounded-xs border border-beige-sand bg-white p-3 shadow-lg"
           >
-            <Calendar value={value} min={min} onSelect={choose} />
+            <Calendar value={value} min={min} max={max} onSelect={choose} />
             <div className="flex justify-between gap-2 border-t border-beige-sand pt-2">
               <Button variant="compact" disabled={!value} onClick={() => choose(null)}>
                 Limpar
               </Button>
               <Button
                 variant="compact"
-                disabled={min !== undefined && today < min}
+                disabled={(min !== undefined && today < min) || (max !== undefined && today > max)}
                 onClick={() => choose(today)}
               >
                 Hoje

@@ -59,6 +59,11 @@ export async function listTopDestinations({ limit }: ListTopDestinationsParams =
   )
 }
 
+/** Busca um destino do catálogo (nome, país e foto). Lança `ApiError`. */
+export async function getDestination(id: string): Promise<Destination> {
+  return unwrap(await apiClient.GET('/api/destination-catalog/{id}', { params: { path: { id } } }))
+}
+
 /**
  * Busca os detalhes públicos de um destino do catálogo pelo identificador.
  * Lança `ApiError` (404 se não existir, 400 se o id não for um UUID válido).

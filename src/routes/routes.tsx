@@ -52,7 +52,11 @@ export const routes: RouteObject[] = [
             children: [
               { path: paths.trips, element: <TripsPage />, handle: { fullBleed: true } },
               { path: paths.tripNew, element: <TripCreatePage />, handle: { fullBleed: true } },
-              { path: patterns.tripDetails, element: <TripDetailsPage /> },
+              {
+                path: patterns.tripDetails,
+                element: <TripDetailsPage />,
+                handle: { fullBleed: true },
+              },
               { path: patterns.tripEdit, element: <TripEditPage />, handle: { fullBleed: true } },
               { path: paths.join, element: <JoinTripPage /> },
               { path: paths.notifications, element: <NotificationsPage /> },

@@ -20,6 +20,17 @@ describe('parseValidationMessage', () => {
       'não pode ser antes da data de início',
     ],
     ['currency must be a valid ISO4217 currency code', 'currency', 'escolha uma moeda válida'],
+    ['departure must not be earlier than arrival', 'departure', 'não pode ser antes da chegada'],
+    [
+      'arrival must be within the trip dates (2027-01-15 to 2027-01-28)',
+      'arrival',
+      'precisa estar dentro das datas da viagem',
+    ],
+    [
+      'dateTime must be within the destination stay (2027-01-15 to 2027-01-19)',
+      'dateTime',
+      'precisa estar dentro da estadia no destino',
+    ],
     ['rating must not be less than 1', 'rating', 'deve ser no mínimo 1'],
     ['rating must not be greater than 5', 'rating', 'deve ser no máximo 5'],
     ['amount must be a positive number', 'amount', 'deve ser um número maior que zero'],

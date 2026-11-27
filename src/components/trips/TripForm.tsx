@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { ApiError } from '../../services/apiError'
+import type { FormEvent } from 'react'
+import { useFormFields } from '../../hooks/useFormFields'
 import type { TripInput } from '../../services/trips'
-import { getErrorMessage } from '../../utils/errorMessages'
 import { tripStatusLabels, type TripStatus } from '../../utils/labels'
 import { Alert } from '../ui/Alert'
 import { Button } from '../ui/Button'
@@ -12,33 +11,17 @@ import { Select } from '../ui/Select'
 import { Textarea } from '../ui/Textarea'
 import { TicketPerforation } from '../ui/TicketPerforation'
 import { currencyOptions } from './currencyOptions'
-import { validateTrip, type TripFormErrors } from './tripFormValues'
+import { validateTrip } from './tripFormValues'
 
 const statusOptions = Object.entries(tripStatusLabels).map(([value, label]) => ({ value, label }))
 
-type Field = keyof TripInput
+const FIELDS = ['name', 'description', 'startDate', 'endDate', 'status', 'currency'] as const
 
-/** Erros que a API devolveu, separados entre os que têm campo e o aviso geral. */
-function readServerError(error: unknown): { fields: TripFormErrors; general?: string } {
-  if (!error) return { fields: {} }
-
-  if (error instanceof ApiError) {
-    // 409 na edição: a moeda não muda depois que a viagem tem despesas.
-    if (error.status === 409) {
-      return { fields: { currency: 'A moeda não pode mudar porque a viagem já tem despesas.' } }
-    }
-    if (error.issues.length > 0) {
-      const fields = Object.fromEntries(
-        error.issues.map(({ field, message }) => [field, `Este campo ${message}.`]),
-      ) as TripFormErrors
-      const known = ['name', 'description', 'startDate', 'endDate', 'status', 'currency']
-      const unknown = error.issues.some(({ field }) => !known.includes(field))
-      return { fields, general: unknown ? getErrorMessage(error) : undefined }
-    }
-  }
-
-  return { fields: {}, general: getErrorMessage(error) }
-}
+/** 409 na edição: a moeda não muda depois que a viagem tem despesas. */
+const CURRENCY_CONFLICT = {
+  field: 'currency',
+  message: 'A moeda não pode mudar porque a viagem já tem despesas.',
+} as const
 
 type TripFormProps = {
   initialValues: TripInput
@@ -49,6 +32,8 @@ type TripFormProps = {
   /** Erro da última tentativa de salvar: o 422 aparece em cada campo. */
   error?: unknown
   onSubmit: (values: TripInput) => void
+  /** Impede datas que quebrem o que já foi planejado; devolve a explicação. */
+  checkDates?: (values: TripInput) => string | undefined
 }
 
 /**
@@ -62,37 +47,21 @@ export function TripForm({
   submitting = false,
   error,
   onSubmit,
+  checkDates,
 }: TripFormProps) {
-  const [values, setValues] = useState(initialValues)
-  const [clientErrors, setClientErrors] = useState<TripFormErrors>({})
-  // Campos alterados depois do último envio: o erro antigo da API deixa de valer para eles.
-  const [edited, setEdited] = useState<Field[]>([])
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const server = readServerError(error)
-
-  function errorOf(field: Field): string | undefined {
-    return clientErrors[field] ?? (edited.includes(field) ? undefined : server.fields[field])
-  }
-
-  function change<TField extends Field>(field: TField, value: TripInput[TField]) {
-    setValues((current) => ({ ...current, [field]: value }))
-    setClientErrors((current) => ({ ...current, [field]: undefined }))
-    setEdited((current) => [...current, field])
-  }
-
-  // Depois de uma tentativa com erro, o foco vai para o primeiro campo a corrigir.
-  useEffect(() => {
-    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
-  }, [clientErrors, error])
+  const { values, formRef, generalError, errorOf, change, check } = useFormFields({
+    initialValues,
+    error,
+    fields: FIELDS,
+    conflict: CURRENCY_CONFLICT,
+  })
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const errors = validateTrip(values)
-    setClientErrors(errors)
-    if (Object.keys(errors).length > 0) return
+    errors.endDate ??= checkDates?.(values)
+    if (!check(errors)) return
 
-    setEdited([])
     onSubmit({ ...values, name: values.name.trim(), description: values.description.trim() })
   }
 
@@ -160,7 +129,7 @@ export function TripForm({
           />
         </div>
 
-        {server.general && <Alert variant="error">{server.general}</Alert>}
+        {generalError && <Alert variant="error">{generalError}</Alert>}
 
         <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
           <ButtonLink to={cancelTo} variant="outline">

@@ -6,6 +6,24 @@ import { IconButton } from './IconButton'
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
+/**
+ * Quantas janelas estão abertas. A rolagem só volta quando a última fecha: com uma
+ * confirmação sobre um formulário, fechar as duas juntas não pode deixar a página travada.
+ */
+let openModals = 0
+let overflowBeforeModals = ''
+
+function lockScroll() {
+  if (openModals === 0) overflowBeforeModals = document.body.style.overflow
+  openModals += 1
+  document.body.style.overflow = 'hidden'
+}
+
+function unlockScroll() {
+  openModals -= 1
+  if (openModals === 0) document.body.style.overflow = overflowBeforeModals
+}
+
 type ModalProps = {
   open: boolean
   /** Chamado ao apertar Esc, clicar no fundo ou no botão de fechar. */
@@ -28,8 +46,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   useEffect(() => {
     if (!open) return
     const previouslyFocused = document.activeElement as HTMLElement | null
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    lockScroll()
 
     const dialog = dialogRef.current
     if (dialog && !dialog.contains(document.activeElement)) {
@@ -37,7 +54,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
     }
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      unlockScroll()
       previouslyFocused?.focus()
     }
   }, [open])

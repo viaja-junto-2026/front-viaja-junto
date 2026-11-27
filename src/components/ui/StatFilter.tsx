@@ -23,7 +23,11 @@ type StatFilterProps = {
  */
 export function StatFilter({ label, options, value, onChange }: StatFilterProps) {
   return (
-    <div role="group" aria-label={label} className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+    <div
+      role="group"
+      aria-label={label}
+      className="mx-auto grid w-fit max-w-full grid-cols-2 gap-2 lg:w-full lg:grid-cols-4"
+    >
       {options.map(({ id, label: optionLabel, icon: Icon, count }) => {
         const selected = id === value
 
@@ -33,7 +37,7 @@ export function StatFilter({ label, options, value, onChange }: StatFilterProps)
             type="button"
             aria-pressed={selected}
             onClick={() => onChange(id)}
-            className={`flex items-center justify-center gap-3 rounded-xs px-3 py-3 text-left transition-colors ${
+            className={`flex items-center gap-2 rounded-xs px-3 py-3 text-left transition-colors sm:gap-3 sm:px-5 lg:justify-center lg:px-3 ${
               selected ? 'bg-beige-light text-brown-espresso' : 'text-white hover:bg-white/10'
             } ${focusRing}`}
           >
@@ -41,13 +45,18 @@ export function StatFilter({ label, options, value, onChange }: StatFilterProps)
               aria-hidden="true"
               size={28}
               strokeWidth={1.5}
-              className={`shrink-0 ${selected ? 'text-red-ruby' : 'text-rose-vintage'}`}
+              className={`size-6 shrink-0 sm:size-7 ${selected ? 'text-red-ruby' : 'text-rose-vintage'}`}
             />
             <span className="flex min-w-0 flex-col">
               <span className="text-numeric-lg tabular">{count ?? '–'}</span>
               <span className="flex items-center gap-1 text-label-md">
                 {optionLabel}
-                {selected && <Check aria-hidden="true" size={16} className="shrink-0" />}
+                {/* O espaço do check fica sempre reservado, para a grade não se mexer ao escolher. */}
+                <Check
+                  aria-hidden="true"
+                  size={16}
+                  className={`shrink-0 ${selected ? '' : 'invisible'}`}
+                />
               </span>
             </span>
           </button>

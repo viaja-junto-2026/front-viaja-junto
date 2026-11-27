@@ -5,6 +5,8 @@ const fieldLabels: Record<string, string> = {
   name: 'nome',
   description: 'descrição',
   startDate: 'data de início',
+  arrival: 'chegada',
+  departure: 'saída',
   endDate: 'data de término',
   email: 'e-mail',
   code: 'código',
