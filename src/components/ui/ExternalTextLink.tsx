@@ -11,7 +11,7 @@ export function ExternalTextLink({
     <a
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-1 rounded-xs text-label-md text-red-burgundy underline transition-colors hover:text-red-ruby ${focusRing}`}
+      className={`inline-flex items-center gap-1 rounded-xs text-label-md underline transition-colors text-red-burgundy hover:text-red-ruby ${focusRing}`}
       {...rest}
     >
       <span>{children}</span>

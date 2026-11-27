@@ -176,7 +176,7 @@ describe('FloatingCard', () => {
       </>,
     )
 
-    expect(screen.getByTestId('floating')).toHaveClass('rounded-lg', 'p-4', 'shadow-xl')
+    expect(screen.getByTestId('floating')).toHaveClass('rounded-xs', 'p-4', 'shadow-xl')
     expect(screen.getByTestId('card')).not.toHaveClass('shadow-xl')
   })
 })

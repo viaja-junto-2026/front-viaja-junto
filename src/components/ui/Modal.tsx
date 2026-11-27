@@ -77,10 +77,10 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         onKeyDown={handleKeyDown}
-        className="flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-t-xl bg-white p-6 text-gray-ink shadow-xl sm:max-w-lg sm:rounded-xl"
+        className="flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-xs border-t-4 border-t-brown-espresso bg-white p-6 text-gray-ink shadow-xl sm:max-w-lg"
       >
         <div className="flex items-start justify-between gap-4">
-          <h2 id={titleId} className="font-heading text-headline-sm text-red-burgundy">
+          <h2 id={titleId} className="font-heading text-headline-sm text-brown-espresso">
             {title}
           </h2>
           <IconButton label="Fechar" variant="ghost" size="sm" onClick={onClose}>

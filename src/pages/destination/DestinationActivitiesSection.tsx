@@ -98,12 +98,14 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
 
         <div className="grid gap-4 sm:grid-cols-2 lg:max-w-xl">
           <Select
+            inverted
             label="Nota mínima"
             options={MIN_RATING_OPTIONS}
             value={filters.minRating !== undefined ? String(filters.minRating) : ''}
             onChange={handleMinRatingChange}
           />
           <Select
+            inverted
             label="Ordenar por"
             options={SORT_OPTIONS}
             value={filters.sort ?? 'name'}

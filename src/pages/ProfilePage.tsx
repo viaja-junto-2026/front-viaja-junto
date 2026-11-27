@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 import { useAuth } from '../auth/useAuth'
 import { Button } from '../components/ui/Button'
 import { paths } from '../routes/paths'
+import { DisplayTitle } from '../components/ui/DisplayTitle'
 
 /** Provisória: mostra quem está logado e permite sair. O restante do perfil é uma tela extra. */
 export default function ProfilePage() {
@@ -17,7 +18,7 @@ export default function ProfilePage() {
 
   return (
     <section className="py-8">
-      <h1 className="text-headline-lg text-red-burgundy">Perfil</h1>
+      <DisplayTitle>Perfil</DisplayTitle>
       {user && (
         <>
           <p className="mt-2 text-title-md text-gray-ink">{user.name}</p>

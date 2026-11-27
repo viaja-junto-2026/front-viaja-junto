@@ -3,13 +3,16 @@ import { useState } from 'react'
 import { Navigate, useLocation, useSearchParams } from 'react-router'
 import { useAuth } from '../auth/useAuth'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
+import { AuthShell } from '../components/layout/AuthShell'
 import { BrandLogo } from '../components/layout/BrandLogo'
 import { Alert } from '../components/ui/Alert'
 import { BackLink } from '../components/ui/BackLink'
 import { Button } from '../components/ui/Button'
-import { Card } from '../components/ui/Card'
+import { CompassDivider } from '../components/ui/CompassDivider'
+import { TicketCard } from '../components/ui/TicketCard'
 import { paths } from '../routes/paths'
 import { getGoogleLoginUrl } from '../services/auth'
+import { DisplayTitle } from '../components/ui/DisplayTitle'
 
 const ERROR_MESSAGES: Record<string, string> = {
   access_denied: 'O login com o Google foi cancelado. Tente novamente quando quiser.',
@@ -51,46 +54,43 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-beige-light px-4 py-10">
-      <div className="flex w-full max-w-md flex-col gap-6">
-        <BackLink to={paths.home}>Voltar para o início</BackLink>
+    <AuthShell>
+      <BackLink to={paths.home}>Voltar para o início</BackLink>
 
-        <Card className="flex flex-col gap-6 border border-beige-sand shadow-lg">
-          <div className="flex flex-col items-center gap-3 text-center">
-            <BrandLogo />
-            <div className="flex flex-col gap-1">
-              <h1 className="font-heading text-headline-md text-red-burgundy lg:text-headline-lg">
-                Entrar
-              </h1>
-              <p className="text-body-md text-gray-dim">
-                Bem-vindo ao ViajaJunto! Entre com sua conta Google para planejar viagens em grupo,
-                controlar o orçamento e compartilhar roteiros.
-              </p>
-            </div>
-          </div>
+      <TicketCard
+        stub={
+          <>
+            {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
 
-          {errorMessage && <Alert variant="error">{errorMessage}</Alert>}
-
-          {status === 'loading' ? (
-            <LoadingSkeleton variant="text" count={2} label="Verificando sessão" />
-          ) : (
-            <div className="flex flex-col gap-3">
-              <Button
-                variant="primary"
-                fullWidth
-                loading={isRedirecting}
-                leftIcon={<LogIn aria-hidden="true" size={20} />}
-                onClick={handleGoogleLogin}
-              >
-                Entrar com o Google
-              </Button>
-              <p className="text-center text-body-sm text-gray-dim">
-                Não é preciso criar senha: sua conta é vinculada diretamente ao Google.
-              </p>
-            </div>
-          )}
-        </Card>
-      </div>
-    </main>
+            {status === 'loading' ? (
+              <LoadingSkeleton variant="text" count={2} label="Verificando sessão" />
+            ) : (
+              <>
+                <Button
+                  variant="solid"
+                  fullWidth
+                  loading={isRedirecting}
+                  leftIcon={<LogIn aria-hidden="true" size={20} />}
+                  onClick={handleGoogleLogin}
+                >
+                  Entrar com o Google
+                </Button>
+                <p className="text-center text-body-sm text-gray-dim">
+                  Não é preciso criar senha: sua conta é vinculada diretamente ao Google.
+                </p>
+              </>
+            )}
+          </>
+        }
+      >
+        <BrandLogo />
+        <DisplayTitle size="page">Entrar</DisplayTitle>
+        <CompassDivider />
+        <p className="text-body-md text-gray-dim">
+          Bem-vindo ao ViajaJunto! Entre com sua conta Google para planejar viagens em grupo,
+          controlar o orçamento e compartilhar roteiros.
+        </p>
+      </TicketCard>
+    </AuthShell>
   )
 }

@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { IconCircle } from './IconCircle'
+import { DisplayTitle } from './DisplayTitle'
 
 type PageMessageProps = {
   icon: LucideIcon
@@ -22,9 +23,7 @@ export function PageMessage({ icon, title, description, action, alert }: PageMes
     >
       <IconCircle icon={icon} size="lg" />
       <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-headline-md text-red-burgundy lg:text-headline-lg">
-          {title}
-        </h1>
+        <DisplayTitle>{title}</DisplayTitle>
         <p className="max-w-md text-body-md text-gray-dim">{description}</p>
       </div>
       {action}

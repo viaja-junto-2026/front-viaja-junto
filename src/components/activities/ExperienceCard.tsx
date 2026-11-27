@@ -33,7 +33,7 @@ export function ExperienceCard({ activity }: ExperienceCardProps) {
       <span className="relative -mt-6">
         <IconCircle icon={Icon} tone="white" />
       </span>
-      <span className="mt-3 text-label-md text-gray-ink uppercase group-hover:text-red-ruby">
+      <span className="mt-3 text-label-md text-brown-espresso uppercase group-hover:text-red-ruby">
         {name}
       </span>
       <span className="mt-1 text-body-sm text-gray-dim">

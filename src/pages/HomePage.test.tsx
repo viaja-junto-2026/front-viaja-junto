@@ -191,15 +191,12 @@ describe('HomePage', () => {
     })
   })
 
-  describe('closing banner and footer', () => {
+  describe('closing banner', () => {
     it('invites a visitor to start', () => {
       renderHome(visitor())
 
       expect(
         within(region('Planeje a próxima viagem')).getByRole('link', { name: 'Começar agora' }),
-      ).toHaveAttribute('href', '/login')
-      expect(
-        within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Fazer login' }),
       ).toHaveAttribute('href', '/login')
     })
 
@@ -209,9 +206,6 @@ describe('HomePage', () => {
       expect(
         within(region('Planeje a próxima viagem')).getByRole('link', { name: 'Planejar viagem' }),
       ).toHaveAttribute('href', '/trips/new')
-      expect(
-        within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Meu perfil' }),
-      ).toHaveAttribute('href', '/profile')
     })
   })
 })

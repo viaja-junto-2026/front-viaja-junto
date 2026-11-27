@@ -7,7 +7,7 @@ export type FieldProps = {
   label: string
   /** Texto de ajuda abaixo do campo. */
   helperText?: string
-  /** Rótulo em branco, para campos sobre fundo escuro (Bordô). */
+  /** Rótulo em branco, para campos sobre fundo escuro (marrom). */
   inverted?: boolean
   /** Mensagem de erro: diga como corrigir. Substitui o texto de ajuda. */
   error?: string

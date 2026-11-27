@@ -34,9 +34,17 @@ export const routes: RouteObject[] = [
         errorElement: <ErrorPage />,
         children: [
           { path: paths.home, element: <HomePage />, handle: { fullBleed: true } },
-          { path: paths.destinations, element: <DestinationsPage /> },
-          { path: patterns.destinationDetails, element: <DestinationDetailsPage /> },
-          { path: patterns.activityDetails, element: <ActivityDetailsPage /> },
+          { path: paths.destinations, element: <DestinationsPage />, handle: { fullBleed: true } },
+          {
+            path: patterns.destinationDetails,
+            element: <DestinationDetailsPage />,
+            handle: { fullBleed: true },
+          },
+          {
+            path: patterns.activityDetails,
+            element: <ActivityDetailsPage />,
+            handle: { fullBleed: true },
+          },
           { path: paths.reviews, element: <ReviewsPage /> },
           // Rotas privadas: sem login, o usuário é levado para /login e volta depois de entrar.
           {

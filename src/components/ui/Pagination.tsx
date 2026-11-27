@@ -28,7 +28,7 @@ export function Pagination({
   return (
     <nav aria-label={label} className="flex flex-wrap items-center justify-between gap-4">
       <Button
-        variant="secondary"
+        variant="outline"
         disabled={!hasPrevious || busy}
         leftIcon={<ChevronLeft aria-hidden="true" size={20} />}
         onClick={() => onPageChange(page - 1)}
@@ -40,7 +40,7 @@ export function Pagination({
         {totalPages ? ` de ${totalPages}` : ''}
       </span>
       <Button
-        variant="secondary"
+        variant="outline"
         disabled={!hasNext || busy}
         rightIcon={<ChevronRight aria-hidden="true" size={20} />}
         onClick={() => onPageChange(page + 1)}

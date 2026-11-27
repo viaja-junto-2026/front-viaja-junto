@@ -51,6 +51,7 @@ export function DestinationsFilters({
       >
         <div className="sm:col-span-5">
           <Input
+            inverted
             label="Buscar destino"
             name="q"
             type="search"
@@ -61,6 +62,7 @@ export function DestinationsFilters({
 
         <div className="sm:col-span-4">
           <Input
+            inverted
             label="País"
             name="country"
             defaultValue={filters.country ?? ''}
@@ -71,7 +73,7 @@ export function DestinationsFilters({
         <div className="sm:col-span-3">
           <Button
             type="submit"
-            variant="primary"
+            variant="light"
             fullWidth
             leftIcon={<Search aria-hidden="true" size={20} />}
           >

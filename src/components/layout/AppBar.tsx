@@ -1,5 +1,5 @@
 import { Bell } from 'lucide-react'
-import { Link, NavLink } from 'react-router'
+import { Link, NavLink, useMatch } from 'react-router'
 import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
 import { Avatar } from '../ui/Avatar'
@@ -9,15 +9,19 @@ import { BrandLogo } from './BrandLogo'
 import { topNavItems } from './navigation'
 
 /**
- * Barra superior. No desktop mostra marca, navegação, notificações e perfil;
- * no celular mostra só a marca e as notificações (a navegação fica na barra inferior).
- * Quem não está logado vê o botão "Entrar" no lugar das notificações e do perfil.
+ * Barra superior, branca em todas as páginas, Fora da home, uma sombra suave a separa do conteúdo. No desktop mostra marca, navegação,
+ * notificações e perfil; no celular mostra só a marca e as notificações (a navegação
+ * fica na barra inferior). Quem não está logado vê o botão "Entrar" no lugar das
+ * notificações e do perfil.
  */
 export function AppBar() {
   const { status, user } = useAuth()
 
+  // Na home a foto já separa a barra do conteúdo, então ela fica sem a sombra.
+  const isHome = useMatch(paths.home) !== null
+
   return (
-    <header className="bg-white">
+    <header className={`bg-white ${isHome ? '' : 'relative z-10 shadow-md'}`.trim()}>
       <div className="mx-auto flex h-18 w-full max-w-content items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <Link
           to={paths.home}
@@ -40,7 +44,7 @@ export function AppBar() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `relative px-2 py-3 text-label-lg ${isActive ? 'text-red-burgundy' : 'text-gray-dim'}`
+                `relative px-2 py-3 text-label-lg ${isActive ? 'text-red-burgundy' : 'text-brown-espresso'}`
               }
             >
               {({ isActive }) => (

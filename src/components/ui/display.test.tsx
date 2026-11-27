@@ -19,8 +19,8 @@ describe('Card', () => {
       </>,
     )
 
-    expect(screen.getByTestId('card')).toHaveClass('rounded-lg', 'p-6')
-    expect(screen.getByTestId('compact')).toHaveClass('rounded-sm', 'p-4')
+    expect(screen.getByTestId('card')).toHaveClass('rounded-xs', 'p-6')
+    expect(screen.getByTestId('compact')).toHaveClass('rounded-xs', 'p-4')
     expect(screen.getByRole('heading', { name: 'Floripa' })).toBeInTheDocument()
   })
 

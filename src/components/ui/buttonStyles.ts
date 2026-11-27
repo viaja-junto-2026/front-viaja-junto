@@ -13,7 +13,7 @@ export const buttonShape = cva(
         danger: 'h-12 rounded-xs px-6 text-label-lg',
         // Estilo editorial (retangular, em maiúsculas), usado na home.
         solid: 'h-12 rounded-xs px-6 text-label-sm uppercase',
-        outline: 'h-12 rounded-xs border border-red-burgundy px-6 text-label-sm uppercase',
+        outline: 'h-12 rounded-xs border border-brown-espresso px-6 text-label-sm uppercase',
         light: 'h-12 rounded-xs px-6 text-label-sm uppercase',
       },
       fullWidth: {
@@ -34,7 +34,7 @@ export const buttonTone: Record<ButtonVariant, string> = {
   compact: 'bg-rose-vintage text-gray-ink enabled:hover:bg-rose-dusty',
   danger: 'bg-rose-dusty text-brown-espresso enabled:hover:bg-rose-vintage',
   solid: 'bg-red-burgundy text-white enabled:hover:bg-red-ruby',
-  outline: 'text-red-burgundy enabled:hover:bg-red-burgundy enabled:hover:text-white',
+  outline: 'text-brown-espresso enabled:hover:bg-brown-espresso enabled:hover:text-white',
   light: 'bg-beige-sand text-red-burgundy enabled:hover:bg-white',
 }
 
@@ -51,6 +51,6 @@ export const linkTone: Record<ButtonVariant, string> = {
   compact: 'bg-rose-vintage text-gray-ink hover:bg-rose-dusty',
   danger: 'bg-rose-dusty text-brown-espresso hover:bg-rose-vintage',
   solid: 'bg-red-burgundy text-white hover:bg-red-ruby',
-  outline: 'text-red-burgundy hover:bg-red-burgundy hover:text-white',
+  outline: 'text-brown-espresso hover:bg-brown-espresso hover:text-white',
   light: 'bg-beige-sand text-red-burgundy hover:bg-white',
 }

@@ -2,7 +2,6 @@ import heroPhoto from '../assets/hero-tokyo.webp'
 import { useAuth } from '../auth/useAuth'
 import { DestinationSearchBar } from '../components/destinations/DestinationSearchBar'
 import { Container } from '../components/layout/Container'
-import { SiteFooter } from '../components/layout/SiteFooter'
 import { ButtonLink } from '../components/ui/ButtonLink'
 import { PromoBanner } from '../components/ui/PromoBanner'
 import { paths } from '../routes/paths'
@@ -37,7 +36,6 @@ export default function HomePage() {
           </ButtonLink>
         }
       />
-      <SiteFooter />
     </>
   )
 }

@@ -5,7 +5,7 @@ import type { Activity } from '../../services/activities'
 import { formatReviewCount } from '../../utils/format'
 import { activityTypeLabels } from '../../utils/labels'
 import { RatingStars } from '../reviews/RatingStars'
-import { Card } from '../ui/Card'
+import { FlushCard } from '../ui/Card'
 import { CoverPhoto } from '../ui/CoverPhoto'
 import { Tag } from '../ui/Tag'
 import { focusRing } from '../ui/focus'
@@ -20,21 +20,23 @@ type ActivityCardProps = {
  */
 export function ActivityCard({ activity }: ActivityCardProps) {
   return (
-    <Card
+    <FlushCard
       as="article"
       interactive
-      className="flex h-full flex-col overflow-hidden border border-beige-sand p-0"
+      className="flex h-full flex-col overflow-hidden border border-beige-sand"
     >
       <Link
         to={paths.activityDetails(activity.id)}
-        className={`group flex h-full flex-col rounded-lg ${focusRing}`}
+        className={`group flex h-full flex-col rounded-xs ${focusRing}`}
       >
         <CoverPhoto src={activity.photoUrl} fallbackIcon={Compass} ratio="video" />
 
         <div className="flex flex-1 flex-col gap-3 p-4">
           <Tag>{activityTypeLabels[activity.type]}</Tag>
 
-          <h3 className="font-heading text-title-md text-red-burgundy">{activity.name}</h3>
+          <h3 className="font-display text-headline-sm font-normal text-brown-espresso">
+            {activity.name}
+          </h3>
 
           {activity.location && (
             <p className="flex items-center gap-1.5 text-body-sm text-gray-dim">
@@ -61,6 +63,6 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           </div>
         </div>
       </Link>
-    </Card>
+    </FlushCard>
   )
 }

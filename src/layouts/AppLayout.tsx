@@ -1,6 +1,7 @@
 import { Outlet, useMatches } from 'react-router'
 import { AppBar } from '../components/layout/AppBar'
 import { BottomNav } from '../components/layout/BottomNav'
+import { SiteFooter } from '../components/layout/SiteFooter'
 
 type RouteHandle = {
   /** Tela em faixas de largura total: ela cuida das próprias margens (com `Container`). */
@@ -26,6 +27,7 @@ export function AppLayout() {
         }
       >
         <Outlet />
+        {fullBleed && <SiteFooter />}
       </main>
       <BottomNav />
     </div>

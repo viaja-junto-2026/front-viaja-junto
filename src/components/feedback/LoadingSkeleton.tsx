@@ -12,7 +12,7 @@ type LoadingSkeletonProps = {
   label?: string
 }
 
-const bar = 'animate-pulse rounded-sm bg-beige-sand'
+const bar = 'animate-pulse rounded-xs bg-beige-sand'
 
 /** Esqueleto de carregamento: mostra a forma do conteúdo enquanto os dados não chegam. */
 export function LoadingSkeleton({
@@ -35,12 +35,12 @@ export function LoadingSkeleton({
           return (
             <div
               key={index}
-              className="aspect-4/5 w-64 shrink-0 animate-pulse rounded-lg bg-beige-sand sm:w-72"
+              className="aspect-4/5 w-64 shrink-0 animate-pulse rounded-xs bg-beige-sand sm:w-72"
             />
           )
         }
         if (variant === 'card') {
-          return <div key={index} className="h-40 animate-pulse rounded-lg bg-beige-sand" />
+          return <div key={index} className="h-40 animate-pulse rounded-xs bg-beige-sand" />
         }
         if (variant === 'list') {
           return (

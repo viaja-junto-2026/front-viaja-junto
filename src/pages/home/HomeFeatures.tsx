@@ -22,8 +22,13 @@ export function HomeFeatures() {
         <ul className="grid grid-cols-2 gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-beige-sand">
           {features.map(({ icon: Icon, title, text }) => (
             <li key={title} className="flex flex-col items-center gap-3 px-4 text-center">
-              <Icon aria-hidden="true" size={36} strokeWidth={1.25} className="text-red-burgundy" />
-              <h3 className="text-label-sm text-gray-ink uppercase">{title}</h3>
+              <Icon
+                aria-hidden="true"
+                size={36}
+                strokeWidth={1.25}
+                className="text-brown-espresso"
+              />
+              <h3 className="text-label-sm text-brown-espresso uppercase">{title}</h3>
               <p className="max-w-3xs text-body-sm text-gray-dim">{text}</p>
             </li>
           ))}

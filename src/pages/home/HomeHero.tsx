@@ -25,12 +25,12 @@ export function HomeHero() {
       />
       <Container className="relative">
         <div className="flex max-w-lg flex-col items-start gap-5 py-10 lg:min-h-160 lg:justify-center lg:py-24">
-          <p className="text-label-overline text-red-burgundy uppercase">
+          <p className="text-label-overline text-brown-espresso uppercase">
             Roteiro. Orçamento. Companhia.
           </p>
           <h1
             id="home-title"
-            className="font-display text-display-hero-mobile text-gray-ink lg:text-display-hero"
+            className="font-display text-display-hero-mobile text-brown-espresso lg:text-display-hero"
           >
             Sua viagem <span className="block text-red-ruby italic">começa aqui.</span>
           </h1>

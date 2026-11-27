@@ -182,6 +182,71 @@ describe('routes', () => {
     )
   })
 
+  it.each(['/', '/destinations', '/destinations/1', '/activities/1'])(
+    'shows the site footer on the full width page %s',
+    (path) => {
+      renderAt(path)
+
+      expect(screen.getByRole('contentinfo')).toHaveTextContent('ViajaJunto')
+    },
+  )
+
+  it.each(['/trips', '/profile', '/reviews'])('has no site footer on %s', (path) => {
+    renderAt(path)
+
+    expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
+  })
+
+  it('offers the account links in the footer according to the session', () => {
+    renderAt('/', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+    const footer = within(screen.getByRole('contentinfo'))
+
+    expect(footer.getByRole('link', { name: 'Fazer login' })).toHaveAttribute('href', '/login')
+    expect(footer.queryByRole('link', { name: 'Meu perfil' })).not.toBeInTheDocument()
+  })
+
+  it('shows the profile link in the footer to a signed-in user', () => {
+    renderAt('/')
+
+    expect(
+      within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Meu perfil' }),
+    ).toHaveAttribute('href', '/profile')
+  })
+
+  it.each(['/', '/destinations', '/destinations/1', '/trips', '/profile', '/does-not-exist'])(
+    'has a white top bar with the ruby brand on %s',
+    (path) => {
+      renderAt(path)
+      const topBar = screen.getAllByRole('banner')[0]
+
+      expect(topBar).toHaveClass('bg-white')
+      expect(within(topBar).getByText('ViajaJunto')).toHaveClass('text-red-ruby')
+    },
+  )
+
+  it.each(['/destinations', '/destinations/1', '/trips', '/profile', '/does-not-exist'])(
+    'separates the top bar with a soft shadow on %s',
+    (path) => {
+      renderAt(path)
+
+      expect(screen.getAllByRole('banner')[0]).toHaveClass('shadow-md')
+    },
+  )
+
+  it('has no shadow under the top bar on the home page', () => {
+    renderAt('/')
+
+    expect(screen.getAllByRole('banner')[0]).not.toHaveClass('shadow-md')
+  })
+
+  it('uses the same solid sign-in button outside the home page', () => {
+    renderAt('/reviews', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
+
+    expect(
+      within(screen.getAllByRole('banner')[0]).getByRole('link', { name: 'Entrar' }),
+    ).toHaveClass('bg-red-burgundy')
+  })
+
   it('keeps the public pages open for visitors', () => {
     renderAt('/destinations', routes, makeAuthValue({ status: 'unauthenticated', user: null }))
 

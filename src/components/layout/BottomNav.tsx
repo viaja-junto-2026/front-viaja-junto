@@ -14,7 +14,7 @@ export function BottomNav() {
           to={to}
           className={({ isActive }) =>
             `flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-label-sm uppercase ${
-              isActive ? 'text-red-burgundy' : 'text-gray-dim'
+              isActive ? 'text-red-burgundy' : 'text-brown-espresso'
             }`
           }
         >

@@ -4,9 +4,11 @@ import type { HTMLAttributes, ReactNode } from 'react'
 const cardStyles = cva('bg-white text-gray-ink', {
   variants: {
     size: {
-      default: 'rounded-lg p-6',
-      compact: 'rounded-sm p-4',
-      floating: 'rounded-lg p-4 shadow-xl',
+      default: 'rounded-xs p-6',
+      compact: 'rounded-xs p-4',
+      floating: 'rounded-xs p-4 shadow-xl',
+      /** Sem respiro interno: para cards que começam com uma foto. */
+      flush: 'rounded-xs',
     },
     interactive: {
       true: 'transition-shadow hover:shadow-md focus-within:shadow-md',
@@ -30,7 +32,7 @@ function CardBase({
   className,
   ...rest
 }: CardBaseProps & {
-  size: 'default' | 'compact' | 'floating'
+  size: 'default' | 'compact' | 'floating' | 'flush'
 }) {
   return <Tag className={cardStyles({ size, interactive, className })} {...rest} />
 }
@@ -45,16 +47,21 @@ export function CardCompact(props: CardBaseProps) {
   return <CardBase size="compact" {...props} />
 }
 
+/** Card sem respiro interno, para itens com foto de capa. */
+export function FlushCard(props: CardBaseProps) {
+  return <CardBase size="flush" {...props} />
+}
+
 /** Card que flutua sobre uma foto (resumo social, destaque), com sombra ampla. */
 export function FloatingCard(props: CardBaseProps) {
   return <CardBase size="floating" {...props} />
 }
 
-/** Título de card em Bordô. */
+/** Título de card em marrom. */
 export function CardTitle({ className, ...rest }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={`font-heading text-headline-sm text-red-burgundy ${className ?? ''}`.trim()}
+      className={`font-heading text-headline-sm text-brown-espresso ${className ?? ''}`.trim()}
       {...rest}
     />
   )

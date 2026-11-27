@@ -13,7 +13,7 @@ const categoryOptions = [
 ]
 
 /**
- * Barra de busca sobre fundo Bordô: leva ao catálogo com os filtros na URL
+ * Barra de busca sobre fundo marrom: leva ao catálogo com os filtros na URL
  * (`/destinations?q=...&category=...`).
  */
 export function DestinationSearchBar() {
@@ -35,7 +35,7 @@ export function DestinationSearchBar() {
       role="search"
       aria-label="Buscar destinos"
       onSubmit={handleSubmit}
-      className="grid gap-4 rounded-xs bg-red-burgundy p-4 shadow-lg sm:grid-cols-12 sm:items-end sm:p-6"
+      className="grid gap-4 rounded-xs bg-brown-espresso p-4 shadow-lg sm:grid-cols-12 sm:items-end sm:p-6"
     >
       <div className="sm:col-span-5">
         <Input

@@ -18,7 +18,7 @@ export function EmptyState({ icon: Icon = Inbox, title, description, action }: E
     <div className="flex flex-col items-center gap-4 px-4 py-12 text-center">
       <IconCircle icon={Icon} size="lg" />
       <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-headline-sm text-red-burgundy">{title}</h2>
+        <h2 className="font-heading text-headline-sm text-brown-espresso">{title}</h2>
         {description && <p className="max-w-md text-body-md text-gray-dim">{description}</p>}
       </div>
       {action}

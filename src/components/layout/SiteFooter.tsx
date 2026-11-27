@@ -32,7 +32,7 @@ function FooterColumn({ title, links }: { title: string; links: FooterLink[] }) 
   )
 }
 
-/** Rodapé em Bordô, só com links para páginas que existem. */
+/** Rodapé em degradê (Bordô em cima, marrom embaixo), só com links para páginas que existem. */
 export function SiteFooter() {
   const { status } = useAuth()
   const accountLinks: FooterLink[] =
@@ -44,7 +44,7 @@ export function SiteFooter() {
       : [{ label: 'Fazer login', to: paths.login }]
 
   return (
-    <footer className="border-t border-white/20 bg-red-burgundy pb-8 text-white">
+    <footer className="bg-linear-to-b from-red-burgundy to-brown-espresso pb-8 text-white">
       <Container className="grid gap-8 py-12 sm:grid-cols-4">
         <div className="flex flex-col gap-3 sm:col-span-2">
           <p className="font-display text-headline-lg font-normal">ViajaJunto</p>

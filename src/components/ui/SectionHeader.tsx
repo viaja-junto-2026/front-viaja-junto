@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { DisplayTitle } from './DisplayTitle'
 
 type SectionHeaderProps = {
   title: string
@@ -6,11 +7,11 @@ type SectionHeaderProps = {
   children?: ReactNode
 }
 
-/** Cabeçalho de uma faixa de conteúdo: título em Bordô e ações à direita. */
+/** Cabeçalho de uma faixa de conteúdo: título em serifa marrom e ações à direita. */
 export function SectionHeader({ title, children }: SectionHeaderProps) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <h2 className="font-heading text-headline-md text-red-burgundy">{title}</h2>
+      <DisplayTitle as="h2">{title}</DisplayTitle>
       {children && <div className="flex items-center gap-4">{children}</div>}
     </div>
   )
