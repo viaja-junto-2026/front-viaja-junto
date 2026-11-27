@@ -1,0 +1,11 @@
+# Quebra de linha do Linux (LF) para todos, também no Windows, mesmo com core.autocrlf ligado.
+# Sem isso, o `pnpm format:check` falha na máquina local, apesar de passar no CI.
+* text=auto eol=lf
+
+# Arquivos binários nunca são convertidos.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.woff2 binary
