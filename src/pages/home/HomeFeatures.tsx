@@ -1,50 +1,39 @@
-import { Star, Users, Wallet, type LucideIcon } from 'lucide-react'
-import { Card } from '../../components/ui/Card'
-import { IconCircle } from '../../components/ui/IconCircle'
+import { Receipt, Route, Star, Wallet, type LucideIcon } from 'lucide-react'
+import { Container } from '../../components/layout/Container'
 
 type Feature = {
   icon: LucideIcon
-  tone: 'sand' | 'wheat' | 'mist'
   title: string
   text: string
 }
 
 const features: Feature[] = [
-  {
-    icon: Users,
-    tone: 'sand',
-    title: 'Planeje junto',
-    text: 'Convide o grupo com um código e monte o roteiro em conjunto.',
-  },
-  {
-    icon: Wallet,
-    tone: 'wheat',
-    title: 'Controle o orçamento',
-    text: 'Veja o total, o saldo e o gasto por categoria, sem planilha.',
-  },
-  {
-    icon: Star,
-    tone: 'mist',
-    title: 'Descubra lugares',
-    text: 'Destinos e atividades avaliados por quem já viajou.',
-  },
+  { icon: Route, title: 'Roteiro em grupo', text: 'Destinos e atividades montados por todos.' },
+  { icon: Wallet, title: 'Orçamento claro', text: 'Total, planejado e saldo em um só lugar.' },
+  { icon: Receipt, title: 'Despesas divididas', text: 'Cada um sabe quanto deve a quem.' },
+  { icon: Star, title: 'Lugares avaliados', text: 'Notas de quem já esteve lá.' },
 ]
 
-/** Faixa com os três pontos fortes do produto. */
+/** Faixa dos pontos fortes: ícones de linha separados por filetes, sem cards. */
 export function HomeFeatures() {
   return (
-    <Card as="section" aria-label="Como o ViajaJunto ajuda" className="rounded-xl">
-      <ul className="grid gap-6 sm:grid-cols-3">
-        {features.map(({ icon, tone, title, text }) => (
-          <li key={title} className="flex items-start gap-4">
-            <IconCircle icon={icon} tone={tone} />
-            <div className="flex flex-col gap-1">
-              <h3 className="text-title-md text-gray-ink">{title}</h3>
-              <p className="text-body-sm text-gray-dim">{text}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <section aria-label="Como o ViajaJunto ajuda">
+      <Container className="py-12">
+        <ul className="grid grid-cols-2 gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-beige-sand">
+          {features.map(({ icon: Icon, title, text }) => (
+            <li key={title} className="flex flex-col items-center gap-3 px-4 text-center">
+              <Icon
+                aria-hidden="true"
+                size={36}
+                strokeWidth={1.25}
+                className="text-brown-espresso"
+              />
+              <h3 className="text-label-sm text-brown-espresso uppercase">{title}</h3>
+              <p className="max-w-3xs text-body-sm text-gray-dim">{text}</p>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
   )
 }

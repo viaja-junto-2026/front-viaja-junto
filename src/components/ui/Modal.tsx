@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { focusRing } from './focus'
+import { IconButton } from './IconButton'
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -77,20 +77,15 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         onKeyDown={handleKeyDown}
-        className="flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-t-xl bg-white p-6 text-gray-ink shadow-xl sm:max-w-lg sm:rounded-xl"
+        className="flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-xs border-t-4 border-t-brown-espresso bg-white p-6 text-gray-ink shadow-xl sm:max-w-lg"
       >
         <div className="flex items-start justify-between gap-4">
-          <h2 id={titleId} className="font-heading text-headline-sm text-red-burgundy">
+          <h2 id={titleId} className="font-heading text-headline-sm text-brown-espresso">
             {title}
           </h2>
-          <button
-            type="button"
-            aria-label="Fechar"
-            onClick={onClose}
-            className={`flex size-8 shrink-0 items-center justify-center rounded-full text-gray-dim hover:bg-beige-light ${focusRing}`}
-          >
+          <IconButton label="Fechar" variant="ghost" size="sm" onClick={onClose}>
             <X aria-hidden="true" size={20} />
-          </button>
+          </IconButton>
         </div>
         <div className="text-body-md">{children}</div>
         {footer && (

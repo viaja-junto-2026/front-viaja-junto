@@ -28,7 +28,7 @@ export function Alert({ variant, title, children, className }: AlertProps) {
   return (
     <div
       role={variant === 'error' ? 'alert' : 'status'}
-      className={`flex items-start gap-3 rounded-md p-4 text-body-sm text-gray-ink ${style} ${className ?? ''}`.trim()}
+      className={`flex items-start gap-3 rounded-xs p-4 text-body-sm text-gray-ink ${style} ${className ?? ''}`.trim()}
     >
       <Icon aria-hidden="true" size={20} className="shrink-0" />
       <div>

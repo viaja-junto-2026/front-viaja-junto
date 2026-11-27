@@ -7,6 +7,7 @@ import { Button } from './Button'
 import { ButtonLink } from './ButtonLink'
 import { Card, FloatingCard } from './Card'
 import { Carousel } from './Carousel'
+import { IconButton, IconButtonLink } from './IconButton'
 import { IconCircle } from './IconCircle'
 import { SectionHeader } from './SectionHeader'
 import { TextLink } from './TextLink'
@@ -28,7 +29,7 @@ describe('ButtonLink', () => {
     ['secondary', 'bg-rose-dusty'],
     ['compact', 'h-9'],
     ['danger', 'text-brown-espresso'],
-    ['pill', 'rounded-full'],
+    ['solid', 'uppercase'],
   ] as const)('applies the %s variant', (variant, expectedClass) => {
     renderInRouter(
       <ButtonLink to="/x" variant={variant}>
@@ -39,29 +40,29 @@ describe('ButtonLink', () => {
     expect(screen.getByRole('link', { name: 'Ir' })).toHaveClass(expectedClass)
   })
 
-  it('shows the arrow circle on the pill, and custom icons otherwise', () => {
-    const { container, rerender } = renderInRouter(
-      <ButtonLink to="/x" variant="pill">
+  it('shows the icons on both sides', () => {
+    renderInRouter(
+      <ButtonLink
+        to="/x"
+        leftIcon={<span data-testid="left" />}
+        rightIcon={<span data-testid="right" />}
+      >
         Ir
       </ButtonLink>,
     )
-    expect(container.querySelector('.lucide-arrow-right')).toBeInTheDocument()
 
-    rerender(
-      <MemoryRouter>
-        <ButtonLink
-          to="/x"
-          leftIcon={<span data-testid="left" />}
-          rightIcon={<span data-testid="right" />}
-        >
-          Ir
-        </ButtonLink>
-      </MemoryRouter>,
-    )
     expect(screen.getByTestId('left')).toBeInTheDocument()
     expect(screen.getByTestId('right')).toBeInTheDocument()
-    expect(container.querySelector('.lucide-arrow-right')).not.toBeInTheDocument()
   })
+
+  it.each(['primary', 'secondary', 'compact', 'danger'] as const)(
+    'has square corners on the %s variant',
+    (variant) => {
+      render(<Button variant={variant}>Ação</Button>)
+
+      expect(screen.getByRole('button', { name: 'Ação' })).toHaveClass('rounded-xs')
+    },
+  )
 
   it('can take the full width', () => {
     renderInRouter(
@@ -75,16 +76,40 @@ describe('ButtonLink', () => {
 })
 
 describe('Button trailing icon', () => {
-  it('shows the arrow circle on the pill by default', () => {
-    const { container } = render(<Button variant="pill">Começar</Button>)
-
-    expect(container.querySelector('.lucide-arrow-right')).toBeInTheDocument()
-  })
-
   it('shows a custom right icon', () => {
     render(<Button rightIcon={<span data-testid="right" />}>Próximo</Button>)
 
     expect(screen.getByTestId('right')).toBeInTheDocument()
+  })
+})
+
+describe('IconButton', () => {
+  it('is a button named by its label, square and white by default', async () => {
+    const onClick = vi.fn()
+    render(
+      <IconButton label="Fechar" onClick={onClick}>
+        x
+      </IconButton>,
+    )
+    const button = screen.getByRole('button', { name: 'Fechar' })
+
+    await userEvent.click(button)
+
+    expect(onClick).toHaveBeenCalledOnce()
+    expect(button).toHaveAttribute('type', 'button')
+    expect(button).toHaveClass('rounded-xs', 'bg-white', 'size-12')
+  })
+
+  it('has a round brand version as a link', () => {
+    renderInRouter(
+      <IconButtonLink to="/notifications" label="Avisos" variant="brand" size="sm" shape="round">
+        x
+      </IconButtonLink>,
+    )
+
+    const link = screen.getByRole('link', { name: 'Avisos' })
+    expect(link).toHaveAttribute('href', '/notifications')
+    expect(link).toHaveClass('rounded-full', 'bg-red-ruby', 'size-8')
   })
 })
 
@@ -151,7 +176,7 @@ describe('FloatingCard', () => {
       </>,
     )
 
-    expect(screen.getByTestId('floating')).toHaveClass('rounded-lg', 'p-4', 'shadow-xl')
+    expect(screen.getByTestId('floating')).toHaveClass('rounded-xs', 'p-4', 'shadow-xl')
     expect(screen.getByTestId('card')).not.toHaveClass('shadow-xl')
   })
 })

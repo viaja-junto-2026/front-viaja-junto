@@ -2,6 +2,7 @@ import { Search, X } from 'lucide-react'
 import type { FormEvent } from 'react'
 import { Button } from '../../components/ui/Button'
 import { Chip } from '../../components/ui/Chip'
+import { FilterPanel } from '../../components/ui/FilterPanel'
 import { Input } from '../../components/ui/Input'
 import type { DestinationFilters } from '../../hooks/useDestinations'
 import { destinationCategoryLabels, type DestinationCategory } from '../../utils/labels'
@@ -40,7 +41,7 @@ export function DestinationsFilters({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-beige-sand bg-white p-4 sm:p-6">
+    <FilterPanel>
       <form
         key={`${filters.q ?? ''}|${filters.country ?? ''}`}
         role="search"
@@ -50,6 +51,7 @@ export function DestinationsFilters({
       >
         <div className="sm:col-span-5">
           <Input
+            inverted
             label="Buscar destino"
             name="q"
             type="search"
@@ -60,6 +62,7 @@ export function DestinationsFilters({
 
         <div className="sm:col-span-4">
           <Input
+            inverted
             label="País"
             name="country"
             defaultValue={filters.country ?? ''}
@@ -70,7 +73,7 @@ export function DestinationsFilters({
         <div className="sm:col-span-3">
           <Button
             type="submit"
-            variant="primary"
+            variant="light"
             fullWidth
             leftIcon={<Search aria-hidden="true" size={20} />}
           >
@@ -105,6 +108,6 @@ export function DestinationsFilters({
           </Button>
         )}
       </div>
-    </div>
+    </FilterPanel>
   )
 }

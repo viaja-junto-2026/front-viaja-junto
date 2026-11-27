@@ -1,10 +1,12 @@
-import { ChevronLeft, ChevronRight, Compass } from 'lucide-react'
+import { Compass } from 'lucide-react'
 import { ActivityCard } from '../../components/activities/ActivityCard'
 import { EmptyState } from '../../components/feedback/EmptyState'
 import { LoadingSkeleton } from '../../components/feedback/LoadingSkeleton'
 import { QueryState } from '../../components/feedback/QueryState'
 import { Button } from '../../components/ui/Button'
 import { Chip } from '../../components/ui/Chip'
+import { FilterPanel } from '../../components/ui/FilterPanel'
+import { Pagination } from '../../components/ui/Pagination'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { Select, type SelectOption } from '../../components/ui/Select'
 import { useActivities } from '../../hooks/useActivities'
@@ -42,7 +44,6 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
   const { filters, meta } = activities
   const hasActiveFilters = Boolean(filters.type || filters.minRating !== undefined)
   const totalPages = meta?.totalPages
-  const showPagination = (totalPages ?? 1) > 1 || activities.hasPrevious || activities.hasNext
 
   function handleTypeToggle(type?: ActivityType) {
     activities.setFilters({
@@ -79,7 +80,7 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
         )}
       </SectionHeader>
 
-      <div className="flex flex-col gap-4 rounded-lg border border-beige-sand bg-white p-4">
+      <FilterPanel>
         <div role="group" aria-label="Filtrar por tipo" className="flex flex-wrap gap-2">
           <Chip selected={!filters.type} onClick={() => handleTypeToggle(undefined)}>
             Todos
@@ -97,19 +98,21 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
 
         <div className="grid gap-4 sm:grid-cols-2 lg:max-w-xl">
           <Select
+            inverted
             label="Nota mínima"
             options={MIN_RATING_OPTIONS}
             value={filters.minRating !== undefined ? String(filters.minRating) : ''}
             onChange={handleMinRatingChange}
           />
           <Select
+            inverted
             label="Ordenar por"
             options={SORT_OPTIONS}
             value={filters.sort ?? 'name'}
             onChange={handleSortChange}
           />
         </div>
-      </div>
+      </FilterPanel>
 
       <QueryState
         isLoading={activities.isLoading}
@@ -148,33 +151,15 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
             ))}
           </ul>
 
-          {showPagination && (
-            <nav
-              aria-label="Paginação das atividades"
-              className="flex flex-wrap items-center justify-between gap-4"
-            >
-              <Button
-                variant="secondary"
-                disabled={!activities.hasPrevious || activities.isFetching}
-                leftIcon={<ChevronLeft aria-hidden="true" size={20} />}
-                onClick={() => activities.setPage(activities.page - 1)}
-              >
-                Anterior
-              </Button>
-              <span aria-live="polite" className="text-body-sm text-gray-dim tabular">
-                Página {activities.page}
-                {totalPages ? ` de ${totalPages}` : ''}
-              </span>
-              <Button
-                variant="secondary"
-                disabled={!activities.hasNext || activities.isFetching}
-                rightIcon={<ChevronRight aria-hidden="true" size={20} />}
-                onClick={() => activities.setPage(activities.page + 1)}
-              >
-                Próxima
-              </Button>
-            </nav>
-          )}
+          <Pagination
+            label="Paginação das atividades"
+            page={activities.page}
+            totalPages={totalPages}
+            hasPrevious={activities.hasPrevious}
+            hasNext={activities.hasNext}
+            busy={activities.isFetching}
+            onPageChange={activities.setPage}
+          />
         </div>
       </QueryState>
     </section>

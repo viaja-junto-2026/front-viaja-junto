@@ -100,23 +100,33 @@ Cores, fontes, estilos de texto, raios, sombras e breakpoints ficam somente em `
 
 Os componentes base do design system ficam em `src/components/ui/`. Cada tela monta a interface com eles, sem repetir estilos.
 
-| Componente                                     | Uso                                                                                                                           |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `Button`                                       | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira) e `pill`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
-| `Input`, `Textarea`, `Select`                  | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                      |
-| `Card`, `CardCompact`, `CardTitle`             | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                        |
-| `Badge`, `Chip`                                | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                |
-| `Avatar`, `AvatarGroup`                        | Iniciais e avatares empilhados com "+N"                                                                                       |
-| `Alert`                                        | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                              |
-| `Tabs`, `ProgressBar`                          | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                       |
-| `Modal`, `ConfirmDialog`                       | Janela com foco preso, Esc e rolagem travada; confirmação de ação destrutiva                                                  |
-| `ButtonLink`, `TextLink`                       | Link com a aparência de botão (`pill` traz o círculo com seta) e link de texto com seta ("Ver todas")                         |
-| `IconCircle`, `SectionHeader`                  | Ícone em círculo tingido e cabeçalho de faixa (título e ações)                                                                |
-| `Carousel`                                     | Faixa horizontal com `scroll-snap`; setas só no desktop                                                                       |
-| `FloatingCard`                                 | Card que flutua sobre uma foto, com sombra ampla                                                                              |
-| `DestinationCard` (`components/destinations/`) | Card de foto de um destino: foto (ou bege com ícone), nome, país e nota                                                       |
+| Componente                                               | Uso                                                                                                                                                |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Button`                                                 | Variantes `primary`, `secondary`, `compact`, `danger` (com lixeira), `solid`, `outline` e `light`; `loading`, `leftIcon`, `disabled` e `fullWidth` |
+| `Input`, `Textarea`, `Select`                            | Rótulo, texto de ajuda e `error` (ícone + mensagem, `aria-invalid` e `aria-describedby`)                                                           |
+| `Card`, `CardCompact`, `CardTitle`                       | Conteúdo principal e itens repetidos; `interactive` para card clicável                                                                             |
+| `Badge`, `Chip`                                          | Status da viagem (`PLANNING`, `CONFIRMED`, `COMPLETED`) e filtros (`selected`)                                                                     |
+| `Avatar`, `AvatarGroup`                                  | Iniciais e avatares empilhados com "+N"                                                                                                            |
+| `Alert`                                                  | `success`, `warning`, `error` e `info`, sempre com ícone e texto                                                                                   |
+| `Tabs`, `ProgressBar`                                    | Abas com painéis e teclado; barra de progresso com `role="progressbar"`                                                                            |
+| `Modal`, `ConfirmDialog`                                 | Janela com foco preso, Esc e rolagem travada; confirmação de ação destrutiva                                                                       |
+| `ButtonLink`, `TextLink`                                 | Link com a aparência de botão e link de texto com seta ("Ver todas")                                                                               |
+| `IconButton`, `IconButtonLink`                           | Botão ou link só com ícone (`brand`, `surface`, `ghost`), com `label` obrigatório                                                                  |
+| `IconCircle`, `SectionHeader`                            | Ícone em círculo tingido e cabeçalho de faixa (título e ações)                                                                                     |
+| `Carousel`                                               | Faixa horizontal com `scroll-snap`; setas só no desktop                                                                                            |
+| `FloatingCard`                                           | Card que flutua sobre uma foto, com sombra ampla                                                                                                   |
+| `Pagination`, `FilterPanel`                              | Navegação entre páginas e caixa de busca e filtros das listas                                                                                      |
+| `PageMessage`, `BackLink`, `ExternalTextLink`            | Mensagem de página inteira (não encontrado, erro), link de voltar e link externo                                                                   |
+| `Tag`, `CoverPhoto`, `BrandLogo`                         | Selo de categoria, foto de capa com fallback e o logo                                                                                              |
+| `SectionTitle`, `PromoBanner`, `Container`, `SiteFooter` | Peças das telas em faixas de largura total (home)                                                                                                  |
+| `PageBanner`, `DetailHero`, `AuthShell`                  | Topo das listas, topo das páginas de detalhe e moldura do login                                                                                    |
+| `TicketCard`, `CurvedEdge`, `CompassDivider`             | Cartão de embarque do login, curva ao lado da foto e filete dos títulos                                                                            |
+| `FlightRoute`                                            | Rota tracejada nas laterais do título das listas                                                                                                   |
+| `DisplayTitle`, `LocationLine`, `RatingSummary`          | Título em serifa, localização e resumo da nota dos topos de detalhe                                                                                |
+| `BandOverlap`                                            | Faz o fundo do topo continuar até a metade do bloco seguinte                                                                                       |
+| `DestinationShowcaseCard`, `FlushCard`                   | Card de destino (home e catálogo) e card sem respiro interno, para itens com foto                                                                  |
 
-- **Como compor estilos:** `cva` declara as variantes e `clsx` junta classes condicionais. Só entram classes geradas pelos tokens (o ESLint barra valores arbitrários).
+- **Como compor estilos:** `cva` declara as variantes e `clsx` junta classes condicionais. Só entram classes geradas pelos tokens (o ESLint barra valores arbitrários). O lint também **proíbe `<button>`, `<input>`, `<select>` e `<textarea>` fora de `src/components/ui/`**: use os componentes.
 - **Acessibilidade:** elementos semânticos (`button`, `label`, `dialog`), foco visível por teclado (`focusRing`, em `ui/focus.ts`) e o estado nunca depende só da cor.
 - **Ícones:** `lucide-react`, com `aria-hidden="true"` quando decorativos.
 - **Modal:** feito sem biblioteca (poucas linhas) para não depender de um pacote só para prender o foco. Sempre use `ConfirmDialog` antes de excluir ou remover algo.
@@ -227,15 +237,14 @@ A Home (`src/pages/HomePage.tsx`) é a tela de referência para quem for criar a
 - **Service:** `listTopDestinations` (`src/services/destinations.ts`) usa o `apiClient` e `unwrap`.
 - **Hook:** `useTopDestinations` (`src/hooks/useTopDestinations.ts`) é um `useQuery` com a chave e a função do service.
 - **Seções em uma pasta própria** (`src/pages/home/`): `HomeHero`, `HomeFeatures` e `TopDestinationsSection`. A página só as monta.
-- **Estados:** `TopDestinationsSection` mostra carregando (`LoadingSkeleton`), erro com "Tentar de novo" e vazio (`EmptyState`, com a ação) usando o `QueryState`, e o conteúdo em um `Carousel` de `DestinationCard`.
-- **Componentes, não estilos soltos:** botões e links via `ButtonLink` e `TextLink`, cards via `Card` e `FloatingCard`.
+- **Estados:** `TopDestinationsSection` mostra carregando (`LoadingSkeleton`), erro com "Tentar de novo" e vazio (`EmptyState`) usando o `QueryState`, e o conteúdo em uma grade de `DestinationShowcaseCard`.
+- **Componentes, não estilos soltos:** botões e links via `ButtonLink` e `TextLink`, cards via `Card` e `FlushCard`.
 - **Testes:** `HomePage.test.tsx` cobre cada estado, mockando só o service com `vi.mock`.
 
 Pontos de atenção:
 
 - A foto do hero é `src/assets/hero-tokyo.webp`.
 - `GET /api/destination-catalog/top` só lista destinos que já têm avaliação. No catálogo de demonstração ainda não há nenhuma, então a faixa mostra o estado vazio até alguém concluir uma viagem e avaliar um destino. Os destinos do catálogo de demonstração também não têm foto: o card usa o bege com o ícone.
-- O cartão sobre a foto mostra o destino mais bem avaliado (dado real da API) e só aparece quando existe um.
 
 ## Testes
 

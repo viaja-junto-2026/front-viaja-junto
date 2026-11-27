@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import logoVj from '../assets/logo-vj.png'
 import { useAuth } from '../auth/useAuth'
 import { Spinner } from '../components/feedback/Spinner'
+import { AuthShell } from '../components/layout/AuthShell'
+import { BrandLogo } from '../components/layout/BrandLogo'
 import { Alert } from '../components/ui/Alert'
 import { ButtonLink } from '../components/ui/ButtonLink'
-import { Card } from '../components/ui/Card'
+import { CompassDivider } from '../components/ui/CompassDivider'
+import { TicketCard } from '../components/ui/TicketCard'
 import { paths } from '../routes/paths'
 import { consumeRedirectTarget } from '../services/session'
 import { getErrorMessage } from '../utils/errorMessages'
+import { DisplayTitle } from '../components/ui/DisplayTitle'
 
 type CallbackToken = {
   token: string
@@ -69,27 +72,30 @@ export default function AuthCallbackPage() {
   }, [callbackToken, navigate, signIn])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-beige-light px-4 py-10">
-      <Card className="flex w-full max-w-md flex-col items-center gap-6 border border-beige-sand text-center shadow-lg">
-        <img src={logoVj} alt="ViajaJunto" className="h-12 w-auto" />
-        <h1 className="font-heading text-headline-md text-red-burgundy">Entrando...</h1>
-
-        {errorMessage ? (
-          <div className="flex w-full flex-col gap-4 text-left">
-            <Alert variant="error">{errorMessage}</Alert>
-            <ButtonLink to={paths.login} variant="primary" fullWidth>
-              Voltar para o login
-            </ButtonLink>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-3">
-            <Spinner label="Confirmando sua sessão" />
-            <p className="text-body-md text-gray-dim">
-              Estamos confirmando sua conta com o Google.
-            </p>
-          </div>
-        )}
-      </Card>
-    </main>
+    <AuthShell>
+      <TicketCard
+        stub={
+          errorMessage ? (
+            <>
+              <Alert variant="error">{errorMessage}</Alert>
+              <ButtonLink to={paths.login} variant="primary" fullWidth>
+                Voltar para o login
+              </ButtonLink>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-3 text-center">
+              <Spinner label="Confirmando sua sessão" />
+              <p className="text-body-md text-gray-dim">
+                Estamos confirmando sua conta com o Google.
+              </p>
+            </div>
+          )
+        }
+      >
+        <BrandLogo />
+        <DisplayTitle size="page">Entrando...</DisplayTitle>
+        <CompassDivider />
+      </TicketCard>
+    </AuthShell>
   )
 }

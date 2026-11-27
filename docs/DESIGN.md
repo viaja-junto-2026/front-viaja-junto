@@ -4,7 +4,7 @@ name: ViajaJunto
 description: Design system da interface web responsiva (celular e desktop) do ViajaJunto, planejador colaborativo de viagens. Paleta rubi, bordô e rosa antigo sobre bege claro, estética editorial de turismo (fotos em destaque, títulos em serifa, pílulas e cards flutuantes), tipografia DM Serif Display + Plus Jakarta Sans + Inter, escala de 4 px.
 colors:
   red-ruby: '#9B111E'
-  red-burgundy: '#6a0d16'
+  red-burgundy: '#790E18'
   white: '#FFFFFF'
   rose-vintage: '#C67C82'
   rose-dusty: '#B5827E'
@@ -164,7 +164,7 @@ components:
     backgroundColor: '{colors.red-ruby}'
     textColor: '{colors.white}'
     typography: '{typography.label-lg}'
-    rounded: '{rounded.md}'
+    rounded: '{rounded.xs}'
     height: 48px
     padding: 24px
   button-primary-hover:
@@ -174,7 +174,7 @@ components:
     backgroundColor: '{colors.rose-dusty}'
     textColor: '{colors.brown-espresso}'
     typography: '{typography.label-lg}'
-    rounded: '{rounded.md}'
+    rounded: '{rounded.xs}'
     height: 48px
     padding: 24px
   button-secondary-hover:
@@ -184,26 +184,19 @@ components:
     backgroundColor: '{colors.rose-vintage}'
     textColor: '{colors.gray-ink}'
     typography: '{typography.label-md}'
-    rounded: '{rounded.sm}'
+    rounded: '{rounded.xs}'
     height: 36px
     padding: 12px
   button-danger:
     backgroundColor: '{colors.rose-dusty}'
     textColor: '{colors.brown-espresso}'
     typography: '{typography.label-lg}'
-    rounded: '{rounded.md}'
+    rounded: '{rounded.xs}'
     height: 48px
     padding: 24px
   button-danger-hover:
     backgroundColor: '{colors.rose-vintage}'
     textColor: '{colors.brown-espresso}'
-  button-pill:
-    backgroundColor: '{colors.red-ruby}'
-    textColor: '{colors.white}'
-    typography: '{typography.label-lg}'
-    rounded: '{rounded.full}'
-    height: 56px
-    padding: 24px
   button-circle:
     backgroundColor: '{colors.white}'
     textColor: '{colors.red-ruby}'
@@ -213,7 +206,7 @@ components:
     backgroundColor: '{colors.white}'
     textColor: '{colors.gray-ink}'
     typography: '{typography.body-md}'
-    rounded: '{rounded.md}'
+    rounded: '{rounded.xs}'
     height: 48px
     padding: 12px
   input-label:
@@ -389,18 +382,18 @@ A paleta tem **três cores de marca** (rubi, bordô e rosa antigo), **dois beges
 
 Os tokens levam o **nome real da cor**, no formato `família-nome` (`red-ruby`, `rose-vintage`...), e não o papel que ela exerce. O uso de cada cor está na coluna "Uso". Em código, a classe é a do próprio nome: `bg-red-ruby`, `text-red-burgundy`, `border-beige-sand`. Se a marca mudar de cor, o token e a classe precisam ser renomeados junto.
 
-| Token            | Valor     | Nome        | Uso                                                                                                               |
-| ---------------- | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| `red-ruby`       | `#9B111E` | Rubi        | Cor da marca: botões principais, ícones de destaque, barra de progresso, aba ativa, anel de foco, itálico do hero |
-| `red-burgundy`   | `#790E18` | Bordô       | Hover dos botões, títulos de página e de card, links, banners de destaque e véu das fotos                         |
-| `rose-vintage`   | `#C67C82` | Rosa Antigo | Avatares, chips selecionados e ilustrações. **Nunca como cor de texto**                                           |
-| `rose-dusty`     | `#B5827E` | Rosa fosco  | Botões `secondary` e `danger` (texto `brown-espresso`, 4,6:1). **Nunca como cor de texto**                        |
-| `brown-espresso` | `#36211D` | Marrom      | Texto dos botões `secondary` e `danger` sobre `rose-dusty`                                                        |
-| `beige-sand`     | `#E3CAB6` | Bege        | Bordas, divisórias, chips, trilha de progresso e fundo de foto enquanto carrega                                   |
-| `beige-light`    | `#EDE6DF` | Bege claro  | Fundo das telas de trabalho, atrás dos cards (versão mais clara do bege)                                          |
-| `white`          | `#FFFFFF` | Branco      | Barra superior, telas de descoberta, cards, busca, campos, modais e menus                                         |
-| `gray-ink`       | `#1F1F1F` | Tinta       | Todo o texto principal                                                                                            |
-| `gray-dim`       | `#5E5E5E` | Cinza       | Texto secundário: legendas, datas, textos de ajuda                                                                |
+| Token            | Valor     | Nome        | Uso                                                                                                                                                     |
+| ---------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `red-ruby`       | `#9B111E` | Rubi        | Cor da marca: botões principais, ícones de destaque, barra de progresso, aba ativa, anel de foco, itálico do hero                                       |
+| `red-burgundy`   | `#790E18` | Bordô       | Hover dos botões, títulos de página e de card, links, banners de destaque e véu das fotos                                                               |
+| `rose-vintage`   | `#C67C82` | Rosa Antigo | Avatares, chips selecionados e ilustrações. **Nunca como cor de texto**                                                                                 |
+| `rose-dusty`     | `#B5827E` | Rosa fosco  | Botões `secondary` e `danger` (texto `brown-espresso`, 4,6:1). **Nunca como cor de texto**                                                              |
+| `brown-espresso` | `#36211D` | Marrom      | Segunda cor de presença, em pontos precisos: títulos, caixas de busca e filtros, rodapé, véu do login, menu, botão `outline` e texto sobre `rose-dusty` |
+| `beige-sand`     | `#E3CAB6` | Bege        | Bordas, divisórias, chips, trilha de progresso e fundo de foto enquanto carrega                                                                         |
+| `beige-light`    | `#EDE6DF` | Bege claro  | Fundo das telas de trabalho, atrás dos cards (versão mais clara do bege)                                                                                |
+| `white`          | `#FFFFFF` | Branco      | Barra superior, telas de descoberta, cards, busca, campos, modais e menus                                                                               |
+| `gray-ink`       | `#1F1F1F` | Tinta       | Todo o texto principal                                                                                                                                  |
+| `gray-dim`       | `#5E5E5E` | Cinza       | Texto secundário: legendas, datas, textos de ajuda                                                                                                      |
 
 **Estados** (`green-mint`, `yellow-wheat`, `rose-blush`, `blue-mist`) são só fundos de alertas e badges, sempre com texto `gray-ink` e um **ícone + texto** que diga o estado. A marca é vermelha, então **a cor nunca é o único sinal**: erro e ação perigosa sempre vêm com ícone, palavra ("Erro", "Excluir") e, nas ações destrutivas, confirmação.
 
@@ -496,7 +489,7 @@ Gutter de 24 px. Toda medida segue a escala de **múltiplos de 4** (a escala pad
 
 ### Composição das telas de descoberta
 
-- **Hero:** no desktop, duas colunas (5 + 7): texto à esquerda e, à direita, a foto em recorte orgânico que encosta na borda direita e no topo, com uma forma bege atrás. No celular, a foto vem **primeiro**, em largura total com a borda de baixo ondulada, e o texto abaixo.
+- **Hero (home):** `hero-overline`, `hero-title` + `hero-title-accent` (ex.: "Sua viagem / _começa aqui._"), um parágrafo `body-lg` e os botões `solid` e `outline`, sobre a foto em largura total com um véu claro à esquerda (no celular, a foto vem primeiro).
 - **Busca em pílula:** no desktop, sobrepõe a base da foto em 40 px, centralizada, com 4 campos lado a lado. No celular vira um card de raio 24 px com os campos empilhados e o botão de largura total.
 - **Faixas de conteúdo:** no desktop, blocos alternados entre um card de destaque (4 colunas) e um carrossel de cards de foto (8 colunas); no celular, uma coluna só.
 - **Carrosséis:** rolam na horizontal com `scroll-snap` e mostram parte do próximo card como dica. As setas circulares só aparecem no desktop; no celular, só o gesto.
@@ -512,21 +505,23 @@ A profundidade vem primeiro de **camadas de tom** (cards brancos sobre o fundo b
 | `shadow-lg` | `0 8px 16px rgba(0,0,0,0.12)`  | Menus suspensos, popovers, botões circulares          |
 | `shadow-xl` | `0 12px 24px rgba(0,0,0,0.14)` | Modais, busca em pílula e cards flutuantes sobre foto |
 
+O cartão de embarque do login usa `drop-shadow-ticket` (`0 8px 16px rgba(0,0,0,0.14)`), que segue o contorno dos furos laterais.
+
 Modais têm um véu `gray-ink` a 40% atrás. Sobre fotos, a legenda fica sobre o véu `scrim-burgundy`, aplicado como gradiente de baixo para cima (de Bordô 78% para transparente, cobrindo o terço de baixo da foto) e é o **único gradiente permitido**. Bordas de 1 px em `beige-sand` separam itens de lista e campos; não use sombra e borda forte no mesmo elemento.
 
 ## Shapes
 
 Formas **suaves e acolhedoras**, todas na escala de 4 px:
 
-| Classe            | Raio    | Uso                                                                                                        |
-| ----------------- | ------- | ---------------------------------------------------------------------------------------------------------- |
-| `rounded-xs`      | 4 px    | Chips, badges                                                                                              |
-| `rounded-sm`      | 8 px    | Botões compactos, cards compactos, itens do menu                                                           |
-| `rounded-md`      | 12 px   | Botões principais e secundários, campos e alertas                                                          |
-| `rounded-lg`      | 16 px   | Cards principais, painéis, modais, cards de foto                                                           |
-| `rounded-xl`      | 24 px   | Banners e cards grandes de destaque (capa da viagem)                                                       |
-| `rounded-organic` | 96 px   | Só a foto do hero, com cantos grandes e assimétricos (`rounded-tl-organic rounded-br-organic`)             |
-| `rounded-full`    | círculo | Pílulas (botão do hero, busca, selos), círculos de ícone, botões circulares, avatares, barras de progresso |
+| Classe            | Raio    | Uso                                                                                                                      |
+| ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `rounded-xs`      | 4 px    | O padrão do app: botões, campos, lista suspensa, cards, caixa de filtros, alertas, modais, selos, chips e barra de busca |
+| `rounded-sm`      | 8 px    | Botões compactos, cards compactos, itens do menu                                                                         |
+| `rounded-md`      | 12 px   | Alertas                                                                                                                  |
+| `rounded-lg`      | 16 px   | Em desuso: os blocos agora usam `rounded-xs`                                                                             |
+| `rounded-xl`      | 24 px   | Em desuso: os blocos agora usam `rounded-xs`                                                                             |
+| `rounded-organic` | 96 px   | Só a foto do hero, com cantos grandes e assimétricos (`rounded-tl-organic rounded-br-organic`)                           |
+| `rounded-full`    | círculo | Pílulas (botão do hero, busca, selos), círculos de ícone, botões circulares, avatares, barras de progresso               |
 
 Fotos seguem o raio do card que as contém. A foto do hero é a exceção: usa um **recorte orgânico** (`clip-path` com curvas suaves), sem cantos retos à vista.
 
@@ -534,8 +529,12 @@ Fotos seguem o raio do card que as contém. A foto do hero é a exceção: usa u
 
 Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de cada grupo.
 
-- **Botões:** `button-primary` (Rubi, texto branco; hover Bordô) para **uma** ação principal por tela ou card, como "Nova viagem". `button-secondary` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`) para ações alternativas. `button-compact` (`rose-vintage`, texto tinta; hover `rose-dusty`, 36 px) para ações dentro de listas e cards. `button-danger` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`, com ícone de lixeira) só para remover ou sair, **sempre com confirmação**: como a marca é vermelha, o perigo não pode depender só da cor. Ícone à esquerda do texto, 20 px, gap de 8 px. Desabilitado: fundo `beige-sand` com texto `gray-ink`, opacidade de 60% e cursor "não permitido" (bem diferente de um botão ativo). Carregando: mantém a cor da variante, com opacidade de 70%.
-- **Campos (`input`):** rótulo acima, campo branco de 48 px com borda de 1 px em `beige-sand`, texto de ajuda abaixo. No foco, borda de 2 px em `red-ruby` mais anel de 3 px em `red-ruby` a 35%. No erro, borda em `red-burgundy`, ícone de alerta e uma mensagem que diga como corrigir.
+- **Botões:** sempre pelos componentes `Button`, `ButtonLink`, `IconButton` e `IconButtonLink`, nunca um `<button>` solto. Todos têm cantos retos (`rounded-xs`); só o botão de notificações é redondo (`shape="round"`), do tamanho do avatar. `button-primary` (Rubi, texto branco; hover Bordô) para **uma** ação principal por tela ou card, como "Nova viagem". `button-secondary` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`) para ações alternativas. `button-compact` (`rose-vintage`, texto tinta; hover `rose-dusty`, 36 px) para ações dentro de listas e cards. `button-danger` (`rose-dusty`, texto `brown-espresso`; hover `rose-vintage`, com ícone de lixeira) só para remover ou sair, **sempre com confirmação**: como a marca é vermelha, o perigo não pode depender só da cor. Ícone à esquerda do texto, 20 px, gap de 8 px. Desabilitado: fundo `beige-sand` com texto `gray-ink`, opacidade de 60% e cursor "não permitido" (bem diferente de um botão ativo). Carregando: mantém a cor da variante, com opacidade de 70%.
+- **Estilo editorial (home):** `button-solid` (Bordô, texto branco; hover Rubi), `button-outline` (borda Bordô; preenche no hover) e `button-light` (bege, texto Bordô, para fundos Bordô). São retangulares (`rounded-xs`), em `label-sm` maiúsculo. O "Entrar" da barra superior usa o `solid`.
+- **Campos (`input`):** rótulo acima, campo branco de 48 px, de cantos retos (`rounded-xs`), com borda de 1 px em `beige-sand`; a lista suspensa e a caixa de filtros (`FilterPanel`) seguem os mesmos cantos, texto de ajuda abaixo. No foco, borda de 2 px em `red-ruby` mais anel de 3 px em `red-ruby` a 35%. No erro, borda em `red-burgundy`, ícone de alerta e uma mensagem que diga como corrigir.
+- **Padrão das telas públicas:** o mesmo desenho da home. Topo **branco** (`PageBanner` nas listas, com título centralizado e o filete com bússola `CompassDivider`; `DetailHero` nos detalhes), título em serifa marrom, blocos de cantos retos, busca e filtros na **caixa marrom** (`FilterPanel`, com os campos em `inverted`) e o rodapé. O marrom não vira faixa de topo: aparece nos títulos, nas caixas de busca e filtro e no rodapé. Rubi e Bordô ficam nos destaques e botões principais.
+- **Rota de viagem (`FlightRoute`):** nas listas, o topo tem uma linha tracejada em Rosa Antigo nas laterais do título, saindo de um alfinete e chegando a um avião. É enfeite (`aria-hidden`): no celular é uma versão pequena nos cantos, ao lado do título (que precisa ser curto, de uma palavra). Não deve ser repetido em outros blocos da mesma tela.
+- **Login:** a foto encosta na coluna do formulário em curva (`CurvedEdge`), nunca em corte reto. O cartão é um **cartão de embarque** (`TicketCard`): sem borda escura no topo, com um picote e dois recortes separando as boas-vindas da ação.
 - **Cards:** `card` para conteúdo principal (viagem, resumo do orçamento) e `card-compact` para itens repetidos (atividade, despesa). Card clicável inteiro ganha `shadow-md` no hover e foco visível.
 - **Chips:** filtros e categorias de atividade (Passeio, Comida, Hospedagem, Transporte, Outros). `chip-selected` em Rosa Antigo com ícone de check e texto `gray-ink`.
 - **Badges de status:** `badge-planning`, `badge-confirmed` e `badge-completed`, em `label-sm` caixa alta, sempre com texto ("PLANEJANDO").
@@ -543,7 +542,7 @@ Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de
 - **Abas:** navegação dentro da viagem (Roteiro, Orçamento, Despesas, Membros). A aba ativa tem texto Bordô e sublinhado de 3 px em `red-ruby`.
 - **Barra de progresso:** trilha `beige-sand` e preenchimento `red-ruby`. Acima de 100% do orçamento, o preenchimento fica cheio e um `alert-warning` explica quanto passou.
 - **Avatares:** iniciais em Rosa Antigo, 40 px (32 px em listas densas), empilhados com sobreposição de 4 px e borda de 2 px na cor do fundo.
-- **Hero:** `hero-overline`, `hero-title` + `hero-title-accent` (ex.: "Sua viagem / _começa aqui._"), um parágrafo `body-lg` em `gray-dim` (no máximo 2 linhas) e o `button-pill` com um círculo branco com seta dentro. Ao lado da foto, um `floating-card` com resumo social (avatares do grupo e número) e um `button-circle` com texto curvo ("ver no mapa").
+- **Hero (home):** `hero-overline`, `hero-title` + `hero-title-accent` (ex.: "Sua viagem / _começa aqui._"), um parágrafo `body-lg` e os botões `solid` e `outline`, sobre a foto em largura total com um véu claro à esquerda (no celular, a foto vem primeiro).
 - **Busca em pílula (`search-bar`):** 4 campos separados por divisórias verticais de 1 px `beige-sand`; cada campo tem um `search-field-icon` (círculo bege com ícone Rubi), um rótulo em `label-md` e o placeholder em `body-sm` cinza, e o `search-button` redondo com lupa no fim.
 - **Cards de foto (`photo-card`):** foto cobrindo o card (proporção 4:5 no desktop), legenda embaixo sobre o véu com o nome em `title-md` branco, `rating-pill` branco com estrela Rubi no canto de baixo à direita e o botão de favorito (coração) no canto de cima à direita. Em viagens do usuário, o selo de status fica no canto de cima à esquerda e o lugar da nota é ocupado pelo número de viajantes.
 - **Banner de destaque (`promo-banner`):** foto com véu Bordô da esquerda para a direita, selo em pílula no topo, título `headline-md` com a palavra-chave em `yellow-wheat` (ex.: "faltam 87 dias") e um botão branco em pílula.
@@ -568,10 +567,10 @@ Os tokens do cabeçalho são a referência normativa; abaixo, o comportamento de
 - Faça estados vazios úteis: ícone, uma frase do que fazer e o botão da ação ("Você ainda não tem viagens. Crie a primeira!").
 - Mostre ações de edição apenas para quem pode editar (OWNER e EDITOR); para VIEWER, a mesma tela em modo leitura.
 - Use fotos reais dos destinos (`photoUrl` da API) sempre que existirem; sem foto, use o bege `beige-sand` com o ícone do destino, nunca uma imagem genérica de banco de imagens.
-- Não use cores fora da paleta, gradientes chamativos ou sombras coloridas. O único gradiente permitido é o véu `scrim-burgundy`.
+- Não use cores fora da paleta, gradientes chamativos ou sombras coloridas. Os gradientes permitidos são os véus sobre fotos e o degradê do banner com o rodapé (`red-burgundy` em cima e `brown-espresso` embaixo, sem divisão). A barra superior é **branca em todas as páginas**, sem faixas marrons ou degradês no topo. Fora da home, uma sombra suave (`shadow-md`), sem linha, a separa do conteúdo; na home não há sombra. No catálogo, o branco do topo desce até a metade da caixa de filtros (`BandOverlap`).
 - Não use Rosa Antigo como cor de texto, nem texto branco sobre ele. Nos botões `secondary` e `danger` o fundo é `rose-dusty` com texto `brown-espresso`.
 - Não use o cinza (`gray-dim`) sobre o bege `beige-sand`.
-- Não use a serifa do hero fora do título do hero, nem crie mais de um hero por tela.
-- Não misture raios fora da escala (como 6 px ou 10 px) nem cantos retos em componentes interativos.
+- Use a serifa (`font-display`) nos títulos de página e de seção e no rodapé; nas telas de trabalho (formulários e viagens), os títulos de card são em `font-heading`. Não crie mais de um hero por tela.
+- Não misture raios fora da escala (como 6 px ou 10 px). Componentes interativos usam `rounded-xs`; pílulas e círculos ficam só nos casos da tabela de formas.
 - Não use emojis no lugar de ícones.
 - Não escreva textos de interface em inglês: rótulos, mensagens e datas são em português do Brasil.

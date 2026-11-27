@@ -1,14 +1,41 @@
+import heroPhoto from '../assets/hero-tokyo.webp'
+import { useAuth } from '../auth/useAuth'
+import { DestinationSearchBar } from '../components/destinations/DestinationSearchBar'
+import { Container } from '../components/layout/Container'
+import { ButtonLink } from '../components/ui/ButtonLink'
+import { PromoBanner } from '../components/ui/PromoBanner'
+import { paths } from '../routes/paths'
+import { HomeExperiences } from './home/HomeExperiences'
 import { HomeFeatures } from './home/HomeFeatures'
 import { HomeHero } from './home/HomeHero'
 import { TopDestinationsSection } from './home/TopDestinationsSection'
 
-/** Home pública: hero do produto, pontos fortes e os destinos mais bem avaliados. */
+/** Home pública, em faixas de largura total (a rota é marcada com `fullBleed`). */
 export default function HomePage() {
+  const { status } = useAuth()
+  const isSignedIn = status === 'authenticated'
+
   return (
-    <div className="flex flex-col gap-16 py-8 lg:gap-20 lg:py-10">
+    <>
       <HomeHero />
-      <HomeFeatures />
+      <div className="border-b border-beige-sand bg-white">
+        <Container className="relative z-10 pt-6 lg:-mt-12 lg:pt-0">
+          <DestinationSearchBar />
+        </Container>
+        <HomeFeatures />
+      </div>
       <TopDestinationsSection />
-    </div>
+      <HomeExperiences />
+      <PromoBanner
+        title="Planeje a próxima viagem"
+        text="Crie o roteiro, chame o grupo com um código e acompanhem tudo juntos."
+        image={heroPhoto}
+        action={
+          <ButtonLink to={isSignedIn ? paths.tripNew : paths.login} variant="light">
+            {isSignedIn ? 'Planejar viagem' : 'Começar agora'}
+          </ButtonLink>
+        }
+      />
+    </>
   )
 }

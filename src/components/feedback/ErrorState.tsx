@@ -23,7 +23,7 @@ export function ErrorState({
     <div role="alert" className="flex flex-col items-center gap-4 px-4 py-12 text-center">
       <IconCircle icon={CircleAlert} tone="blush" size="lg" />
       <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-headline-sm text-red-burgundy">{title}</h2>
+        <h2 className="font-heading text-headline-sm text-brown-espresso">{title}</h2>
         <p className="max-w-md text-body-md text-gray-dim">{message}</p>
       </div>
       {onRetry && (

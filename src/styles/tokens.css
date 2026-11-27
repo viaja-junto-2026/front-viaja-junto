@@ -11,6 +11,7 @@
   --text-*: initial;
   --radius-*: initial;
   --shadow-*: initial;
+  --drop-shadow-*: initial;
   --breakpoint-*: initial;
 
   /* ---------- Cores ---------- */
@@ -24,7 +25,7 @@
   --color-white: #ffffff; /* Branco: barra superior, cards, campos e modais */
   --color-gray-ink: #1f1f1f; /* Tinta: texto principal */
   --color-gray-dim: #5e5e5e; /* Cinza: texto secundário (legendas, datas, ajuda) */
-  --color-brown-espresso: #36211d; /* Marrom: texto dos botões secundário e de perigo sobre rosa fosco */
+  --color-brown-espresso: #36211d; /* Marrom: títulos, faixas de topo, rodapé, busca, menu e texto sobre rosa fosco */
 
   /* Estados (sempre com ícone e texto, nunca só a cor) */
   --color-green-mint: #bfdcbc; /* sucesso */
@@ -124,6 +125,8 @@
   --shadow-md: 0 4px 8px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 8px 16px rgb(0 0 0 / 0.12);
   --shadow-xl: 0 12px 24px rgb(0 0 0 / 0.14);
+  /* Sombra que segue o contorno recortado (cartão de embarque do login). */
+  --drop-shadow-ticket: 0 8px 16px rgb(0 0 0 / 0.14);
 
   /* ---------- Breakpoints: celular < 640, tablet 640-1023, desktop >= 1024 ---------- */
   --breakpoint-sm: 40rem;

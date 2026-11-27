@@ -1,28 +1,34 @@
 import { Bell } from 'lucide-react'
-import { Link, NavLink } from 'react-router'
-import logo from '../../assets/logo-vj.png'
-import { getInitials } from '../../utils/getInitials'
+import { Link, NavLink, useMatch } from 'react-router'
 import { useAuth } from '../../auth/useAuth'
 import { paths } from '../../routes/paths'
+import { Avatar } from '../ui/Avatar'
+import { ButtonLink } from '../ui/ButtonLink'
+import { IconButtonLink } from '../ui/IconButton'
+import { BrandLogo } from './BrandLogo'
 import { topNavItems } from './navigation'
 
 /**
- * Barra superior. No desktop mostra marca, navegação, notificações e perfil;
- * no celular mostra só a marca e as notificações (a navegação fica na barra inferior).
- * Quem não está logado vê o botão "Entrar" no lugar das notificações e do perfil.
+ * Barra superior, branca em todas as páginas, Fora da home, uma sombra suave a separa do conteúdo. No desktop mostra marca, navegação,
+ * notificações e perfil; no celular mostra só a marca e as notificações (a navegação
+ * fica na barra inferior). Quem não está logado vê o botão "Entrar" no lugar das
+ * notificações e do perfil.
  */
 export function AppBar() {
   const { status, user } = useAuth()
 
+  // Na home a foto já separa a barra do conteúdo, então ela fica sem a sombra.
+  const isHome = useMatch(paths.home) !== null
+
   return (
-    <header className="bg-white">
+    <header className={`bg-white ${isHome ? '' : 'relative z-10 shadow-md'}`.trim()}>
       <div className="mx-auto flex h-18 w-full max-w-content items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <Link
           to={paths.home}
           aria-label="ViajaJunto, ir para a página inicial"
           className="flex items-center gap-3"
         >
-          <img src={logo} alt="" width={58} height={40} className="h-10 w-auto" />
+          <BrandLogo alt="" size="md" />
           <span className="flex flex-col">
             <span className="font-heading text-headline-sm text-red-ruby">ViajaJunto</span>
             <span className="hidden text-body-sm text-gray-dim lg:block">Viagens em grupo</span>
@@ -38,7 +44,7 @@ export function AppBar() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `relative px-2 py-3 text-label-lg ${isActive ? 'text-red-burgundy' : 'text-gray-dim'}`
+                `relative px-2 py-3 text-label-lg ${isActive ? 'text-red-burgundy' : 'text-brown-espresso'}`
               }
             >
               {({ isActive }) => (
@@ -59,29 +65,28 @@ export function AppBar() {
         <div className="flex items-center gap-3">
           {status === 'authenticated' && user && (
             <>
-              <Link
+              <IconButtonLink
                 to={paths.notifications}
-                aria-label="Notificações"
-                className="flex size-12 items-center justify-center rounded-full bg-white text-red-burgundy shadow-md"
+                label="Notificações"
+                variant="brand"
+                shape="round"
+                size="md"
               >
                 <Bell aria-hidden="true" size={20} />
-              </Link>
+              </IconButtonLink>
               <Link
                 to={paths.profile}
                 aria-label={`Perfil de ${user.name}`}
-                className="hidden size-10 items-center justify-center rounded-full bg-rose-vintage text-label-md text-gray-ink lg:flex"
+                className="hidden rounded-full lg:flex"
               >
-                {getInitials(user.name)}
+                <Avatar name={user.name} />
               </Link>
             </>
           )}
           {status === 'unauthenticated' && (
-            <Link
-              to={paths.login}
-              className="rounded-full bg-red-ruby px-6 py-3 text-label-lg text-white hover:bg-red-burgundy"
-            >
+            <ButtonLink to={paths.login} variant="solid">
               Entrar
-            </Link>
+            </ButtonLink>
           )}
         </div>
       </div>

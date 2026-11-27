@@ -1,12 +1,13 @@
 import type { LucideIcon } from 'lucide-react'
 
-type IconCircleTone = 'sand' | 'wheat' | 'mist' | 'blush'
+type IconCircleTone = 'sand' | 'wheat' | 'mist' | 'blush' | 'white'
 
 const toneStyles: Record<IconCircleTone, string> = {
   sand: 'bg-beige-sand text-red-ruby',
   wheat: 'bg-yellow-wheat text-red-burgundy',
   mist: 'bg-blue-mist text-red-burgundy',
   blush: 'bg-rose-blush text-red-burgundy',
+  white: 'bg-white text-red-burgundy shadow-md',
 }
 
 type IconCircleProps = {

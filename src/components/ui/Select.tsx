@@ -33,6 +33,7 @@ export function Select({
   label,
   helperText,
   error,
+  inverted,
   options,
   value,
   defaultValue = '',
@@ -122,7 +123,13 @@ export function Select({
   }
 
   return (
-    <FieldShell id={selectId} label={label} helperText={helperText} error={error}>
+    <FieldShell
+      id={selectId}
+      label={label}
+      helperText={helperText}
+      error={error}
+      inverted={inverted}
+    >
       <div ref={wrapperRef} className="relative">
         {name && <input type="hidden" name={name} value={current} />}
         <button
@@ -154,7 +161,7 @@ export function Select({
             aria-label={label}
             // mantém o foco no campo ao clicar em uma opção
             onMouseDown={(event) => event.preventDefault()}
-            className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-beige-sand bg-white p-1 shadow-lg"
+            className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-xs border border-beige-sand bg-white p-1 shadow-lg"
           >
             {options.map((option, index) => (
               <li
@@ -165,7 +172,7 @@ export function Select({
                 aria-disabled={option.disabled || undefined}
                 onClick={() => choose(index)}
                 onMouseEnter={() => !option.disabled && setActiveIndex(index)}
-                className={`flex cursor-pointer items-center justify-between gap-2 rounded-sm px-3 py-2 text-body-md text-gray-ink ${
+                className={`flex cursor-pointer items-center justify-between gap-2 rounded-xs px-3 py-2 text-body-md text-gray-ink ${
                   index === activeIndex ? 'bg-rose-vintage' : ''
                 } ${option.disabled ? 'cursor-not-allowed opacity-50' : ''} ${
                   option.value === current ? 'font-semibold' : ''

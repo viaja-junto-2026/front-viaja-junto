@@ -80,6 +80,11 @@ export class ApiError extends Error {
   }
 }
 
+/** Recurso inexistente (404) ou identificador inválido na URL (400). */
+export function isNotFoundError(error: unknown): boolean {
+  return error instanceof ApiError && (error.status === 404 || error.status === 400)
+}
+
 type ClientResult<TData> = {
   data?: TData
   error?: unknown

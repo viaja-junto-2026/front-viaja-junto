@@ -1,11 +1,11 @@
-import { ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
 import { formatDate } from '../../utils/format'
 import { EmptyState } from '../feedback/EmptyState'
 import { LoadingSkeleton } from '../feedback/LoadingSkeleton'
 import { QueryState } from '../feedback/QueryState'
 import { Avatar } from '../ui/Avatar'
-import { Button } from '../ui/Button'
 import { CardCompact } from '../ui/Card'
+import { Pagination } from '../ui/Pagination'
 import { RatingStars } from './RatingStars'
 
 const FALLBACK_AUTHOR = 'Viajante'
@@ -55,8 +55,6 @@ export function ReviewList({
   emptyTitle = 'Ainda não há avaliações',
   emptyDescription = 'As avaliações de quem já visitou aparecerão aqui.',
 }: ReviewListProps) {
-  const showPagination = (totalPages ?? 1) > 1 || hasPrevious || hasNext
-
   return (
     <QueryState
       isLoading={isLoading}
@@ -93,33 +91,15 @@ export function ReviewList({
           })}
         </ul>
 
-        {showPagination && (
-          <nav
-            aria-label="Paginação das avaliações"
-            className="flex flex-wrap items-center justify-between gap-4"
-          >
-            <Button
-              variant="secondary"
-              disabled={!hasPrevious || isFetching}
-              leftIcon={<ChevronLeft aria-hidden="true" size={20} />}
-              onClick={() => onPageChange(page - 1)}
-            >
-              Anterior
-            </Button>
-            <span aria-live="polite" className="text-body-sm text-gray-dim tabular">
-              Página {page}
-              {totalPages ? ` de ${totalPages}` : ''}
-            </span>
-            <Button
-              variant="secondary"
-              disabled={!hasNext || isFetching}
-              rightIcon={<ChevronRight aria-hidden="true" size={20} />}
-              onClick={() => onPageChange(page + 1)}
-            >
-              Próxima
-            </Button>
-          </nav>
-        )}
+        <Pagination
+          label="Paginação das avaliações"
+          page={page}
+          totalPages={totalPages}
+          hasPrevious={hasPrevious}
+          hasNext={hasNext}
+          busy={isFetching}
+          onPageChange={onPageChange}
+        />
       </div>
     </QueryState>
   )
