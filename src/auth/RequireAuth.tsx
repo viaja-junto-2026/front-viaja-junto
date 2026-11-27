@@ -59,8 +59,7 @@ export function RequireAuth() {
   if (status === 'unauthenticated' && sessionExpired) return <ExpiredSessionRedirect />
 
   return (
-    // A altura mínima mantém o rodapé das telas de largura total fora da primeira dobra.
-    <div className="min-h-screen">
+    <>
       {status === 'loading' ? (
         <LoadingSkeleton />
       ) : sessionError ? (
@@ -68,6 +67,6 @@ export function RequireAuth() {
       ) : (
         <SignInPrompt />
       )}
-    </div>
+    </>
   )
 }

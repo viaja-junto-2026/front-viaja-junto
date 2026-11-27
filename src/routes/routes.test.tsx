@@ -59,6 +59,21 @@ vi.mock('../services/activities', () => ({
   }),
 }))
 vi.mock('../services/trips', () => ({
+  createTrip: vi.fn(),
+  updateTrip: vi.fn(),
+  deleteTrip: vi.fn(),
+  getTrip: vi.fn().mockResolvedValue({
+    id: '1',
+    name: 'Eurotrip',
+    description: null,
+    startDate: null,
+    endDate: null,
+    status: 'PLANNING',
+    currency: 'BRL',
+    role: 'OWNER',
+    createdBy: '1',
+    createdAt: '2026-02-01T12:00:00.000Z',
+  }),
   listTrips: vi.fn().mockResolvedValue({
     data: [],
     meta: { page: 1, limit: 9, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
@@ -188,16 +203,22 @@ describe('routes', () => {
     )
   })
 
-  it.each(['/', '/destinations', '/destinations/1', '/activities/1', '/trips'])(
-    'shows the site footer on the full width page %s',
-    (path) => {
-      renderAt(path)
+  it('shows the site footer on the home page', () => {
+    renderAt('/')
 
-      expect(screen.getByRole('contentinfo')).toHaveTextContent('ViajaJunto')
-    },
-  )
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('ViajaJunto')
+  })
 
-  it.each(['/trips/new', '/profile', '/reviews'])('has no site footer on %s', (path) => {
+  it.each([
+    '/destinations',
+    '/destinations/1',
+    '/activities/1',
+    '/trips',
+    '/trips/new',
+    '/trips/1/edit',
+    '/profile',
+    '/reviews',
+  ])('has no site footer on %s', (path) => {
     renderAt(path)
 
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()

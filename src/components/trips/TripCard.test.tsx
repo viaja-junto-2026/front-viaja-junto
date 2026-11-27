@@ -15,6 +15,18 @@ function renderCard(overrides: Partial<Trip> = {}) {
 }
 
 describe('TripCard', () => {
+  it('offers the edit shortcut only to the creator', () => {
+    const { unmount } = renderCard({ id: 'abc', role: 'OWNER' })
+    expect(screen.getByRole('link', { name: 'Editar Eurotrip 2027' })).toHaveAttribute(
+      'href',
+      '/trips/abc/edit',
+    )
+    unmount()
+
+    renderCard({ role: 'EDITOR' })
+    expect(screen.queryByRole('link', { name: /Editar/ })).not.toBeInTheDocument()
+  })
+
   it.each<[Partial<Trip>, string]>([
     [{ startDate: '2027-07-01', endDate: null }, 'A partir de 1 jul. 2027'],
     [{ startDate: null, endDate: '2027-07-15' }, 'Até 15 jul. 2027'],

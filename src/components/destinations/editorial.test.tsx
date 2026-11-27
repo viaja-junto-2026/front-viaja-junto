@@ -57,6 +57,20 @@ describe('DestinationShowcaseCard', () => {
     )
   }
 
+  it('is a single link covering the card, with the button only from tablets up', () => {
+    renderCard({ id: 'k1' })
+
+    // para leitores de tela e teclado há um link só: o nome
+    expect(screen.getAllByRole('link')).toHaveLength(1)
+    expect(screen.getByRole('link', { name: 'Kyoto' })).toHaveClass('after:inset-0')
+
+    const button = screen.getByText('Ver detalhes')
+    expect(button).toHaveAttribute('tabindex', '-1')
+    expect(button).toHaveAttribute('aria-hidden', 'true')
+    expect(button.parentElement).toHaveClass('hidden', 'sm:block')
+    expect(screen.getByText('Antiga capital imperial.')).toHaveClass('hidden', 'sm:line-clamp-2')
+  })
+
   it('shows name, country, summary, rating and the details link', () => {
     renderCard({ id: 'abc', reviewCount: 12 })
 
@@ -65,10 +79,7 @@ describe('DestinationShowcaseCard', () => {
     expect(screen.getByText('Antiga capital imperial.')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'Nota 4,8 de 5' })).toBeInTheDocument()
     expect(screen.getByText('(12 avaliações)')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Ver detalhes de Kyoto' })).toHaveAttribute(
-      'href',
-      '/destinations/abc',
-    )
+    expect(screen.getByRole('link', { name: 'Kyoto' })).toHaveAttribute('href', '/destinations/abc')
   })
 
   it('uses the singular for one review', () => {

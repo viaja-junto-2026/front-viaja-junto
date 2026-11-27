@@ -33,7 +33,7 @@ export const routes: RouteObject[] = [
       {
         errorElement: <ErrorPage />,
         children: [
-          { path: paths.home, element: <HomePage />, handle: { fullBleed: true } },
+          { path: paths.home, element: <HomePage />, handle: { fullBleed: true, footer: true } },
           { path: paths.destinations, element: <DestinationsPage />, handle: { fullBleed: true } },
           {
             path: patterns.destinationDetails,
@@ -51,9 +51,9 @@ export const routes: RouteObject[] = [
             element: <RequireAuth />,
             children: [
               { path: paths.trips, element: <TripsPage />, handle: { fullBleed: true } },
-              { path: paths.tripNew, element: <TripCreatePage /> },
+              { path: paths.tripNew, element: <TripCreatePage />, handle: { fullBleed: true } },
               { path: patterns.tripDetails, element: <TripDetailsPage /> },
-              { path: patterns.tripEdit, element: <TripEditPage /> },
+              { path: patterns.tripEdit, element: <TripEditPage />, handle: { fullBleed: true } },
               { path: paths.join, element: <JoinTripPage /> },
               { path: paths.notifications, element: <NotificationsPage /> },
               { path: paths.profile, element: <ProfilePage /> },

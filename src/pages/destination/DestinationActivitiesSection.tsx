@@ -12,6 +12,7 @@ import { Select, type SelectOption } from '../../components/ui/Select'
 import { useActivities } from '../../hooks/useActivities'
 import type { ActivitySort } from '../../services/activities'
 import { activityTypeLabels, type ActivityType } from '../../utils/labels'
+import { PhotoGrid } from '../../components/ui/PhotoGrid'
 
 const ACTIVITY_TYPES: ActivityType[] = ['TOUR', 'FOOD', 'LODGING', 'TRANSPORT', 'OTHER']
 
@@ -143,13 +144,13 @@ export function DestinationActivitiesSection({ destinationId }: DestinationActiv
         }
       >
         <div className="flex flex-col gap-6">
-          <ul aria-label="Lista de atividades" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <PhotoGrid label="Lista de atividades">
             {activities.items.map((activity) => (
               <li key={activity.id}>
                 <ActivityCard activity={activity} />
               </li>
             ))}
-          </ul>
+          </PhotoGrid>
 
           <Pagination
             label="Paginação das atividades"
