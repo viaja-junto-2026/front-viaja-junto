@@ -58,6 +58,12 @@ vi.mock('../services/activities', () => ({
     meta: { page: 1, limit: 9, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
   }),
 }))
+vi.mock('../services/trips', () => ({
+  listTrips: vi.fn().mockResolvedValue({
+    data: [],
+    meta: { page: 1, limit: 9, total: 0, totalPages: 0, hasNext: false, hasPrevious: false },
+  }),
+}))
 vi.mock('../services/reviews', () => ({
   listReviews: vi.fn().mockResolvedValue({
     data: [],
@@ -182,7 +188,7 @@ describe('routes', () => {
     )
   })
 
-  it.each(['/', '/destinations', '/destinations/1', '/activities/1'])(
+  it.each(['/', '/destinations', '/destinations/1', '/activities/1', '/trips'])(
     'shows the site footer on the full width page %s',
     (path) => {
       renderAt(path)
@@ -191,7 +197,7 @@ describe('routes', () => {
     },
   )
 
-  it.each(['/trips', '/profile', '/reviews'])('has no site footer on %s', (path) => {
+  it.each(['/trips/new', '/profile', '/reviews'])('has no site footer on %s', (path) => {
     renderAt(path)
 
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()

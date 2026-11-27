@@ -6,9 +6,12 @@ import { AuthContext, type AuthContextValue, type AuthStatus } from './authConte
 interface AuthState {
   status: AuthStatus
   user: User | null
+  sessionExpired?: boolean
+  sessionError?: unknown
 }
 
 const signedOut: AuthState = { status: 'unauthenticated', user: null }
+const expired: AuthState = { ...signedOut, sessionExpired: true }
 
 /** Mantém a sessão do usuário e a oferece para o app inteiro (use `useAuth`). */
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -17,22 +20,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     getToken() ? { status: 'loading', user: null } : signedOut,
   )
 
+  // Muda a cada "Tentar de novo", para confirmar a sessão outra vez.
+  const [attempt, setAttempt] = useState(0)
+
   useEffect(() => {
     let active = true
 
     if (getToken()) {
       getCurrentUser()
         .then((user) => active && setState({ status: 'authenticated', user }))
-        .catch(() => active && setState(signedOut))
+        .catch((error: unknown) => {
+          if (!active) return
+          setState((current) => {
+            // Se a falha foi um 401, o aviso de sessão expirada é mantido.
+            if (current.sessionExpired) return current
+            // Com o token ainda guardado, a falha foi da rede ou do servidor: dá para tentar de novo.
+            return getToken() ? { ...signedOut, sessionError: error } : signedOut
+          })
+        })
     }
 
     // A API recusou o token (401): a sessão acabou.
-    const removeHandler = setUnauthorizedHandler(() => setState(signedOut))
+    const removeHandler = setUnauthorizedHandler(() => setState(expired))
 
     return () => {
       active = false
       removeHandler()
     }
+  }, [attempt])
+
+  const retrySession = useCallback(() => {
+    setState({ status: 'loading', user: null })
+    setAttempt((current) => current + 1)
   }, [])
 
   const signIn = useCallback(async (token: string, expiresInSeconds?: number) => {
@@ -60,8 +79,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<AuthContextValue>(
-    () => ({ ...state, signIn, signOut }),
-    [state, signIn, signOut],
+    () => ({ ...state, signIn, signOut, retrySession }),
+    [state, signIn, signOut, retrySession],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -127,6 +127,7 @@
   --shadow-xl: 0 12px 24px rgb(0 0 0 / 0.14);
   /* Sombra que segue o contorno recortado (cartão de embarque do login). */
   --drop-shadow-ticket: 0 8px 16px rgb(0 0 0 / 0.14);
+  --drop-shadow-ticket-rest: 0 2px 4px rgb(0 0 0 / 0.12);
 
   /* ---------- Breakpoints: celular < 640, tablet 640-1023, desktop >= 1024 ---------- */
   --breakpoint-sm: 40rem;
