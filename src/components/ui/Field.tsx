@@ -5,6 +5,8 @@ import { getDescriptionId } from './fieldStyles'
 export type FieldProps = {
   /** Rótulo visível acima do campo. */
   label: string
+  /** Esconde o rótulo na tela; leitores de tela continuam lendo. */
+  hideLabel?: boolean
   /** Texto de ajuda abaixo do campo. */
   helperText?: string
   /** Rótulo em branco, para campos sobre fundo escuro (marrom). */
@@ -25,13 +27,19 @@ export function FieldShell({
   helperText,
   error,
   inverted = false,
+  hideLabel = false,
   children,
 }: FieldShellProps) {
   const message = error ?? helperText
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className={`text-label-md ${inverted ? 'text-white' : 'text-gray-ink'}`}>
+      <label
+        htmlFor={id}
+        className={
+          hideLabel ? 'sr-only' : `text-label-md ${inverted ? 'text-white' : 'text-gray-ink'}`
+        }
+      >
         {label}
       </label>
       {children}

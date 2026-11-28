@@ -8,8 +8,11 @@ import { getActivity } from '../services/activities'
 import { ApiError } from '../services/apiError'
 import { getBudgetSummary } from '../services/budgets'
 import { getDestination } from '../services/destinations'
+import { getInviteCode } from '../services/invites'
 import { listTripActivities, listTripDestinations } from '../services/itinerary'
+import { listTripMembers } from '../services/members'
 import { getTrip } from '../services/trips'
+import { getUserName } from '../services/users'
 import { makeActivity } from '../test/activities'
 import { makeAuthValue } from '../test/auth'
 import { makeBudgetSummary } from '../test/budgets'
@@ -21,6 +24,9 @@ import TripDetailsPage from './TripDetailsPage'
 
 vi.mock('../services/trips', () => ({ getTrip: vi.fn() }))
 vi.mock('../services/budgets', () => ({ getBudgetSummary: vi.fn() }))
+vi.mock('../services/invites', () => ({ getInviteCode: vi.fn() }))
+vi.mock('../services/members', () => ({ listTripMembers: vi.fn() }))
+vi.mock('../services/users', () => ({ getUserName: vi.fn() }))
 vi.mock('../services/itinerary', () => ({
   listTripDestinations: vi.fn(),
   listTripActivities: vi.fn(),
@@ -138,8 +144,11 @@ describe('TripDetailsPage', () => {
     expect(screen.queryByText('Duração:')).not.toBeInTheDocument()
   })
 
-  it('has the three tabs, with the budget one working and members still to come', async () => {
+  it('has the three tabs, each one with its content', async () => {
     vi.mocked(getBudgetSummary).mockResolvedValue(makeBudgetSummary())
+    vi.mocked(listTripMembers).mockResolvedValue([])
+    vi.mocked(getUserName).mockResolvedValue('Ana Souza')
+    vi.mocked(getInviteCode).mockResolvedValue('K7M2QX9P')
     renderPage()
     const tabs = within(await screen.findByRole('tablist', { name: 'Seções da viagem' }))
     expect(tabs.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
@@ -151,7 +160,7 @@ describe('TripDetailsPage', () => {
     await userEvent.click(tabs.getByRole('tab', { name: 'Orçamento' }))
     expect(await screen.findByRole('region', { name: 'Resumo do orçamento' })).toBeInTheDocument()
     await userEvent.click(tabs.getByRole('tab', { name: 'Membros' }))
-    expect(screen.getByRole('heading', { name: 'Os membros chegam em breve' })).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'Membros' })).toHaveTextContent('Ana Souza')
   })
 
   it.each(['VIEWER', 'EDITOR'] as const)('shows no trip edit button to a %s', async (role) => {

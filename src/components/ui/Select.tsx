@@ -31,6 +31,7 @@ export type SelectProps = FieldProps & {
  */
 export function Select({
   label,
+  hideLabel,
   helperText,
   error,
   inverted,
@@ -133,6 +134,7 @@ export function Select({
     <FieldShell
       id={selectId}
       label={label}
+      hideLabel={hideLabel}
       helperText={helperText}
       error={error}
       inverted={inverted}

@@ -58,7 +58,7 @@ export const routes: RouteObject[] = [
                 handle: { fullBleed: true },
               },
               { path: patterns.tripEdit, element: <TripEditPage />, handle: { fullBleed: true } },
-              { path: paths.join, element: <JoinTripPage /> },
+              { path: paths.join, element: <JoinTripPage />, handle: { fullBleed: true } },
               { path: paths.notifications, element: <NotificationsPage /> },
               { path: paths.profile, element: <ProfilePage /> },
             ],
