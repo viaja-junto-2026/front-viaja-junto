@@ -1,6 +1,5 @@
-import { Lock, MapPin, MapPinOff, Moon, Pencil, Ticket, UserRound, Users } from 'lucide-react'
+import { Lock, MapPin, MapPinOff, Moon, Pencil, Ticket, UserRound } from 'lucide-react'
 import { useParams } from 'react-router'
-import { EmptyState } from '../components/feedback/EmptyState'
 import { ErrorState } from '../components/feedback/ErrorState'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
 import { Container } from '../components/layout/Container'
@@ -23,6 +22,7 @@ import { formatDateRange, nightsBetween } from '../utils/format'
 import { memberRoleLabels } from '../utils/labels'
 import { BudgetTab } from './trip/BudgetTab'
 import { ItineraryTab } from './trip/ItineraryTab'
+import { MembersTab } from './trip/MembersTab'
 
 const backToTrips = <ButtonLink to={paths.trips}>Voltar para minhas viagens</ButtonLink>
 
@@ -93,14 +93,7 @@ function TripContent({ trip }: { trip: Trip }) {
             {
               id: 'members',
               label: 'Membros',
-              content: (
-                <EmptyState
-                  icon={Users}
-                  plainIcon
-                  title="Os membros chegam em breve"
-                  description="Aqui vão aparecer quem participa da viagem e o convite por código."
-                />
-              ),
+              content: <MembersTab trip={trip} />,
             },
           ]}
         />

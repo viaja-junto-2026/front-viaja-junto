@@ -30,13 +30,13 @@ describe('TripsPage', () => {
     vi.mocked(listTrips).mockReset()
   })
 
-  it('links to the new trip and join pages', () => {
+  it('links to the new trip page and offers to join with a code', () => {
     vi.mocked(listTrips).mockReturnValue(new Promise(() => {}))
     renderPage()
 
     expect(screen.getByRole('heading', { level: 1, name: 'Minhas viagens' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Nova viagem' })).toHaveAttribute('href', '/trips/new')
-    expect(screen.getByRole('link', { name: 'Entrar com código' })).toHaveAttribute('href', '/join')
+    expect(screen.getByRole('button', { name: 'Entrar com código' })).toBeInTheDocument()
   })
 
   it('shows a loading skeleton while fetching', () => {

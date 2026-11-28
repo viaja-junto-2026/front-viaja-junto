@@ -1,8 +1,10 @@
 import { Plane, Plus, Ticket } from 'lucide-react'
+import { useState } from 'react'
 import { EmptyState } from '../components/feedback/EmptyState'
 import { LoadingSkeleton } from '../components/feedback/LoadingSkeleton'
 import { QueryState } from '../components/feedback/QueryState'
 import { Container } from '../components/layout/Container'
+import { JoinTripDialog } from '../components/members/JoinTripDialog'
 import { TripCard } from '../components/trips/TripCard'
 import { BandOverlap } from '../components/ui/BandOverlap'
 import { Button } from '../components/ui/Button'
@@ -27,6 +29,7 @@ function NewTripLink() {
 export default function TripsPage() {
   const trips = useTrips()
   const counts = useTripCounts()
+  const [joining, setJoining] = useState(false)
 
   return (
     <>
@@ -37,13 +40,13 @@ export default function TripsPage() {
       >
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <NewTripLink />
-          <ButtonLink
-            to={paths.join}
+          <Button
             variant="outline"
             leftIcon={<Ticket aria-hidden="true" size={20} />}
+            onClick={() => setJoining(true)}
           >
             Entrar com código
-          </ButtonLink>
+          </Button>
         </div>
       </PageBanner>
 
@@ -105,6 +108,8 @@ export default function TripsPage() {
           </div>
         </QueryState>
       </Container>
+
+      {joining && <JoinTripDialog onClose={() => setJoining(false)} />}
     </>
   )
 }

@@ -52,7 +52,8 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </p>
           )}
 
-          <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
+          {/* No celular, a altura é a mesma com ou sem nota (ela ocupa duas linhas). */}
+          <div className="mt-auto flex min-h-13 flex-wrap content-center items-center gap-x-2 pt-2 sm:min-h-0">
             {activity.averageRating !== null ? (
               <>
                 <RatingStars rating={activity.averageRating} size="sm" showValue />
